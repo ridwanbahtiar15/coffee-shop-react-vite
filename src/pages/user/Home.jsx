@@ -1,90 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import getImageUrl from "../../utils/imageGetter";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
+import DropdownMobile from "../../components/dropdownMobile";
 
 function Home() {
+  const [isDropdownShown, setIsDropdownShow] = useState(false);
+
   return (
     <>
-      <nav className="w-full flex justify-between py-4 px-5 items-center font-plusJakartaSans bg-[#0B0909] md:px-24 lg:px-[130px]">
-        <div className="nav-start flex items-center gap-x-[60px] text-sm font-normal">
-          <img
-            src={getImageUrl("coffee-shop-white", "svg")}
-            alt="logo"
-            className="w-32 h-8"
-          />
-          <a
-            href="/home"
-            className="text-light hover:border-b-2 border-primary border-b-2 hidden lg:block"
-          >
-            Home
-          </a>
-          <a
-            href="/product"
-            className="text-light hover:border-b-2 hover:border-primary focus:border-b-2 focus:border-primary hidden lg:block"
-          >
-            Product
-          </a>
-        </div>
-        <div className="nav-end flex gap-x-[22px] items-center">
-          <a href="#" className="icon-search hidden lg:block">
-            <img
-              src={getImageUrl("Search-white", "svg")}
-              alt="Search"
-              className="w-full h-full"
-            />
-          </a>
-          <a href="#" className="hidden lg:block">
-            <img
-              src={getImageUrl("ShoppingCart-white", "svg")}
-              alt="ShoppingCart"
-              className="w-full h-full"
-            />
-          </a>
-          <a
-            href="#"
-            className="text-light text-sm font-medium py-3 px-[18px] border border-[#ebeaea] hover:bg-light hover:text-dark rounded-md hidden lg:block active:ring active:ring-slate-300"
-          >
-            Sign In
-          </a>
-          <a
-            href="#"
-            className="text-dark text-sm font-medium py-3 px-[18px] bg-primary hover:bg-amber-600 rounded-md hidden lg:block active:ring active:ring-orange-300"
-          >
-            Sign Up
-          </a>
-          <div className="text-2xl lg:hidden" id="burger-menu">
-            <img
-              src={getImageUrl("burger-menu", "svg")}
-              alt="burger-menu"
-              id="burger-menu"
-              className="w-full h-full"
-            />
-          </div>
-        </div>
-      </nav>
-      <nav
-        id="dropdown-mobile"
-        className="w-full h-full font-plusJakartaSans py-4 px-5 border-b-[1px] border-b-[#E8E8E8] hidden md:px-24 lg:hidden"
-      >
-        <ul className="flex flex-col gap-y-2">
-          <li className="p-1 hover:bg-primary hover:font-medium">
-            <a href="/home">Home</a>
-          </li>
-          <li className="p-1 hover:bg-primary hover:font-medium">
-            <a href="/product">Product</a>
-          </li>
-          <li className="p-1 hover:bg-primary hover:font-medium">
-            <a href="#">Search</a>
-          </li>
-          <li className="p-1 hover:bg-primary hover:font-medium">
-            <a href="/login">Sign In</a>
-          </li>
-          <li className="p-1 hover:bg-primary hover:font-medium">
-            <a href="/register">Sign Up</a>
-          </li>
-        </ul>
-      </nav>
+      <Navbar isClick={(isDropdownShown) => setIsDropdownShow(true)} />
       <header className="flex flex-wrap font-plusJakartaSans">
-        <div className="w-full h-screen select-none flex items-center py-4 px-5 md:px-24 lg:px-[130px] max-[1400px]:h-[700px] min-[1400px]:h-[1024px] xl:w-1/2 header-section">
+        <div className="w-full max-sm:h-screen select-none flex items-center py-4 px-5 md:px-24 lg:px-[130px] max-[1400px]:h-[700px] min-[1400px]:h-[1024px] xl:w-1/2 header-section">
           <article className="flex flex-col gap-y-6 items-baseline relative">
             <h1 className="text-light text-2xl font-medium leading-tight md:text-5xl md:leading-snug">
               Start Your Day with Coffee and Good Meals
@@ -129,7 +56,7 @@ function Home() {
             </div>
             <div className="absolute bottom-20 right-0 p-3 bg-primary rounded-full md:bottom-[100px] xl:hidden">
               <img
-                src="assets/img/ChatCircleDots.svg"
+                src={getImageUrl("ChatCircleDots", "svg")}
                 alt="ChatCircleDots"
                 className="w-8 h-8"
               />
@@ -462,64 +389,12 @@ function Home() {
           </div>
         </div>
       </section>
-      <footer className="font-plusJakartaSans p-5 mt-5 flex flex-wrap gap-y-8 sm:px-5 md:px-24 pt md:pt-10 md:pb-20 md:mt-10 lg:px-[130px] bg-[#F8F8F8]">
-        <section className="flex flex-col gap-y-6 w-full lg:self-end lg:w-2/5 lg:pr-16">
-          <img
-            src={getImageUrl("coffee-shop", "webp")}
-            alt="logo"
-            className="w-32 h-8"
-          />
-          <span className="text-base font-normal text-secondary">
-            Coffee Shop is a store that sells some good meals, and especially
-            coffee. We provide high quality beans
-          </span>
-          <span className="font-rubik text-base font-semibold text-dark">
-            &copy;2020CoffeeStore
-          </span>
-        </section>
-        <section className="flex flex-col gap-y-5 w-full sm:w-1/3 md:1/3 lg:w-1/5">
-          <p className="text-base font-medium text-dark">Product</p>
-          <p className="text-sm font-normal text-secondary">Our Product</p>
-          <p className="text-sm font-normal text-secondary">Pricing</p>
-          <p className="text-sm font-normal text-secondary">Locations</p>
-          <p className="text-sm font-normal text-secondary">Countries</p>
-          <p className="text-sm font-normal text-secondary">Blog</p>
-        </section>
-        <section className="flex flex-col gap-y-5 w-full sm:w-1/3 md:1/3 lg:w-1/5">
-          <p className="text-base font-medium text-dark">Engage</p>
-          <p className="text-sm font-normal text-secondary">Partner</p>
-          <p className="text-sm font-normal text-secondary">FAQ</p>
-          <p className="text-sm font-normal text-secondary">About Us</p>
-          <p className="text-sm font-normal text-secondary">Provice Policy</p>
-          <p className="text-sm font-normal text-secondary">Term of Services</p>
-        </section>
-        <section className="social-media w-full sm:w-1/3 md:1/3 lg:w-1/5">
-          <p className="text-base font-medium text-dark mb-4">Social Media</p>
-          <div className="flex">
-            <div>
-              <img
-                src={getImageUrl("Facebook", "svg")}
-                alt="Facebook"
-                className="w-full h-full"
-              />
-            </div>
-            <div>
-              <img
-                src={getImageUrl("Twitter", "svg")}
-                alt="Twitter"
-                className="w-full h-full"
-              />
-            </div>
-            <div>
-              <img
-                src={getImageUrl("Instagram", "svg")}
-                alt="Instagram"
-                className="w-full h-full"
-              />
-            </div>
-          </div>
-        </section>
-      </footer>
+      {isDropdownShown && (
+        <DropdownMobile
+          isClick={(isDropdownShown) => setIsDropdownShow(false)}
+        />
+      )}
+      <Footer />
     </>
   );
 }
