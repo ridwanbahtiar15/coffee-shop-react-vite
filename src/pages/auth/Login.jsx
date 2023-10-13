@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import getImageUrl from "../../utils/imageGetter";
@@ -130,12 +130,12 @@ function Login() {
                 />
               </div>
             </div>
-            <a
-              href="#"
+            <Link
+              to="/forgot-password"
               className="text-sm md:text-base font-medium self-end underline"
             >
               Lupa Password?
-            </a>
+            </Link>
             <button
               type="submit"
               className="text-base font-medium text-[#0B132A] bg-primary p-2.5 rounded-md hover:bg-amber-600 active:ring active:ring-orange-300"
@@ -147,9 +147,9 @@ function Login() {
             <span>
               No Have An Account?
               <span>
-                <a href="/register" className="font-medium underline">
+                <Link to="/register" className="font-medium underline">
                   Register
-                </a>
+                </Link>
               </span>
             </span>
           </div>

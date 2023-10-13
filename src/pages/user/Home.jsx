@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 import getImageUrl from "../../utils/imageGetter";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import DropdownMobile from "../../components/dropdownMobile";
 
 function Home() {
+  useEffect(() => {
+    document.title = "Home";
+  });
+
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
   return (
@@ -20,12 +26,12 @@ function Home() {
               We provide high quality beans, good taste, and healthy meals made
               by love just for you. Start your day with us for a bigger smile!
             </span>
-            <a
-              href="#"
+            <Link
+              to="#"
               className="text-sm font-medium text-dark p-[10px] bg-primary rounded-md w-[143px] h-[50px] flex items-center justify-center hover:bg-amber-600 active:ring active:ring-orange-300"
             >
               Get Started
-            </a>
+            </Link>
             <div className="flex justify-between self-stretch">
               <span className="flex flex-col gap-y-3">
                 <p className="text-2xl font-medium text-primary md:text-5xl">

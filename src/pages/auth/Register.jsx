@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import getImageUrl from "../../utils/imageGetter";
@@ -218,9 +218,9 @@ function Register() {
             <span>
               Have An Account?
               <span>
-                <a href="/" className="font-medium underline">
+                <Link to="/" className="font-medium underline">
                   Login
-                </a>
+                </Link>
               </span>
             </span>
           </div>
