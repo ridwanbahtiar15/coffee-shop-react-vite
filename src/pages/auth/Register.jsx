@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -7,31 +7,9 @@ import "../../style/style.css";
 import Modal from "../../components/modal/modal";
 
 function Register() {
-  // const [isPassShown, setIsPassShown] = useState(false);
-
-  // const [type, setType] = useState("password");
-  // const [icon, setIcon] = useState("block");
-  // const [icon2, setIcon2] = useState("hidden");
-
-  // const showPassHandler = () => {
-  //   if (type == "password") {
-  //     setType("text");
-  //     setIcon("hidden");
-  //   } else {
-  //     setType("password");
-  //     setIcon("block");
-  //   }
-  // };
-
-  // const showPassHandler2 = () => {
-  //   if (type == "password") {
-  //     setType("text");
-  //     setIcon2("block");
-  //   } else {
-  //     setType("password");
-  //     setIcon2("hidden");
-  //   }
-  // };
+  useEffect(() => {
+    document.title = "Register";
+  });
 
   const [isPassShown, setIsPassShown] = useState(false);
   const [isPassShown2, setIsPassShown2] = useState(false);
@@ -43,6 +21,9 @@ function Register() {
   const showPassHandler2 = () => {
     setIsPassShown2((state) => !state);
   };
+
+  const [errorMsg, setErrorMsg] = useState("");
+  const [openModal, setOpenModal] = useState(false);
 
   const navigate = useNavigate();
   const submitHandler = (e) => {
@@ -60,10 +41,11 @@ function Register() {
     const url = "http://localhost:3000/auth/register";
     axios
       .post(url, body)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
-    navigate("/home");
-    console.log(body);
+      .then(() => navigate("/"))
+      .catch((err) => {
+        setErrorMsg(err.response.data.msg);
+        setOpenModal(true);
+      });
   };
 
   return (
@@ -236,7 +218,7 @@ function Register() {
             <span>
               Have An Account?
               <span>
-                <a href="/login" className="font-medium underline">
+                <a href="/" className="font-medium underline">
                   Login
                 </a>
               </span>
@@ -277,7 +259,7 @@ function Register() {
           </div>
         </section>
       </main>
-      {/* <Modal isHidden="hidden"></Modal> */}
+      {openModal && <Modal closeModal={setOpenModal} errorMsg={errorMsg} />}
     </>
   );
 }

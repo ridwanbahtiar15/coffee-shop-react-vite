@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.header-section {
+  background: linear-gradient(168deg, #777c82 -114.74%, #0b0909 91.35%);
+}

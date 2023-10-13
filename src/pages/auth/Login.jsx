@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -7,12 +7,19 @@ import "../../style/style.css";
 import Modal from "../../components/modal/modal";
 
 function Login() {
+  useEffect(() => {
+    document.title = "Login";
+  });
+
   const [isPassShown, setIsPassShown] = useState(false);
-  const navigate = useNavigate();
 
   const showPassHandler = () => {
     setIsPassShown((state) => !state);
   };
+
+  const [errorMsg, setErrorMsg] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const navigate = useNavigate();
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -26,9 +33,10 @@ function Login() {
     axios
       .post(url, body)
       .then(() => navigate("/home"))
-      .catch((err) => console.log(err));
-    // navigate("/home");
-    // console.log(body);
+      .catch((err) => {
+        setErrorMsg(err.response.data.msg);
+        setOpenModal(true);
+      });
   };
 
   return (
@@ -65,7 +73,7 @@ function Login() {
                 type="email"
                 id="email"
                 placeholder="Enter Your Email"
-                className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary"
+                className={`py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary`}
               />
               <div className="icon-email absolute top-[46px] left-4 md:top-[50px]">
                 <img
@@ -73,9 +81,6 @@ function Login() {
                   alt="mail.svg"
                   className="w-full h-full"
                 />
-              </div>
-              <div className="text-xs font-normal text-red-500">
-                Email not registered!
               </div>
             </div>
             <div className="flex flex-col gap-y-3 relative">
@@ -183,7 +188,7 @@ function Login() {
           </div>
         </section>
       </main>
-      {/* <Modal isHidden="hidden"></Modal> */}
+      {openModal && <Modal closeModal={setOpenModal} errorMsg={errorMsg} />}
     </>
   );
 }

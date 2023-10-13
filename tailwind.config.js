@@ -5,9 +5,13 @@ export default {
     extend: {
       fontFamily: {
         plusJakartaSans: ["Plus Jakarta Sans"],
+        rubik: ["Rubik"],
       },
       colors: {
         primary: "#FF8906",
+        secondary: "#4F5665",
+        dark: "#0B132A",
+        light: "#FFF",
       },
     },
   },
