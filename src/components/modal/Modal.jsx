@@ -1,7 +1,7 @@
 import { useState } from "react";
 import getImageUrl from "../../utils/imageGetter";
 
-function Modal({ closeModal, errorMsg }) {
+function Modal({ closeModal, message: { msg, isError } }) {
   return (
     <div
       className={`bg-gray-200 justify-center items-center h-screen opacity-100 absolute`}
@@ -10,9 +10,21 @@ function Modal({ closeModal, errorMsg }) {
       <div className="fixed left-0 top-0 bg-black bg-opacity-50 w-screen h-screen flex justify-center items-center px-[10px] md:px-0">
         <div className="bg-white rounded shadow-md p-6 w-full flex justify-center items-center flex-col gap-y-8 md:w-[55%] lg:w-[35%]">
           <div className="flex items-center gap-x-4">
-            <img src={getImageUrl("x-circle", "svg")} alt="x-circle" />
+            {isError ? (
+              <img
+                src={getImageUrl("x-circle", "svg")}
+                alt="x-circle"
+                className="w-6 h-6"
+              />
+            ) : (
+              <img
+                src={getImageUrl("success", "svg")}
+                alt="success"
+                className="w-6 h-6"
+              />
+            )}
 
-            <h1 className="text-xl font-medium text-dark">{errorMsg}</h1>
+            <h1 className="text-xl font-medium text-dark">{msg}</h1>
           </div>
           <div className="flex gap-x-6">
             <button

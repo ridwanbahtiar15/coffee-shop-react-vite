@@ -22,7 +22,7 @@ function Register() {
     setIsPassShown2((state) => !state);
   };
 
-  const [errorMsg, setErrorMsg] = useState("");
+  const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState(false);
 
   const navigate = useNavigate();
@@ -43,7 +43,10 @@ function Register() {
       .post(url, body)
       .then(() => navigate("/"))
       .catch((err) => {
-        setErrorMsg(err.response.data.msg);
+        setMessage({
+          msg: err.response.data.msg,
+          isError: true,
+        });
         setOpenModal(true);
       });
   };
@@ -259,7 +262,7 @@ function Register() {
           </div>
         </section>
       </main>
-      {openModal && <Modal closeModal={setOpenModal} errorMsg={errorMsg} />}
+      {openModal && <Modal closeModal={setOpenModal} message={Message} />}
     </>
   );
 }

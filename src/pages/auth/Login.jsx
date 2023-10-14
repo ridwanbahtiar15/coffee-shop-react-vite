@@ -20,7 +20,7 @@ function Login() {
     setIsPassShown((state) => !state);
   };
 
-  const [errorMsg, setErrorMsg] = useState("");
+  const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
 
@@ -41,7 +41,10 @@ function Login() {
         navigate("/users/profile");
       })
       .catch((err) => {
-        setErrorMsg(err.response.data.msg);
+        setMessage({
+          msg: err.response.data.msg,
+          isError: true,
+        });
         setOpenModal(true);
       });
   };
@@ -195,7 +198,7 @@ function Login() {
           </div>
         </section>
       </main>
-      {openModal && <Modal closeModal={setOpenModal} errorMsg={errorMsg} />}
+      {openModal && <Modal closeModal={setOpenModal} message={Message} />}
     </>
   );
 }
