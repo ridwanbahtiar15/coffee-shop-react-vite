@@ -5,15 +5,15 @@ import axios from "axios";
 import getImageUrl from "../../utils/imageGetter";
 import "../../style/style.css";
 import Modal from "../../components/modal/modal";
-import { UseUserContext } from "../../context/UserContext";
+// import { UseUserContext } from "../../context/UserContext";
 
 function Login() {
   useEffect(() => {
     document.title = "Login";
   });
 
-  const { user, changeUser } = UseUserContext();
-  console.log(user);
+  // const { user, changeUser } = UseUserContext();
+  // console.log(user, changeUser);
 
   const [isPassShown, setIsPassShown] = useState(false);
   const showPassHandler = () => {
@@ -35,7 +35,11 @@ function Login() {
     const url = "http://localhost:3000/auth/login";
     axios
       .post(url, body)
-      .then((res) => console.log(res))
+      .then((res) => {
+        localStorage.setItem("token", res.data.data.token);
+        localStorage.setItem("userInfo", res.data.data.userInfo.users_id);
+        navigate("/users/profile");
+      })
       .catch((err) => {
         setErrorMsg(err.response.data.msg);
         setOpenModal(true);

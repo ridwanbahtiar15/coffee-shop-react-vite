@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from "react";
 
 // generate context
-const UserContext = createContext;
+const UserContext = createContext();
 
 // buatkan shortcut untuk penggunaan context
 export const UseUserContext = () => useContext(UserContext);

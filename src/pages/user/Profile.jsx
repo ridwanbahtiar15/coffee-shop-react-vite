@@ -5,6 +5,7 @@ import getImageUrl from "../../utils/imageGetter";
 
 import Navbar from "../../components/Navbar";
 import DropdownMobile from "../../components/dropdownMobile";
+import Modal from "../../components/modal/modal";
 import Footer from "../../components/Footer";
 
 function Profile() {
@@ -19,12 +20,69 @@ function Profile() {
     setIsPassShown((state) => !state);
   };
 
-  const url = "http://localhost:3000/users/profile";
+  const [errorMsg, setErrorMsg] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+
+  const url = "http://localhost:3000";
   const token = localStorage.getItem("token");
-  console.log(token);
-  // axios
-  //   .get(url)
-  //   .then((res) => console.log(res).catch((err) => console.log(err)));
+
+  const authAxios = axios.create({
+    baseURL: url,
+    headers: {
+      Authorization: `Barer ${token}`,
+    },
+  });
+
+  const [user, setUser] = useState({
+    users_fullname: "",
+    users_email: "",
+    users_phone: "",
+    users_password: "",
+    users_address: "",
+  });
+
+  useEffect(() => {
+    authAxios
+      .get("/users/profile")
+      .then((res) => {
+        setUser({
+          users_fullname: res.data.result[0].users_fullname,
+          users_email: res.data.result[0].users_email,
+          users_phone: res.data.result[0].users_phone,
+          users_password: res.data.result[0].users_password,
+          users_address: res.data.result[0].users_address,
+        });
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  const handleChange = (e) => {
+    const dataClone = { ...user };
+    dataClone[e.target.name] = e.target.value;
+    setUser(dataClone);
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    const body = {
+      users_fullname: e.target.fullname.value,
+      users_email: e.target.email.value,
+      users_phone: e.target.phone.value,
+      users_password: e.target.password.value,
+      users_address: e.target.address.value,
+    };
+
+    authAxios
+      .patch("/users/profile/edit", body)
+      .then((res) => console.log(res))
+      .catch((err) => {
+        setErrorMsg(err.response.data.msg);
+        setOpenModal(true);
+      });
+
+    console.log(body);
+  };
 
   return (
     <>
@@ -37,15 +95,16 @@ function Profile() {
       <main className="font-plusJakartaSans px-5 md:px-24 lg:px-[130px] flex flex-col gap-y-5 lg:flex-row lg:gap-x-5">
         <section className="border border-[#E8E8E8] rounded-md py-3.5 px-12 flex flex-col gap-y-4 items-center h-full lg:w-1/3">
           <span className="text-lg font-medium text-dark lg:text-xl">
-            Ghaluh Wizard
+            {user.users_fullname}
           </span>
           <span className="text-sm font-normal text-secondary lg:text-base">
-            ghaluhwizz@gmail.com
+            {user.users_image}
           </span>
           <img
-            src={getImageUrl("profile", "jpg")}
+            src={`/src/assets/img/${user.users_image}`}
             alt="user-image"
             className="w-20 h-20 rounded-full"
+            name="users_image"
           />
           <button
             type="button"
@@ -58,7 +117,7 @@ function Profile() {
           </span>
         </section>
         <section className="border border-[#E8E8E8] rounded-md py-4 px-2.5 md:py-6 md:px-12 lg:w-2/3">
-          <form className="flex flex-col gap-y-5">
+          <form className="flex flex-col gap-y-5" onSubmit={submitHandler}>
             <div className="flex flex-col gap-y-3 relative">
               <label
                 htmlFor="fullname"
@@ -69,8 +128,11 @@ function Profile() {
               <input
                 type="text"
                 id="fullname"
+                name="users_fullname"
                 placeholder="Enter Your Full Name"
                 className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary"
+                value={user.users_fullname}
+                onChange={handleChange}
               />
               <div className="icon-email absolute top-[46px] left-4 md:top-[50px]">
                 <img
@@ -90,8 +152,11 @@ function Profile() {
               <input
                 type="email"
                 id="email"
+                name="users_email"
                 placeholder="Enter Your Email"
                 className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary"
+                value={user.users_email}
+                onChange={handleChange}
               />
               <div className="icon-email absolute top-[46px] left-4 md:top-[50px]">
                 <img
@@ -111,8 +176,11 @@ function Profile() {
               <input
                 type="number"
                 id="phone"
+                name="users_phone"
                 placeholder="Enter Your Phone Number"
                 className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary"
+                value={user.users_phone}
+                onChange={handleChange}
               />
               <div className="absolute top-[46px] left-4 md:top-[50px]">
                 <img
@@ -132,6 +200,7 @@ function Profile() {
               <input
                 type="password"
                 id="password"
+                name="users_password"
                 placeholder="Enter Your Password"
                 className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary"
               />
@@ -179,8 +248,11 @@ function Profile() {
               <input
                 type="text"
                 id="address"
+                name="users_address"
                 placeholder="Enter Your Address"
                 className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary"
+                value={user.users_address}
+                onChange={handleChange}
               />
               <div className="absolute top-[46px] left-4 md:top-[50px]">
                 <img
@@ -191,10 +263,10 @@ function Profile() {
               </div>
             </div>
             <button
-              type="button"
+              type="submit"
               className="text-base font-medium text-dark bg-primary p-2.5 rounded-md hover:bg-amber-600 active:ring active:ring-orange-300"
             >
-              Register
+              Update
             </button>
           </form>
         </section>
@@ -202,6 +274,7 @@ function Profile() {
       {isDropdownShown && (
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />
       )}
+      {openModal && <Modal closeModal={setOpenModal} errorMsg={errorMsg} />}
       <Footer />
     </>
   );
