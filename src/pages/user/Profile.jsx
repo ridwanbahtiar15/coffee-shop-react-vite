@@ -79,6 +79,11 @@ function Profile() {
 
     const formData = new FormData();
     formData.append("users_image", image);
+    formData.append("users_fullname", e.target.fullname.value);
+    formData.append("users_email", e.target.email.value);
+    formData.append("users_phone", e.target.phone.value);
+    formData.append("users_password", e.target.password.value);
+    formData.append("users_address", e.target.address.value);
 
     authAxios
       .patch("/users/profile/edit", formData)
