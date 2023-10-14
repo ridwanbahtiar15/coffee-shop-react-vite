@@ -33,16 +33,7 @@ function Profile() {
     },
   });
 
-  // const [image, setImage] = useState({ name: null, size: null, type: null });
-  // const handleImage = (e) => {
-  //   // let changeImage = e.target.files;
-  //   setImage({
-  //     name: e.target.files[0].name,
-  //     size: e.target.files[0].size,
-  //     type: e.target.files[0].type,
-  //   });
-  // };
-
+  const [image, setImage] = useState();
   const [user, setUser] = useState({
     users_fullname: "",
     users_email: "",
@@ -77,17 +68,20 @@ function Profile() {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    const body = {
-      users_fullname: e.target.fullname.value,
-      users_email: e.target.email.value,
-      users_phone: e.target.phone.value,
-      users_password: e.target.password.value,
-      users_address: e.target.address.value,
-      users_image: e.target.image.value,
-    };
+    // const body = {
+    //   users_fullname: e.target.fullname.value,
+    //   users_email: e.target.email.value,
+    //   users_phone: e.target.phone.value,
+    //   users_password: e.target.password.value,
+    //   users_address: e.target.address.value,
+    //   users_image: image.name,
+    // };
+
+    const formData = new FormData();
+    formData.append("users_image", image);
 
     authAxios
-      .patch("/users/profile/edit", body)
+      .patch("/users/profile/edit", formData)
       .then((res) => {
         setMessage({
           msg: res.data.msg,
@@ -122,7 +116,7 @@ function Profile() {
               {user.users_email}
             </span>
             <img
-              src={`/src/assets/img/${user.users_image}`}
+              src={user.users_image}
               alt="user-image"
               className="w-20 h-20 rounded-full"
               name="users_image"
@@ -132,7 +126,7 @@ function Profile() {
               id="image"
               name="users_image"
               className="text-sm font-medium text-dark py-3 px-6 bg-primary hover:bg-amber-600 rounded-md w-full lg:text-xs xl:text-sm active:ring active:ring-orange-300 outline-none file:hidden"
-              // onChange={(e) => handleImage(e)}
+              onChange={(e) => setImage(e.target.files[0])}
             />
             <span className="text-base font-normal text-secondary lg:text-xs xl:text-sm">
               Since <span className="font-medium">20 January 2022</span>
