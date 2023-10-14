@@ -38,7 +38,7 @@ function Login() {
       .then((res) => {
         localStorage.setItem("token", res.data.data.token);
         localStorage.setItem("userInfo", res.data.data.userInfo.users_id);
-        navigate("/users/profile");
+        navigate("/profile");
       })
       .catch((err) => {
         setMessage({

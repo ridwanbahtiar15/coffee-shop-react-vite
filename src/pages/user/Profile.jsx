@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import getImageUrl from "../../utils/imageGetter";
@@ -13,6 +14,10 @@ function Profile() {
     document.title = "Profile";
   });
 
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+  // navigate("/");
+
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
   const [isPassShown, setIsPassShown] = useState(false);
@@ -24,8 +29,6 @@ function Profile() {
   const [openModal, setOpenModal] = useState(false);
 
   const url = "http://localhost:3000";
-  const token = localStorage.getItem("token");
-
   const authAxios = axios.create({
     baseURL: url,
     headers: {

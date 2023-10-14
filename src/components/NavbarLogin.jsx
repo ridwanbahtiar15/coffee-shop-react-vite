@@ -41,7 +41,7 @@ function NavbarLogin(props) {
         </div>
         <Link href="#" className="hidden lg:block">
           <img
-            src={getImageUrl("ShoppingCart", "svg")}
+            src={getImageUrl("ShoppingCart-white", "svg")}
             alt="ShoppingCart"
             className="w-full h-full"
           />

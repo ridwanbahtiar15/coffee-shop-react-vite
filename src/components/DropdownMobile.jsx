@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import getImageUrl from "../utils/imageGetter";
 import { Link } from "react-router-dom";
 
 function DropdownMobile(props) {
+  const token = localStorage.getItem("token");
+  const [isLogin, setIsLogin] = useState(false);
+  useEffect(() => {
+    if (token) {
+      setIsLogin(true);
+    }
+  }, []);
+
   return (
     <div
       id="dropdownMobile"
@@ -43,12 +51,26 @@ function DropdownMobile(props) {
           <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
             <Link to="/cart">Cart</Link>
           </li>
-          <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
-            <Link to="/">Sign In</Link>
-          </li>
-          <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
-            <Link to="/register">Sign Up</Link>
-          </li>
+          {!isLogin && (
+            <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
+              <Link to="/">Sign In</Link>
+            </li>
+          )}
+          {!isLogin && (
+            <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
+              <Link to="/register">Sign Up</Link>
+            </li>
+          )}
+          {isLogin && (
+            <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
+              <Link to="/profile">Profile</Link>
+            </li>
+          )}
+          {isLogin && (
+            <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
+              <button>Logout</button>
+            </li>
+          )}
         </ul>
       </div>
     </div>
