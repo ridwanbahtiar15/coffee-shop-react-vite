@@ -214,14 +214,13 @@ function Profile() {
               <div className="flex flex-col gap-y-3 relative">
                 <label
                   htmlFor="password"
-                  className="text-sm md:text-base font-semibold text-dark lg:text-base"
+                  className="text-sm md:text-base font-semibold text-[#0B132A] lg:text-base"
                 >
                   Password
                 </label>
                 <input
-                  type="password"
+                  type={isPassShown ? "text" : "password"}
                   id="password"
-                  name="users_password"
                   placeholder="Enter Your Password"
                   className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary"
                 />

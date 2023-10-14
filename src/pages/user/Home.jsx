@@ -5,6 +5,8 @@ import getImageUrl from "../../utils/imageGetter";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import DropdownMobile from "../../components/dropdownMobile";
+import NavbarLogin from "../../components/NavbarLogin";
+import DropdownMobileLogin from "../../components/DropdownMobileLogin";
 
 function Home() {
   useEffect(() => {
@@ -15,7 +17,8 @@ function Home() {
 
   return (
     <>
-      <Navbar isClick={() => setIsDropdownShow(true)} />
+      {/* <Navbar isClick={() => setIsDropdownShow(true)} /> */}
+      <NavbarLogin isClick={() => setIsDropdownShow(true)} />
       <header className="flex flex-wrap font-plusJakartaSans">
         <div className="w-full max-sm:h-screen select-none flex items-center py-4 px-5 md:px-24 lg:px-[130px] max-[1400px]:h-[700px] min-[1400px]:h-[1024px] xl:w-1/2 header-section">
           <article className="flex flex-col gap-y-6 items-baseline relative">
@@ -70,9 +73,9 @@ function Home() {
           </article>
         </div>
         <div
-          className={`bg-[url('/src/assets/img/Rectangle287.webp')] max-[1400px]:h-[700px] min-[1400px]:h-[1024px] relative hidden xl:w-1/2 xl:block`}
+          className={`bg-cover bg-[url('/src/assets/img/Rectangle287.webp')] max-[1400px]:h-[700px] hidden xl:w-1/2 xl:block`}
         >
-          <div className="absolute bottom-24 right-24 p-3 bg-primary rounded-full">
+          <div className="absolute bottom-48 right-24 min-[1400px]:bottom-16 p-3 bg-primary rounded-full">
             <img
               src={getImageUrl("ChatCircleDots", "svg")}
               alt="ChatCircleDots"
@@ -147,7 +150,7 @@ function Home() {
             </div>
           </article>
         </div>
-        <div className="bg-[url('src/assets/img/Rectangle291.webp')] h-[574px] hidden xl:block xl:w-1/2"></div>
+        <div className="bg-cover bg-[url('src/assets/img/Rectangle291.webp')] h-[574px] hidden xl:block xl:w-1/2"></div>
       </header>
       <main className="font-plusJakartaSans px-5 md:px-24 lg:py-20 lg:px-[130px]">
         <div className="items-center text-center flex flex-col gap-y-5">
@@ -395,8 +398,11 @@ function Home() {
           </div>
         </div>
       </section>
-      {isDropdownShown && (
+      {/* {isDropdownShown && (
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />
+      )} */}
+      {isDropdownShown && (
+        <DropdownMobileLogin isClick={() => setIsDropdownShow(false)} />
       )}
       <Footer />
     </>

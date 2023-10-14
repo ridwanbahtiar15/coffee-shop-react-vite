@@ -2,7 +2,7 @@ import React from "react";
 import getImageUrl from "../utils/imageGetter";
 import { Link } from "react-router-dom";
 
-function DropdownMobile(props) {
+function DropdownMobileLogin(props) {
   return (
     <div
       id="dropdownMobile"
@@ -44,10 +44,10 @@ function DropdownMobile(props) {
             <Link to="/cart">Cart</Link>
           </li>
           <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
-            <Link to="/">Sign In</Link>
+            <Link to="/profile">Profile</Link>
           </li>
           <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
-            <Link to="/register">Sign Up</Link>
+            <button>Logout</button>
           </li>
         </ul>
       </div>
@@ -55,4 +55,4 @@ function DropdownMobile(props) {
   );
 }
 
-export default DropdownMobile;
+export default DropdownMobileLogin;
