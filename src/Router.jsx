@@ -4,6 +4,7 @@ import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import Home from "./pages/user/Home";
 import Profile from "./pages/user/Profile";
+import Product from "./pages/user/Product";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,11 @@ const router = createBrowserRouter([
   {
     path: "/profile",
     element: <Profile />,
+    // errorElement: "",
+  },
+  {
+    path: "/product",
+    element: <Product />,
     // errorElement: "",
   },
 ]);

@@ -4,7 +4,7 @@ import axios from "axios";
 
 import getImageUrl from "../../utils/imageGetter";
 
-import Navbar from "../../components/Navbar";
+import NavbarLogin from "../../components/Navbar";
 import DropdownMobile from "../../components/dropdownMobile";
 import Modal from "../../components/modal/modal";
 import Footer from "../../components/Footer";
@@ -16,7 +16,6 @@ function Profile() {
 
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  // navigate("/");
 
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
@@ -71,15 +70,6 @@ function Profile() {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    // const body = {
-    //   users_fullname: e.target.fullname.value,
-    //   users_email: e.target.email.value,
-    //   users_phone: e.target.phone.value,
-    //   users_password: e.target.password.value,
-    //   users_address: e.target.address.value,
-    //   users_image: image.name,
-    // };
-
     const formData = new FormData();
     formData.append("users_image", image);
     formData.append("users_fullname", e.target.fullname.value);
@@ -108,7 +98,7 @@ function Profile() {
 
   return (
     <>
-      <Navbar isClick={() => setIsDropdownShow(true)} />
+      <NavbarLogin isClick={() => setIsDropdownShow(true)} />
       <header className="pt-10 pb-7 px-5 md:px-24 lg:px-[130px]">
         <h1 className="font-plusJakartaSans text-2xl font-medium text-[#0B0909] md:text-3xl xl:text-5xl">
           Profile
@@ -295,11 +285,11 @@ function Profile() {
           </section>
         </main>
       </form>
+      <Footer />
       {isDropdownShown && (
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />
       )}
       {openModal && <Modal closeModal={setOpenModal} message={Message} />}
-      <Footer />
     </>
   );
 }

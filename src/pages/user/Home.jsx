@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+import "../../style/style.css";
 import getImageUrl from "../../utils/imageGetter";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
