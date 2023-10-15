@@ -72,14 +72,14 @@ export class Product extends Component {
             />
             <div className="absolute top-3.5 left-4 md:top-3.5 md:left-4">
               <img
-                src="assets/img/Search-product.svg"
+                src={getImageUrl("Search-product", "svg")}
                 alt="Search-product"
                 className="w-full h-full"
               />
             </div>
             <button onclick="showFilterModal()">
               <img
-                src="assets/img/sorting-menu.svg"
+                src={getImageUrl("sorting-menu", "svg")}
                 alt="sorting-menu"
                 className="w-full h-full"
               />

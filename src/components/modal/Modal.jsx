@@ -1,6 +1,6 @@
-import { useState } from "react";
 import getImageUrl from "../../utils/imageGetter";
 
+/*  eslint-disable-next-line react/prop-types */
 function Modal({ closeModal, message: { msg, isError } }) {
   return (
     <div
@@ -26,14 +26,28 @@ function Modal({ closeModal, message: { msg, isError } }) {
 
             <h1 className="text-xl font-medium text-dark">{msg}</h1>
           </div>
-          <div className="flex gap-x-6">
-            <button
-              className="p-[10px] px-4 bg-light border-2 hover:bg-slate-200 rounded-md text-dark text-base font-medium active:ring active:ring-slate-300"
-              onClick={() => closeModal(false)}
-            >
-              OK
-            </button>
-          </div>
+          {msg != "Are you sure?" ? (
+            <div className="flex gap-x-6">
+              <button
+                className="p-[10px] px-4 bg-light border-2 hover:bg-slate-200 rounded-md text-dark text-base font-medium active:ring active:ring-slate-300"
+                onClick={() => closeModal(false)}
+              >
+                OK
+              </button>
+            </div>
+          ) : (
+            <div className="flex gap-x-6">
+              <button className="p-[10px] bg-primary hover:bg-amber-600 rounded-md text-dark text-base font-medium active:ring active:ring-orange-300">
+                Confirm
+              </button>
+              <button
+                className="p-[10px] bg-light border-2 hover:bg-slate-200 rounded-md text-dark text-base font-medium active:ring active:ring-slate-300"
+                onClick={() => closeModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

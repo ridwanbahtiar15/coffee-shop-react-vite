@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import getImageUrl from "../../utils/imageGetter";
 
-import NavbarLogin from "../../components/Navbar";
-import DropdownMobile from "../../components/dropdownMobile";
-import Modal from "../../components/modal/modal";
+import NavbarLogin from "../../components/NavbarLogin";
+import DropdownMobile from "../../components/DropdownMobile";
+import Modal from "../../components/modal/Modal";
 import Footer from "../../components/Footer";
 
 function Profile() {
@@ -15,7 +14,6 @@ function Profile() {
   });
 
   const token = localStorage.getItem("token");
-  const navigate = useNavigate();
 
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
@@ -24,7 +22,10 @@ function Profile() {
     setIsPassShown((state) => !state);
   };
 
-  const [Message, setMessage] = useState({ msg: null, isError: null });
+  const [Message, setMessage] = useState({
+    msg: null,
+    isError: null,
+  });
   const [openModal, setOpenModal] = useState(false);
 
   const url = "http://localhost:3000";
@@ -98,7 +99,14 @@ function Profile() {
 
   return (
     <>
-      <NavbarLogin isClick={() => setIsDropdownShow(true)} />
+      <NavbarLogin
+        isClick={() => setIsDropdownShow(true)}
+        isLogoutClick={() => {
+          setOpenModal(true);
+          setMessage({ msg: "Are you sure?", isError: null });
+        }}
+        message={Message}
+      />
       <header className="pt-10 pb-7 px-5 md:px-24 lg:px-[130px]">
         <h1 className="font-plusJakartaSans text-2xl font-medium text-[#0B0909] md:text-3xl xl:text-5xl">
           Profile

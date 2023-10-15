@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import getImageUrl from "../utils/imageGetter";
 
@@ -72,10 +72,12 @@ function NavbarLogin(props) {
               <Link to="/history-order">History Order</Link>
             </li>
             <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
-              <button>Logout</button>
+              {/*  eslint-disable-next-line react/prop-types */}
+              <button onClick={() => props.isLogoutClick()}>Logout</button>
             </li>
           </ul>
         </div>
+        {/*  eslint-disable-next-line react/prop-types */}
         <button className="lg:hidden" onClick={() => props.isClick()}>
           <img
             src={getImageUrl("burger-menu", "svg")}

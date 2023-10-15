@@ -5,7 +5,7 @@ import "../../style/style.css";
 import getImageUrl from "../../utils/imageGetter";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import DropdownMobile from "../../components/dropdownMobile";
+import DropdownMobile from "../../components/DropdownMobile";
 import NavbarLogin from "../../components/NavbarLogin";
 
 function Home() {
