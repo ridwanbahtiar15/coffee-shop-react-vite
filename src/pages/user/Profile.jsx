@@ -13,8 +13,6 @@ function Profile() {
     document.title = "Profile";
   });
 
-  const token = localStorage.getItem("token");
-
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
   const [isPassShown, setIsPassShown] = useState(false);
@@ -28,6 +26,7 @@ function Profile() {
   });
   const [openModal, setOpenModal] = useState(false);
 
+  const token = localStorage.getItem("token");
   const url = "http://localhost:3000";
   const authAxios = axios.create({
     baseURL: url,
