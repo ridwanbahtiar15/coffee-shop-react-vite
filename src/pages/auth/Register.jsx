@@ -4,7 +4,7 @@ import axios from "axios";
 
 import getImageUrl from "../../utils/imageGetter";
 import "../../style/style.css";
-import Modal from "../../components/modal/modal";
+import Modal from "../../components/modal/Modal";
 
 function Register() {
   useEffect(() => {

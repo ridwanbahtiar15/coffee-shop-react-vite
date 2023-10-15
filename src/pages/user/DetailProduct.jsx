@@ -6,6 +6,7 @@ import getImageUrl from "../../utils/imageGetter";
 import NavbarLogin from "../../components/NavbarLogin";
 import Footer from "../../components/Footer";
 import DropdownMobile from "../../components/DropdownMobile";
+import Modal from "../../components/modal/Modal";
 
 function DetailProduct() {
   useEffect(() => {
@@ -32,8 +33,10 @@ function DetailProduct() {
     },
   });
 
-  const [productById, setProductById] = useState([]);
+  const [Message, setMessage] = useState({ msg: null, isError: null });
+  const [openModal, setOpenModal] = useState(false);
 
+  const [productById, setProductById] = useState([]);
   useEffect(() => {
     authAxios
       .get("/products/" + paramsId)
@@ -42,6 +45,65 @@ function DetailProduct() {
       })
       .catch((err) => console.log(err));
   }, []);
+
+  const [sizes, setSizes] = useState([]);
+  useEffect(() => {
+    authAxios
+      .get("/sizes")
+      .then((res) => {
+        // console.log(res.data.result);
+        setSizes(res.data.result);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  const [count, setCount] = useState(1);
+  const setCountHandler = (e) => {
+    e.target.id == "minus" && count != 0
+      ? setCount((count) => count - 1)
+      : setCount((count) => count + 1);
+  };
+
+  const [size, setSize] = useState(1);
+  const choseSizeHandler = (e) => {
+    // console.log(e.target.id);
+    setSize(e.target.id);
+  };
+  console.log(size);
+
+  const [hotIce, setHotice] = useState("Hot");
+  const choseHoticeHandler = (e) => {
+    // console.log(e.target.innerText);
+    setHotice(e.target.innerText);
+  };
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+
+    const body = {
+      products_id: paramsId,
+      sizes_id: size,
+      orders_products_qty: count,
+      hot_or_ice: hotIce,
+    };
+
+    authAxios
+      .post("/orders", body)
+      .then((res) => {
+        setMessage({
+          msg: res.data.msg,
+          isError: false,
+        });
+        setOpenModal(true);
+      })
+      .catch((err) => {
+        setMessage({
+          msg: err.response.data.msg,
+          isError: true,
+        });
+        setOpenModal(true);
+      });
+  };
 
   return (
     <>
@@ -120,21 +182,29 @@ function DetailProduct() {
               {productById.products_desc}
             </p>
             <div className="flex relative">
-              <div className="p-[9px] border border-primary bg-light rounded absolute top-0 left-0 flex items-center justify-center">
+              <button
+                className="p-[9px] border border-primary bg-light rounded absolute top-0 left-0 flex items-center justify-center"
+                onClick={setCountHandler}
+              >
                 <img
                   src={getImageUrl("minus", "svg")}
                   alt="minus"
                   className="w-full h-full"
+                  id="minus"
                 />
-              </div>
+              </button>
               <div className="text-sm md:text-lg font-bold text-dark py-2 md:py-1 px-14 border rounded">
-                1
+                {count}
               </div>
-              <div className="p-[9px] border border-primary bg-primary rounded absolute top-0 right-0 flex items-center justify-center">
+              <div
+                className="p-[9px] border border-primary bg-primary rounded absolute top-0 right-0 flex items-center justify-center"
+                onClick={setCountHandler}
+              >
                 <img
                   src={getImageUrl("plus", "svg")}
                   alt="plus"
                   className="w-full h-full"
+                  id="plus"
                 />
               </div>
             </div>
@@ -142,25 +212,18 @@ function DetailProduct() {
               <p className="text-sm md:text-lg font-bold text-[#0B0909] mb-4">
                 Chose Size
               </p>
-              <div className="text-sm flex justify-between md:text-base font-normal text-[#0B0909] gap-x-4 lg:gap-x-2 xl:gap-x-10">
-                <button
-                  type="button"
-                  className="py-2 border focus:border-primary w-1/3 tex-center"
-                >
-                  Regular
-                </button>
-                <button
-                  type="button"
-                  className="p-2 border focus:border-primary w-1/3"
-                >
-                  Medium
-                </button>
-                <button
-                  type="button"
-                  className="p-2 border focus:border-primary w-1/3"
-                >
-                  Large
-                </button>
+              <div className="text-sm flex flex-wrap justify-between md:text-base font-normal text-[#0B0909] gap-4 lg:gap-x-2">
+                {sizes.map((result, i) => (
+                  <button
+                    type="button"
+                    className="border focus:border-primary py-2 w-[47%] md:w-[48%] flex justify-center"
+                    onClick={choseSizeHandler}
+                    key={i}
+                    id={result.sizes_id}
+                  >
+                    {result.sizes_name}
+                  </button>
+                ))}
               </div>
             </div>
             <div className="w-full">
@@ -171,12 +234,14 @@ function DetailProduct() {
                 <button
                   type="button"
                   className="p-2 border focus:border-primary w-1/2"
+                  onClick={choseHoticeHandler}
                 >
                   Hot
                 </button>
                 <button
                   type="button"
                   className="p-2 border focus:border-primary w-1/2"
+                  onClick={choseHoticeHandler}
                 >
                   Ice
                 </button>
@@ -186,6 +251,7 @@ function DetailProduct() {
               <button
                 type="button"
                 className="text-sm font-medium p-2 bg-primary w-full md:w-1/2 rounded-md border border-primary hover:bg-amber-600 active:ring active:ring-orange-300"
+                onClick={onSubmitHandler}
               >
                 Buy
               </button>
@@ -335,6 +401,7 @@ function DetailProduct() {
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />
       )}
       <Footer />
+      {openModal && <Modal closeModal={setOpenModal} message={Message} />}
     </>
   );
 }

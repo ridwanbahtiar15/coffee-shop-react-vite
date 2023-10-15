@@ -9,7 +9,7 @@ function Modal({ closeModal, message: { msg, isError } }) {
     >
       <div className="fixed left-0 top-0 bg-black bg-opacity-50 w-screen h-screen flex justify-center items-center px-[10px] md:px-0">
         <div className="bg-white rounded shadow-md p-6 w-full flex justify-center items-center flex-col gap-y-8 md:w-[55%] lg:w-[35%]">
-          <div className="flex items-center gap-x-4">
+          <div className="flex items-start gap-x-4">
             {isError ? (
               <img
                 src={getImageUrl("x-circle", "svg")}
@@ -24,7 +24,7 @@ function Modal({ closeModal, message: { msg, isError } }) {
               />
             )}
 
-            <h1 className="text-xl font-medium text-dark">{msg}</h1>
+            <h1 className="text-xl font-medium text-dark text-center">{msg}</h1>
           </div>
           {msg != "Are you sure?" ? (
             <div className="flex gap-x-6">
