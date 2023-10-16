@@ -16,9 +16,7 @@ function DetailProduct() {
   });
 
   const navigate = useNavigate();
-
   const token = localStorage.getItem("token");
-
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
   const [searchParams] = useSearchParams();

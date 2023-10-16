@@ -8,6 +8,8 @@ import Profile from "./pages/user/Profile";
 import Product from "./pages/user/Product";
 import DetailProduct from "./pages/user/DetailProduct";
 import CheckoutProduct from "./pages/user/CheckoutProduct";
+import HistoryOrder from "./pages/user/HistoryOrder";
+import DetailOrder from "./pages/user/DetailOrder";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +50,16 @@ const router = createBrowserRouter([
   {
     path: "/checkout-product",
     element: <CheckoutProduct />,
+    // errorElement: "",
+  },
+  {
+    path: "/history-order",
+    element: <HistoryOrder />,
+    // errorElement: "",
+  },
+  {
+    path: "/detail-order",
+    element: <DetailOrder />,
     // errorElement: "",
   },
 ]);

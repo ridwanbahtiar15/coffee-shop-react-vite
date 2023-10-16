@@ -64,7 +64,7 @@ function NavbarLogin(props) {
         <div
           className={`absolute top-20 right-24 bg-[#0B0909] text-light text-sm font-normal py-2 px-6 ${
             btnArrow ? "" : "hidden"
-          } lg:right-32`}
+          } lg:right-32 max-lg:hidden`}
           id="dropdown-menu"
         >
           <ul className="flex flex-col gap-y-2">

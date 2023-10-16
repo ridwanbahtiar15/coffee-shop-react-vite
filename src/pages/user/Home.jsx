@@ -7,6 +7,7 @@ import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import DropdownMobile from "../../components/DropdownMobile";
 import NavbarLogin from "../../components/NavbarLogin";
+import Modal from "../../components/modal/Modal";
 
 function Home() {
   useEffect(() => {
@@ -21,11 +22,22 @@ function Home() {
     }
   }, []);
 
+  const [Message, setMessage] = useState({ msg: null, isError: null });
+  const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
   return (
     <>
-      {isLogin && <NavbarLogin isClick={() => setIsDropdownShow(true)} />}
+      {isLogin && (
+        <NavbarLogin
+          isClick={() => setIsDropdownShow(true)}
+          isLogoutClick={() => {
+            setOpenModal(true);
+            setMessage({ msg: "Are you sure?", isError: null });
+          }}
+          message={Message}
+        />
+      )}
       {!isLogin && <Navbar isClick={() => setIsDropdownShow(true)} />}
 
       <header className="flex flex-wrap font-plusJakartaSans">
@@ -405,10 +417,11 @@ function Home() {
           </div>
         </div>
       </section>
+      <Footer />
       {isDropdownShown && (
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />
       )}
-      <Footer />
+      {openModal && <Modal closeModal={setOpenModal} message={Message} />}
     </>
   );
 }

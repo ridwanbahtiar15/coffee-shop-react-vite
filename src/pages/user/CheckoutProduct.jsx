@@ -7,6 +7,7 @@ import NavbarLogin from "../../components/NavbarLogin";
 import Footer from "../../components/Footer";
 import DropdownMobile from "../../components/DropdownMobile";
 import Modal from "../../components/modal/Modal";
+import { useNavigate } from "react-router-dom";
 
 // const Product = () => {
 //   const { body } = UseProductContext();
@@ -47,6 +48,10 @@ import Modal from "../../components/modal/Modal";
 // };
 
 function CheckoutProduct() {
+  useEffect(() => {
+    document.title = "Checkout Product";
+  });
+
   const product = UseProductContext();
   const { body } = product;
 
@@ -55,6 +60,7 @@ function CheckoutProduct() {
   const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
+  const navigate = useNavigate();
 
   const url = "http://localhost:3000";
   const authAxios = axios.create({
@@ -121,6 +127,7 @@ function CheckoutProduct() {
           isError: false,
         });
         setOpenModal(true);
+        navigate("/history-order");
       })
       .catch((err) => {
         setMessage({
