@@ -8,11 +8,18 @@ import DropdownMobile from "../../components/DropdownMobile";
 import Footer from "../../components/Footer";
 import PromoCard from "../../components/PromoCard";
 import ItemProduct from "../../components/ItemProduct";
+import Modal from "../../components/modal/Modal";
 
 function Product() {
   useEffect(() => {
     document.title = "Product";
   });
+
+  const [Message, setMessage] = useState({
+    msg: null,
+    isError: null,
+  });
+  const [openModal, setOpenModal] = useState(false);
 
   const token = localStorage.getItem("token");
   const [isLogin, setIsLogin] = useState(false);
@@ -44,7 +51,16 @@ function Product() {
 
   return (
     <>
-      {isLogin && <NavbarLogin isClick={() => setIsDropdownShow(true)} />}
+      {isLogin && (
+        <NavbarLogin
+          isClick={() => setIsDropdownShow(true)}
+          isLogoutClick={() => {
+            setOpenModal(true);
+            setMessage({ msg: "Are you sure?", isError: null });
+          }}
+          message={Message}
+        />
+      )}
       <header className="hidden md:w-full md:h-[305px] md:bg-[url('/src/assets/img/Rectangle299.webp')] md:flex md:items-center md:px-24 lg:px-[130px]">
         <h1 className="font-plusJakartaSans text-5xl font-medium w-[80%] text-light leading-tight">
           We Provide Good Coffee and Healthy Meals
@@ -281,10 +297,11 @@ function Product() {
           </div>
         </section>
       </main>
+      <Footer />
       {isDropdownShown && (
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />
       )}
-      <Footer />
+      {openModal && <Modal closeModal={setOpenModal} message={Message} />}
     </>
   );
 }

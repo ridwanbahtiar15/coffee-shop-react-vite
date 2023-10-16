@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { UseProductContext } from "../../context/ProductContext";
 
 import getImageUrl from "../../utils/imageGetter";
 import NavbarLogin from "../../components/NavbarLogin";
@@ -13,17 +15,13 @@ function DetailProduct() {
     document.title = "Product";
   });
 
+  const navigate = useNavigate();
+
   const token = localStorage.getItem("token");
-  const [isLogin, setIsLogin] = useState(false);
-  useEffect(() => {
-    if (token) {
-      setIsLogin(true);
-    }
-  }, []);
 
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const url = "http://localhost:3000";
   const paramsId = searchParams.get("id");
   const authAxios = axios.create({
@@ -62,14 +60,14 @@ function DetailProduct() {
     e.target.id == "minus" && count != 0
       ? setCount((count) => count - 1)
       : setCount((count) => count + 1);
+    // console.log(e);
   };
 
-  const [size, setSize] = useState(1);
+  const [size, setSize] = useState({ id: null, name: null });
   const choseSizeHandler = (e) => {
     // console.log(e.target.id);
-    setSize(e.target.id);
+    setSize({ id: e.target.id, name: e.target.name });
   };
-  console.log(size);
 
   const [hotIce, setHotice] = useState("Hot");
   const choseHoticeHandler = (e) => {
@@ -77,37 +75,54 @@ function DetailProduct() {
     setHotice(e.target.innerText);
   };
 
+  const { changeBody } = UseProductContext();
+
   const onSubmitHandler = (e) => {
     e.preventDefault();
 
-    const body = {
+    const data = {
       products_id: paramsId,
-      sizes_id: size,
+      products_name: productById.products_name,
+      sizes_id: size.id,
+      sizes_name: size.name,
       orders_products_qty: count,
       hot_or_ice: hotIce,
+      products_image: productById.products_image,
+      products_price: productById.products_price,
     };
 
-    authAxios
-      .post("/orders", body)
-      .then((res) => {
-        setMessage({
-          msg: res.data.msg,
-          isError: false,
-        });
-        setOpenModal(true);
-      })
-      .catch((err) => {
-        setMessage({
-          msg: err.response.data.msg,
-          isError: true,
-        });
-        setOpenModal(true);
-      });
+    changeBody(data);
+
+    navigate("/checkout-product");
+
+    // authAxios
+    //   .post("/orders", body)
+    //   .then((res) => {
+    //     setMessage({
+    //       msg: res.data.msg,
+    //       isError: false,
+    //     });
+    //     setOpenModal(true);
+    //   })
+    //   .catch((err) => {
+    //     setMessage({
+    //       msg: err.response.data.msg,
+    //       isError: true,
+    //     });
+    //     setOpenModal(true);
+    //   });
   };
 
   return (
     <>
-      {isLogin && <NavbarLogin isClick={() => setIsDropdownShow(true)} />}
+      <NavbarLogin
+        isClick={() => setIsDropdownShow(true)}
+        isLogoutClick={() => {
+          setOpenModal(true);
+          setMessage({ msg: "Are you sure?", isError: null });
+        }}
+        message={Message}
+      />
       <main className="font-plusJakartaSans px-5 lg:px-[130px] md:px-24 mt-5 md:mt-[87px]">
         <section className="flex flex-col lg:flex-row gap-x-5">
           <section className="w-full flex flex-col gap-y-4 md:flex-row max-lg:justify-between lg:gap-y-7 lg:flex-col lg:w-3/5 xl:1/2">
@@ -182,9 +197,10 @@ function DetailProduct() {
               {productById.products_desc}
             </p>
             <div className="flex relative">
-              <button
+              <div
                 className="p-[9px] border border-primary bg-light rounded absolute top-0 left-0 flex items-center justify-center"
                 onClick={setCountHandler}
+                id="minus"
               >
                 <img
                   src={getImageUrl("minus", "svg")}
@@ -192,13 +208,14 @@ function DetailProduct() {
                   className="w-full h-full"
                   id="minus"
                 />
-              </button>
+              </div>
               <div className="text-sm md:text-lg font-bold text-dark py-2 md:py-1 px-14 border rounded">
                 {count}
               </div>
               <div
                 className="p-[9px] border border-primary bg-primary rounded absolute top-0 right-0 flex items-center justify-center"
                 onClick={setCountHandler}
+                id="plus"
               >
                 <img
                   src={getImageUrl("plus", "svg")}
@@ -219,6 +236,7 @@ function DetailProduct() {
                     className="border focus:border-primary py-2 w-[47%] md:w-[48%] flex justify-center"
                     onClick={choseSizeHandler}
                     key={i}
+                    name={result.sizes_name}
                     id={result.sizes_id}
                   >
                     {result.sizes_name}

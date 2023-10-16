@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 import getImageUrl from "../../utils/imageGetter";
@@ -25,7 +25,6 @@ function Register() {
   const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState(false);
 
-  const navigate = useNavigate();
   const submitHandler = (e) => {
     e.preventDefault();
 
@@ -41,7 +40,13 @@ function Register() {
     const url = "http://localhost:3000/auth/register";
     axios
       .post(url, body)
-      .then(() => navigate("/"))
+      .then((res) => {
+        setMessage({
+          msg: res.data.msg,
+          isError: false,
+        });
+        setOpenModal(true);
+      })
       .catch((err) => {
         setMessage({
           msg: err.response.data.msg,

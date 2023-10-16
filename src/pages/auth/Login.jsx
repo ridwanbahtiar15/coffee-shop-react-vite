@@ -5,15 +5,12 @@ import axios from "axios";
 import getImageUrl from "../../utils/imageGetter";
 import "../../style/style.css";
 import Modal from "../../components/modal/Modal";
-// import { UseUserContext } from "../../context/UserContext";
+import { UseUserContext } from "../../context/UserContext";
 
 function Login() {
   useEffect(() => {
     document.title = "Login";
   });
-
-  // const { user, changeUser } = UseUserContext();
-  // console.log(user, changeUser);
 
   const [isPassShown, setIsPassShown] = useState(false);
   const showPassHandler = () => {
