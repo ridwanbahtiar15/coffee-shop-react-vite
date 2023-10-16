@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import getImageUrl from "../../utils/imageGetter";
 import "../../style/style.css";
+import getImageUrl from "../../utils/imageGetter";
 import Modal from "../../components/modal/Modal";
-import { UseUserContext } from "../../context/UserContext";
 
 function Login() {
   useEffect(() => {
@@ -29,13 +28,13 @@ function Login() {
       users_password: e.target.password.value,
     };
 
-    const url = "http://localhost:3000/auth/login";
+    const url = import.meta.env.VITE_BACKEND_HOST + "/auth/login";
     axios
       .post(url, body)
       .then((res) => {
         localStorage.setItem("token", res.data.data.token);
         localStorage.setItem("userInfo", res.data.data.userInfo.users_id);
-        navigate("/profile");
+        navigate("/home");
       })
       .catch((err) => {
         setMessage({

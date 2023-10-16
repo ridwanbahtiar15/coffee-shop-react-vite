@@ -62,7 +62,7 @@ function CheckoutProduct() {
   const [isDropdownShown, setIsDropdownShow] = useState(false);
   const navigate = useNavigate();
 
-  const url = "http://localhost:3000";
+  const url = import.meta.env.VITE_BACKEND_HOST;
   const authAxios = axios.create({
     baseURL: url,
     headers: {

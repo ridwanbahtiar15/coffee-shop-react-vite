@@ -20,7 +20,7 @@ function DetailProduct() {
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
   const [searchParams] = useSearchParams();
-  const url = "http://localhost:3000";
+  const url = import.meta.env.VITE_BACKEND_HOST;
   const paramsId = searchParams.get("id");
   const authAxios = axios.create({
     baseURL: url,
@@ -92,23 +92,6 @@ function DetailProduct() {
     changeBody(data);
 
     navigate("/checkout-product");
-
-    // authAxios
-    //   .post("/orders", body)
-    //   .then((res) => {
-    //     setMessage({
-    //       msg: res.data.msg,
-    //       isError: false,
-    //     });
-    //     setOpenModal(true);
-    //   })
-    //   .catch((err) => {
-    //     setMessage({
-    //       msg: err.response.data.msg,
-    //       isError: true,
-    //     });
-    //     setOpenModal(true);
-    //   });
   };
 
   return (

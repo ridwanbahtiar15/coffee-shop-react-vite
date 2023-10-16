@@ -37,7 +37,7 @@ function Register() {
       users_password: e.target.password.value,
     };
 
-    const url = "http://localhost:3000/auth/register";
+    const url = import.meta.env.VITE_BACKEND_HOST + "/auth/register";
     axios
       .post(url, body)
       .then((res) => {
