@@ -39,14 +39,14 @@ function NavbarLogin(props) {
             className="w-full h-full"
           />
         </div>
-        <Link href="#" className="hidden lg:block">
+        <Link to="#" className="hidden lg:block">
           <img
             src={getImageUrl("ShoppingCart-white", "svg")}
             alt="ShoppingCart"
             className="w-full h-full"
           />
         </Link>
-        <Link href="/profile" className="hidden lg:block">
+        <Link to="/profile" className="hidden lg:block">
           <img
             src={getImageUrl("profile", "jpg")}
             alt="icon-profile"

@@ -69,11 +69,12 @@ function DetailProduct() {
 
   const [hotIce, setHotice] = useState("Hot");
   const choseHoticeHandler = (e) => {
-    // console.log(e.target.innerText);
     setHotice(e.target.innerText);
   };
 
-  const { changeBody } = UseProductContext();
+  const subtotal = productById.products_price * count;
+
+  const { addData } = UseProductContext();
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -87,10 +88,11 @@ function DetailProduct() {
       hot_or_ice: hotIce,
       products_image: productById.products_image,
       products_price: productById.products_price,
+      orders_products_subtotal: subtotal,
     };
 
-    changeBody(data);
-
+    addData(data);
+    // body.push(data);
     navigate("/checkout-product");
   };
 

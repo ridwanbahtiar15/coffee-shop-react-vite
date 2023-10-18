@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 
 import getImageUrl from "../../utils/imageGetter";
 import { UseProductContext } from "../../context/ProductContext.jsx";
@@ -7,7 +8,6 @@ import NavbarLogin from "../../components/NavbarLogin";
 import Footer from "../../components/Footer";
 import DropdownMobile from "../../components/DropdownMobile";
 import Modal from "../../components/modal/Modal";
-import { useNavigate } from "react-router-dom";
 
 // const Product = () => {
 //   const { body } = UseProductContext();
@@ -53,10 +53,10 @@ function CheckoutProduct() {
   });
 
   const product = UseProductContext();
-  const { body } = product;
+  const { wrapBody, deleteData } = product;
 
   const token = localStorage.getItem("token");
-  const id = localStorage.getItem("userInfo");
+  // const id = localStorage.getItem("userInfo");
   const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
@@ -100,34 +100,38 @@ function CheckoutProduct() {
       .catch((err) => console.log(err));
   }, []);
 
-  const [delivery, setDelivery] = useState("");
+  const [setDelivery] = useState("");
   const deliverieHandler = (e) => {
     setDelivery(e.target.id);
   };
 
-  console.log(delivery);
+  let data = [];
+  for (let i = 0; i <= wrapBody.length; i++) {
+    data.push(wrapBody[i]);
+  }
+  // data.map((data) => {
+  //   // console.log(result.products_id);
+  // });
 
   const OnSubmitHandler = () => {
-    const data = {
-      users_id: id,
-      deliveries_id: "1",
-      products_id: body.products_id,
-      sizes_id: body.sizes_id,
-      orders_products_qty: body.orders_products_qty,
-      hot_or_ice: body.hot_or_ice,
-    };
-
-    console.log(data);
+    // const body = {
+    //   users_id: id,
+    //   deliveries_id: delivery,
+    //   products_id: body.products_id,
+    //   sizes_id: body.sizes_id,
+    //   orders_products_qty: body.orders_products_qty,
+    //   hot_or_ice: body.hot_or_ice,
+    // };
 
     authAxios
-      .post("/orders", data)
+      .post("/orders", wrapBody)
       .then((res) => {
         setMessage({
           msg: res.data.msg,
           isError: false,
         });
         setOpenModal(true);
-        navigate("/history-order");
+        // navigate("/history-order");
       })
       .catch((err) => {
         setMessage({
@@ -137,6 +141,12 @@ function CheckoutProduct() {
         setOpenModal(true);
       });
   };
+
+  let price = 0;
+  wrapBody.forEach((result) => {
+    price += Number(result.products_price) * Number(result.orders_products_qty);
+  });
+
   return (
     <>
       <NavbarLogin
@@ -159,55 +169,61 @@ function CheckoutProduct() {
               <h2 className="text-xl text-dark font-medium lg:text-[22px]">
                 Your Order
               </h2>
-              <a
-                href="#"
+              <Link
+                to="/product"
                 className="p-[10px] bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
               >
                 + Add Menu
-              </a>
+              </Link>
             </header>
             <div className="section-body flex flex-col gap-y-4">
               {/* <ProductProvider>
                 <Product />
               </ProductProvider> */}
-              <div className="item-product bg-[#E8E8E84D] flex flex-col gap-y-4 p-4 relative sm:flex-row sm:gap-x-4 sm:items-center">
-                <div className="w-[80%] h-[80%] sm:w-[60%] sm:h-[60%] lg:w-1/3">
-                  <img
-                    src={body.products_image}
-                    alt="coffee"
-                    className="w-full h-full"
-                  />
-                </div>
-                <div className="product-info flex flex-col items-start gap-y-4 lg:w-2/3">
-                  <p className="text-xs text-light bg-[#D00000] p-[10px] rounded-full font-bold">
-                    FLASH SALE!
-                  </p>
-                  <p className="text-lg text-[#0B0909] font-bold">
-                    {body.products_name}
-                  </p>
-                  <div className="text-sm text-secondary font-normal md:text-lg lg:text-base xl:text-lg flex">
-                    <p>
-                      {body.orders_products_qty} | {body.sizes_name} |{" "}
-                      {body.hot_or_ice} | DineIn
-                    </p>
+              {wrapBody.map((result, i) => (
+                <div
+                  className="item-product bg-[#E8E8E84D] flex flex-col gap-y-4 p-4 relative sm:flex-row sm:gap-x-4 sm:items-center"
+                  key={i}
+                >
+                  <div className="w-[80%] h-[80%] sm:w-[60%] sm:h-[60%] lg:w-1/3">
+                    <img
+                      src={result.products_image}
+                      alt="coffee"
+                      className="w-full h-full"
+                    />
                   </div>
-                  <div className="flex gap-x-4 items-center">
-                    <p className="text-xs text-[#D00000] font-medium line-through">
-                      IDR. 10.000
+                  <div className="product-info flex flex-col items-start gap-y-4 lg:w-2/3">
+                    <p className="text-xs text-light bg-[#D00000] p-[10px] rounded-full font-bold">
+                      FLASH SALE!
                     </p>
-                    <p className="text-lg text-[#0B0909] font-medium lg:text-[22px]">
-                      IDR. {body.products_price}
+                    <p className="text-lg text-[#0B0909] font-bold">
+                      {result.products_name}
                     </p>
+                    <div className="text-sm text-secondary font-normal md:text-lg lg:text-base xl:text-lg flex">
+                      <p>
+                        {result.orders_products_qty} | {result.sizes_name} |{" "}
+                        {result.hot_or_ice} | DineIn
+                      </p>
+                    </div>
+                    <div className="flex gap-x-4 items-center">
+                      <p className="text-xs text-[#D00000] font-medium line-through">
+                        IDR. 10.000
+                      </p>
+                      <p className="text-lg text-[#0B0909] font-medium lg:text-[22px]">
+                        IDR. {result.products_price}
+                      </p>
+                    </div>
                   </div>
+                  <button type="button" className="absolute top-3 right-3">
+                    <img
+                      src={getImageUrl("XCircle", "svg")}
+                      alt="XCircle"
+                      className="w-full h-full"
+                      onClick={() => deleteData(i)}
+                    />
+                  </button>
                 </div>
-                <button type="button" className="absolute top-3 right-3">
-                  <img
-                    src={getImageUrl("XCircle", "svg")}
-                    alt="XCircle"
-                    className="w-full h-full"
-                  />
-                </button>
-              </div>
+              ))}
             </div>
           </div>
           <div>
@@ -319,8 +335,7 @@ function CheckoutProduct() {
                 Order
               </span>
               <span className="text-sm font-bold text-dark lg:text-lg">
-                Idr.{" "}
-                {Number(body.products_price) * Number(body.orders_products_qty)}
+                IDR. {price}
               </span>
             </div>
             <div className="flex justify-between">
@@ -328,7 +343,7 @@ function CheckoutProduct() {
                 Delivery
               </span>
               <span className="text-sm font-bold text-dark lg:text-lg">
-                Idr. 0
+                IDR. 0
               </span>
             </div>
             <div className="flex justify-between">
@@ -336,7 +351,7 @@ function CheckoutProduct() {
                 Tax
               </span>
               <span className="text-sm font-bold text-dark lg:text-lg">
-                Idr. o
+                IDR. 0
               </span>
             </div>
             <hr />
@@ -345,8 +360,7 @@ function CheckoutProduct() {
                 Subtotal
               </span>
               <span className="text-sm font-bold text-dark lg:text-lg">
-                Idr.{" "}
-                {Number(body.products_price) * Number(body.orders_products_qty)}
+                IDR. {price}
               </span>
             </div>
             <button
