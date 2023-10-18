@@ -23,7 +23,7 @@ function Register() {
   };
 
   const [Message, setMessage] = useState({ msg: null, isError: null });
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState({ isOpen: false, status: null });
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -45,14 +45,14 @@ function Register() {
           msg: res.data.msg,
           isError: false,
         });
-        setOpenModal(true);
+        setOpenModal({ isOpen: true, status: "success" });
       })
       .catch((err) => {
         setMessage({
           msg: err.response.data.msg,
           isError: true,
         });
-        setOpenModal(true);
+        setOpenModal({ isOpen: true, status: "error" });
       });
   };
 
@@ -267,7 +267,9 @@ function Register() {
           </div>
         </section>
       </main>
-      {openModal && <Modal closeModal={setOpenModal} message={Message} />}
+      {openModal.isOpen && (
+        <Modal modal={openModal} closeModal={setOpenModal} message={Message} />
+      )}
     </>
   );
 }

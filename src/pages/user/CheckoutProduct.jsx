@@ -56,11 +56,9 @@ function CheckoutProduct() {
   const { wrapBody, deleteData } = product;
 
   const token = localStorage.getItem("token");
-  // const id = localStorage.getItem("userInfo");
   const [Message, setMessage] = useState({ msg: null, isError: null });
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState({ isOpen: false, status: null });
   const [isDropdownShown, setIsDropdownShow] = useState(false);
-  const navigate = useNavigate();
 
   const url = import.meta.env.VITE_BACKEND_HOST;
   const authAxios = axios.create({
@@ -109,20 +107,8 @@ function CheckoutProduct() {
   for (let i = 0; i <= wrapBody.length; i++) {
     data.push(wrapBody[i]);
   }
-  // data.map((data) => {
-  //   // console.log(result.products_id);
-  // });
 
   const OnSubmitHandler = () => {
-    // const body = {
-    //   users_id: id,
-    //   deliveries_id: delivery,
-    //   products_id: body.products_id,
-    //   sizes_id: body.sizes_id,
-    //   orders_products_qty: body.orders_products_qty,
-    //   hot_or_ice: body.hot_or_ice,
-    // };
-
     authAxios
       .post("/orders", wrapBody)
       .then((res) => {
@@ -130,8 +116,7 @@ function CheckoutProduct() {
           msg: res.data.msg,
           isError: false,
         });
-        setOpenModal(true);
-        // navigate("/history-order");
+        setOpenModal({ isOpen: true, status: "checkout" });
       })
       .catch((err) => {
         setMessage({
@@ -152,7 +137,7 @@ function CheckoutProduct() {
       <NavbarLogin
         isClick={() => setIsDropdownShow(true)}
         isLogoutClick={() => {
-          setOpenModal(true);
+          setOpenModal({ isOpen: true, status: "logout" });
           setMessage({ msg: "Are you sure?", isError: null });
         }}
         message={Message}
@@ -426,7 +411,9 @@ function CheckoutProduct() {
       {isDropdownShown && (
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />
       )}
-      {openModal && <Modal closeModal={setOpenModal} message={Message} />}
+      {openModal.isOpen && (
+        <Modal modal={openModal} closeModal={setOpenModal} message={Message} />
+      )}
     </>
   );
 }

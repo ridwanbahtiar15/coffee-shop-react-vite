@@ -19,7 +19,8 @@ function Product() {
     msg: null,
     isError: null,
   });
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState({ isOpen: false, status: null });
+  const [isDropdownShown, setIsDropdownShow] = useState(false);
 
   const token = localStorage.getItem("token");
   const [isLogin, setIsLogin] = useState(false);
@@ -28,8 +29,6 @@ function Product() {
       setIsLogin(true);
     }
   }, []);
-
-  const [isDropdownShown, setIsDropdownShow] = useState(false);
 
   const url = import.meta.env.VITE_BACKEND_HOST;
   const authAxios = axios.create({
@@ -55,7 +54,7 @@ function Product() {
         <NavbarLogin
           isClick={() => setIsDropdownShow(true)}
           isLogoutClick={() => {
-            setOpenModal(true);
+            setOpenModal({ isOpen: true, status: "logout" });
             setMessage({ msg: "Are you sure?", isError: null });
           }}
           message={Message}
@@ -301,7 +300,9 @@ function Product() {
       {isDropdownShown && (
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />
       )}
-      {openModal && <Modal closeModal={setOpenModal} message={Message} />}
+      {openModal.isOpen && (
+        <Modal modal={openModal} closeModal={setOpenModal} message={Message} />
+      )}
     </>
   );
 }

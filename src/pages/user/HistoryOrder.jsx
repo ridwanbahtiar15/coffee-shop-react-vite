@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import getImageUrl from "../../utils/imageGetter";
 import NavbarLogin from "../../components/NavbarLogin";
@@ -16,12 +17,33 @@ function HistoryOrder() {
   const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
+  const token = localStorage.getItem("token");
+  const id = localStorage.getItem("userInfo");
+  const url = import.meta.env.VITE_BACKEND_HOST;
+  const authAxios = axios.create({
+    baseURL: url,
+    headers: {
+      Authorization: `Barer ${token}`,
+    },
+  });
+
+  const [productByUser, setProductByUser] = useState([]);
+  useEffect(() => {
+    authAxios
+      .get("/orders/" + id)
+      .then((res) => {
+        setProductByUser(res.data.result);
+        // console.log(res.data.result);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <>
       <NavbarLogin
         isClick={() => setIsDropdownShow(true)}
         isLogoutClick={() => {
-          setOpenModal(true);
+          setOpenModal({ isOpen: true, status: "logout" });
           setMessage({ msg: "Are you sure?", isError: null });
         }}
         message={Message}
@@ -60,346 +82,96 @@ function HistoryOrder() {
             </section>
           </header>
           <section className="flex flex-col gap-y-5">
-            <div className="flex flex-col items-center gap-y-4 bg-[#E8E8E84D] py-7 px-2 sm:flex-row sm:gap-x-4 md:items-center">
-              <div className="w-[70%] sm:w-2/5 md:w-1/5">
-                <img
-                  src={getImageUrl("image31", "webp")}
-                  alt="product-image"
-                  className="w-full h-full"
-                />
+            {productByUser.map((result, i) => (
+              <div
+                className="flex flex-col items-center gap-y-4 bg-[#E8E8E84D] py-7 px-2 sm:flex-row sm:gap-x-4 md:items-center"
+                key={i}
+              >
+                <div className="w-[70%] sm:w-2/5 md:w-1/5">
+                  <img
+                    src={getImageUrl("image31", "webp")}
+                    alt="product-image"
+                    className="w-full h-full"
+                  />
+                </div>
+                <div className="flex flex-wrap gap-y-9 md:gap-y-4">
+                  <div className="w-1/2 md:w-1/4 text-center sm:text-left">
+                    <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
+                      <div>
+                        <img
+                          src={getImageUrl("u_glass-tea", "svg")}
+                          alt="u_glass-tea"
+                          className="w-full h-full"
+                        />
+                      </div>
+                      <span className="text-sm font-medium text-secondary">
+                        No. Order
+                      </span>
+                    </div>
+                    <span className="text-sm font-bold text-dark">
+                      #{result.orders_id}
+                    </span>
+                  </div>
+                  <div className="w-1/2 md:w-1/4 text-center sm:text-left">
+                    <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
+                      <div>
+                        <img
+                          src={getImageUrl("Calendar", "svg")}
+                          alt="Calendar"
+                          className="w-full h-full"
+                        />
+                      </div>
+                      <span className="text-sm font-medium text-secondary">
+                        Date
+                      </span>
+                    </div>
+                    <span className="text-sm font-bold text-dark">
+                      {result.created_at}
+                    </span>
+                  </div>
+                  <div className="w-1/2 md:w-1/4 text-center sm:text-left">
+                    <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
+                      <div>
+                        <img
+                          src={getImageUrl("Repeat", "svg")}
+                          alt="Repeat.svg"
+                          className="w-full h-full"
+                        />
+                      </div>
+                      <span className="text-sm font-medium text-secondary">
+                        Total
+                      </span>
+                    </div>
+                    <span className="text-sm font-bold text-dark">
+                      IDR. {result.orders_total}
+                    </span>
+                  </div>
+                  <div className="w-1/2 md:w-1/4 text-center sm:text-left">
+                    <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
+                      <div>
+                        <img
+                          src={getImageUrl("u_process", "svg")}
+                          alt="u_process"
+                          className="w-full h-full"
+                        />
+                      </div>
+                      <span className="text-sm font-medium text-secondary">
+                        Status
+                      </span>
+                    </div>
+                    <span className="text-xs md:text-xs font-bold text-dark py-2 px-4 rounded-full bg-[#FF890633]">
+                      {result.orders_status}
+                    </span>
+                  </div>
+                  <Link
+                    to={`/detail-order?id=${result.orders_id}`}
+                    className="text-sm font-medium text-dark underline underline-offset-2 max-sm:w-full text-center sm:text-left"
+                  >
+                    Views Order Detail
+                  </Link>
+                </div>
               </div>
-              <div className="flex flex-wrap gap-y-9 md:gap-y-4">
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("u_glass-tea", "svg")}
-                        alt="u_glass-tea"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      No. Order
-                    </span>
-                  </div>
-                  <span className="text-sm font-bold text-dark">
-                    #12354-09893
-                  </span>
-                </div>
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("Calendar", "svg")}
-                        alt="Calendar"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      Date
-                    </span>
-                  </div>
-                  <span className="text-sm font-bold text-dark">
-                    23 January 2023
-                  </span>
-                </div>
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("Repeat", "svg")}
-                        alt="Repeat.svg"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      Total
-                    </span>
-                  </div>
-                  <span className="text-sm font-bold text-dark">
-                    Idr 40.000
-                  </span>
-                </div>
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("u_process", "svg")}
-                        alt="u_process"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      Status
-                    </span>
-                  </div>
-                  <span className="text-xs md:text-xs font-bold text-dark py-2 px-4 rounded-full bg-[#FF890633]">
-                    On Progress
-                  </span>
-                </div>
-                <Link
-                  to="/detail-order"
-                  className="text-sm font-medium text-dark underline underline-offset-2 max-sm:w-full text-center sm:text-left"
-                >
-                  Views Order Detail
-                </Link>
-              </div>
-            </div>
-            <div className="flex flex-col items-center gap-y-4 bg-[#E8E8E84D] py-7 px-2 sm:flex-row sm:gap-x-4 md:items-center">
-              <div className="w-[70%] sm:w-2/5 md:w-1/5">
-                <img
-                  src={getImageUrl("image31", "webp")}
-                  alt="product-image"
-                  className="w-full h-full"
-                />
-              </div>
-              <div className="flex flex-wrap gap-y-9 md:gap-y-4">
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("u_glass-tea", "svg")}
-                        alt="u_glass-tea"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      No. Order
-                    </span>
-                  </div>
-                  <span className="text-sm font-bold text-dark">
-                    #12354-09893
-                  </span>
-                </div>
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("Calendar", "svg")}
-                        alt="Calendar"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      Date
-                    </span>
-                  </div>
-                  <span className="text-sm font-bold text-dark">
-                    23 January 2023
-                  </span>
-                </div>
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("Repeat", "svg")}
-                        alt="Repeat.svg"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      Total
-                    </span>
-                  </div>
-                  <span className="text-sm font-bold text-dark">
-                    Idr 40.000
-                  </span>
-                </div>
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("u_process", "svg")}
-                        alt="u_process"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      Status
-                    </span>
-                  </div>
-                  <span className="text-xs md:text-xs font-bold text-dark py-2 px-4 rounded-full bg-[#FF890633]">
-                    On Progress
-                  </span>
-                </div>
-                <Link
-                  to="/detail-order"
-                  className="text-sm font-medium text-dark underline underline-offset-2 max-sm:w-full text-center sm:text-left"
-                >
-                  Views Order Detail
-                </Link>
-              </div>
-            </div>
-            <div className="flex flex-col items-center gap-y-4 bg-[#E8E8E84D] py-7 px-2 sm:flex-row sm:gap-x-4 md:items-center">
-              <div className="w-[70%] sm:w-2/5 md:w-1/5">
-                <img
-                  src={getImageUrl("image31", "webp")}
-                  alt="product-image"
-                  className="w-full h-full"
-                />
-              </div>
-              <div className="flex flex-wrap gap-y-9 md:gap-y-4">
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("u_glass-tea", "svg")}
-                        alt="u_glass-tea"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      No. Order
-                    </span>
-                  </div>
-                  <span className="text-sm font-bold text-dark">
-                    #12354-09893
-                  </span>
-                </div>
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("Calendar", "svg")}
-                        alt="Calendar"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      Date
-                    </span>
-                  </div>
-                  <span className="text-sm font-bold text-dark">
-                    23 January 2023
-                  </span>
-                </div>
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("Repeat", "svg")}
-                        alt="Repeat.svg"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      Total
-                    </span>
-                  </div>
-                  <span className="text-sm font-bold text-dark">
-                    Idr 40.000
-                  </span>
-                </div>
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("u_process", "svg")}
-                        alt="u_process"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      Status
-                    </span>
-                  </div>
-                  <span className="text-xs md:text-xs font-bold text-dark py-2 px-4 rounded-full bg-[#FF890633]">
-                    On Progress
-                  </span>
-                </div>
-                <Link
-                  to="/detail-order"
-                  className="text-sm font-medium text-dark underline underline-offset-2 max-sm:w-full text-center sm:text-left"
-                >
-                  Views Order Detail
-                </Link>
-              </div>
-            </div>
-            <div className="flex flex-col items-center gap-y-4 bg-[#E8E8E84D] py-7 px-2 sm:flex-row sm:gap-x-4 md:items-center">
-              <div className="w-[70%] sm:w-2/5 md:w-1/5">
-                <img
-                  src={getImageUrl("image31", "webp")}
-                  alt="product-image"
-                  className="w-full h-full"
-                />
-              </div>
-              <div className="flex flex-wrap gap-y-9 md:gap-y-4">
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("u_glass-tea", "svg")}
-                        alt="u_glass-tea"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      No. Order
-                    </span>
-                  </div>
-                  <span className="text-sm font-bold text-dark">
-                    #12354-09893
-                  </span>
-                </div>
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("Calendar", "svg")}
-                        alt="Calendar"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      Date
-                    </span>
-                  </div>
-                  <span className="text-sm font-bold text-dark">
-                    23 January 2023
-                  </span>
-                </div>
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("Repeat", "svg")}
-                        alt="Repeat.svg"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      Total
-                    </span>
-                  </div>
-                  <span className="text-sm font-bold text-dark">
-                    Idr 40.000
-                  </span>
-                </div>
-                <div className="w-1/2 md:w-1/4 text-center sm:text-left">
-                  <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
-                    <div>
-                      <img
-                        src={getImageUrl("u_process", "svg")}
-                        alt="u_process"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-secondary">
-                      Status
-                    </span>
-                  </div>
-                  <span className="text-xs md:text-xs font-bold text-dark py-2 px-4 rounded-full bg-[#FF890633]">
-                    On Progress
-                  </span>
-                </div>
-                <Link
-                  to="/detail-order"
-                  className="text-sm font-medium text-dark underline underline-offset-2 max-sm:w-full text-center sm:text-left"
-                >
-                  Views Order Detail
-                </Link>
-              </div>
-            </div>
+            ))}
           </section>
           <section className="flex justify-center gap-x-4">
             <img
@@ -458,7 +230,9 @@ function HistoryOrder() {
       {isDropdownShown && (
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />
       )}
-      {openModal && <Modal closeModal={setOpenModal} message={Message} />}
+      {openModal.isOpen && (
+        <Modal modal={openModal} closeModal={setOpenModal} message={Message} />
+      )}
     </>
   );
 }

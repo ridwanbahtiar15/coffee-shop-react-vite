@@ -30,7 +30,7 @@ function DetailProduct() {
   });
 
   const [Message, setMessage] = useState({ msg: null, isError: null });
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState({ isOpen: false, status: null });
 
   const [productById, setProductById] = useState([]);
   useEffect(() => {
@@ -47,7 +47,6 @@ function DetailProduct() {
     authAxios
       .get("/sizes")
       .then((res) => {
-        // console.log(res.data.result);
         setSizes(res.data.result);
       })
       .catch((err) => console.log(err));
@@ -58,12 +57,10 @@ function DetailProduct() {
     e.target.id == "minus" && count != 0
       ? setCount((count) => count - 1)
       : setCount((count) => count + 1);
-    // console.log(e);
   };
 
   const [size, setSize] = useState({ id: null, name: null });
   const choseSizeHandler = (e) => {
-    // console.log(e.target.id);
     setSize({ id: e.target.id, name: e.target.name });
   };
 
@@ -92,7 +89,6 @@ function DetailProduct() {
     };
 
     addData(data);
-    // body.push(data);
     navigate("/checkout-product");
   };
 
@@ -101,7 +97,7 @@ function DetailProduct() {
       <NavbarLogin
         isClick={() => setIsDropdownShow(true)}
         isLogoutClick={() => {
-          setOpenModal(true);
+          setOpenModal({ isOpen: true, status: "logout" });
           setMessage({ msg: "Are you sure?", isError: null });
         }}
         message={Message}
@@ -398,11 +394,13 @@ function DetailProduct() {
           </div>
         </section>
       </main>
+      <Footer />
       {isDropdownShown && (
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />
       )}
-      <Footer />
-      {openModal && <Modal closeModal={setOpenModal} message={Message} />}
+      {openModal.isOpen && (
+        <Modal modal={openModal} closeModal={setOpenModal} message={Message} />
+      )}
     </>
   );
 }

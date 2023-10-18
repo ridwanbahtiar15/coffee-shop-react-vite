@@ -32,7 +32,7 @@ function Home() {
         <NavbarLogin
           isClick={() => setIsDropdownShow(true)}
           isLogoutClick={() => {
-            setOpenModal(true);
+            setOpenModal({ isOpen: true, status: "logout" });
             setMessage({ msg: "Are you sure?", isError: null });
           }}
           message={Message}
@@ -421,7 +421,9 @@ function Home() {
       {isDropdownShown && (
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />
       )}
-      {openModal && <Modal closeModal={setOpenModal} message={Message} />}
+      {openModal.isOpen && (
+        <Modal modal={openModal} closeModal={setOpenModal} message={Message} />
+      )}
     </>
   );
 }

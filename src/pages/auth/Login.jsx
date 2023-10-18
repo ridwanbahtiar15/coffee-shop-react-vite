@@ -17,7 +17,7 @@ function Login() {
   };
 
   const [Message, setMessage] = useState({ msg: null, isError: null });
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState({ isOpen: false, status: null });
   const navigate = useNavigate();
 
   const submitHandler = (e) => {
@@ -41,7 +41,7 @@ function Login() {
           msg: err.response.data.msg,
           isError: true,
         });
-        setOpenModal(true);
+        setOpenModal({ isOpen: true, status: "error" });
       });
   };
 
@@ -194,7 +194,9 @@ function Login() {
           </div>
         </section>
       </main>
-      {openModal && <Modal closeModal={setOpenModal} message={Message} />}
+      {openModal.isOpen && (
+        <Modal modal={openModal} closeModal={setOpenModal} message={Message} />
+      )}
     </>
   );
 }
