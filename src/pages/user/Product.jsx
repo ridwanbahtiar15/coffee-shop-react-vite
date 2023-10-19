@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import getImageUrl from "../../utils/imageGetter";
+import { useSearchParams } from "react-router-dom";
 
+import getImageUrl from "../../utils/imageGetter";
 import "../../style/style.css";
 import NavbarLogin from "../../components/NavbarLogin";
 import DropdownMobile from "../../components/DropdownMobile";
@@ -47,6 +48,58 @@ function Product() {
       })
       .catch((err) => console.log(err));
   }, []);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState();
+  const [category, setCategory] = useState();
+
+  const setSearchHandler = (e) => {
+    setSearch(e.target.value);
+  };
+  const setCategoryHandler = (e) => {
+    setCategory(e.target.value);
+  };
+
+  const OnSubmitHandler = (e) => {
+    e.preventDefault();
+
+    let urlProduct = `/products`;
+    if (search) {
+      setSearchParams((prev) => ({
+        ...prev,
+        name: search,
+      }));
+      urlProduct = `/products?name=${search}`;
+    }
+
+    if (category) {
+      setSearchParams((prev) => ({
+        ...prev,
+        category: category,
+      }));
+      urlProduct = `/products?category=${category}`;
+    }
+
+    if (search && category) {
+      setSearchParams((prev) => ({
+        ...prev,
+        name: search,
+        category: category,
+      }));
+      urlProduct = `/products?name=${search}&category=${category}`;
+    }
+
+    if (!search && !category) {
+      setSearchParams((prev) => ({
+        ...prev,
+      }));
+      urlProduct = `/products`;
+    }
+    authAxios
+      .get(urlProduct)
+      .then((res) => setProduct(res.data.result))
+      .catch((err) => console.log(err));
+  };
 
   return (
     <>
@@ -142,8 +195,11 @@ function Product() {
             <span className="text-lg font-bold">Search</span>
             <input
               type="text"
+              name="name"
               placeholder="Search Your Product"
               className="py-4 px-5 text-normal font-normal text-[#696F79] rounded tracking-wider outline-none"
+              value={search}
+              onChange={setSearchHandler}
             />
           </div>
           <div className="flex flex-col gap-y-4">
@@ -151,44 +207,36 @@ function Product() {
             <div className="flex flex-col gap-y-4 text-lg font-normal">
               <div className="flex gap-3.5 items-center">
                 <input
-                  type="checkbox"
-                  id="favorite-product"
-                  checked
-                  className="appearance-none w-[24px] h-[24px] bg-none border border-[#a0a3bd] rounded-lg flex items-center justify-center after:font-awesome after:content-['\f00c'] after:font-black after:text-normal after:text-[#0b0909] after:hidden checked:bg-primary checked:border-none checked:after:block"
-                />
-                <label htmlFor="favorite-product">Favorite Product</label>
-              </div>
-              <div className="flex gap-3.5 items-center">
-                <input
-                  type="checkbox"
+                  type="radio"
                   id="coffee"
+                  name="category"
                   className="appearance-none w-[24px] h-[24px] bg-none border border-[#a0a3bd] rounded-lg flex items-center justify-center after:font-awesome after:content-['\f00c'] after:font-black after:text-normal after:text-[#0b0909] after:hidden checked:bg-primary checked:border-none checked:after:block"
+                  value="Coffee"
+                  onChange={setCategoryHandler}
                 />
                 <label htmlFor="coffee">Coffee</label>
               </div>
               <div className="flex gap-3.5 items-center">
                 <input
-                  type="checkbox"
+                  type="radio"
                   id="non-coffee"
+                  name="category"
                   className="appearance-none w-[24px] h-[24px] bg-none border border-[#a0a3bd] rounded-lg flex items-center justify-center after:font-awesome after:content-['\f00c'] after:font-black after:text-normal after:text-[#0b0909] after:hidden checked:bg-primary checked:border-none checked:after:block"
+                  value="Non-Coffee"
+                  onChange={setCategoryHandler}
                 />
                 <label htmlFor="non-coffee">Non Coffee</label>
               </div>
               <div className="flex gap-3.5 items-center">
                 <input
-                  type="checkbox"
-                  id="foods"
+                  type="radio"
+                  id="milk"
+                  name="category"
                   className="appearance-none w-[24px] h-[24px] bg-none border border-[#a0a3bd] rounded-lg flex items-center justify-center after:font-awesome after:content-['\f00c'] after:font-black after:text-normal after:text-[#0b0909] after:hidden checked:bg-primary checked:border-none checked:after:block"
+                  value="Milk"
+                  onChange={setCategoryHandler}
                 />
-                <label htmlFor="foods">Foods</label>
-              </div>
-              <div className="flex gap-3.5 items-center">
-                <input
-                  type="checkbox"
-                  id="add-on"
-                  className="appearance-none w-[24px] h-[24px] bg-none border border-[#a0a3bd] rounded-lg flex items-center justify-center after:font-awesome after:content-['\f00c'] after:font-black after:text-normal after:text-[#0b0909] after:hidden checked:bg-primary checked:border-none checked:after:block"
-                />
-                <label htmlFor="add-on">Add-On</label>
+                <label htmlFor="milk">Milk</label>
               </div>
             </div>
           </div>
@@ -251,50 +299,60 @@ function Product() {
             </div>
           </div>
           <div className="text-sm font-medium text-[#0B0909] py-3 px-4 bg-primary text-center rounded-md hover:bg-amber-600 active:ring active:ring-orange-300 mt-4">
-            <button>Apply Filter</button>
+            <button type="button" onClick={OnSubmitHandler}>
+              Apply Filter
+            </button>
           </div>
         </section>
-        <section className="xl:w-4/6">
-          <div className="w-full grid grid-cols-1 md:grid-cols-product md:gap-x-5">
-            {product.map((result, i) => (
-              <ItemProduct
-                key={i}
-                id={result.products_id}
-                img={result.products_image}
-                name={result.products_name}
-                desc={result.products_desc}
-                price={result.products_price}
+        {product.length > 0 ? (
+          <section className="xl:w-4/6">
+            <div className="w-full grid grid-cols-1 md:grid-cols-product md:gap-x-5">
+              {product.map((result, i) => (
+                <ItemProduct
+                  key={i}
+                  id={result.products_id}
+                  img={result.products_image}
+                  name={result.products_name}
+                  desc={result.products_desc}
+                  price={result.products_price}
+                />
+              ))}
+            </div>
+            <div className="flex justify-center gap-x-4">
+              <img
+                src={getImageUrl("paginate-1", "svg")}
+                alt="paginate-1"
+                className="w-10 h-10"
               />
-            ))}
-          </div>
-          <div className="flex justify-center gap-x-4">
-            <img
-              src={getImageUrl("paginate-1", "svg")}
-              alt="paginate-1"
-              className="w-10 h-10"
-            />
-            <img
-              src={getImageUrl("paginate-2", "svg")}
-              alt="paginate-2"
-              className="w-10 h-10"
-            />
-            <img
-              src={getImageUrl("paginate-3", "svg")}
-              alt="paginate-3"
-              className="w-10 h-10"
-            />
-            <img
-              src={getImageUrl("paginate-4", "svg")}
-              alt="paginate-4"
-              className="w-10 h-10"
-            />
-            <img
-              src={getImageUrl("arrow-right", "svg")}
-              alt="arrow-right"
-              className="w-10 h-10"
-            />
-          </div>
-        </section>
+              <img
+                src={getImageUrl("paginate-2", "svg")}
+                alt="paginate-2"
+                className="w-10 h-10"
+              />
+              <img
+                src={getImageUrl("paginate-3", "svg")}
+                alt="paginate-3"
+                className="w-10 h-10"
+              />
+              <img
+                src={getImageUrl("paginate-4", "svg")}
+                alt="paginate-4"
+                className="w-10 h-10"
+              />
+              <img
+                src={getImageUrl("arrow-right", "svg")}
+                alt="arrow-right"
+                className="w-10 h-10"
+              />
+            </div>
+          </section>
+        ) : (
+          <section className="xl:w-4/6">
+            <div className="w-full">
+              <h1 className="text-5xl text-center">Products Not Found!</h1>
+            </div>
+          </section>
+        )}
       </main>
       <Footer />
       {isDropdownShown && (
