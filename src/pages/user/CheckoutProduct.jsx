@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import getImageUrl from "../../utils/imageGetter";
 import { UseProductContext } from "../../context/ProductContext.jsx";
@@ -185,10 +185,13 @@ function CheckoutProduct() {
                       {result.products_name}
                     </p>
                     <div className="text-sm text-secondary font-normal md:text-lg lg:text-base xl:text-lg flex">
-                      <p>
-                        {result.orders_products_qty} | {result.sizes_name} |{" "}
-                        {result.hot_or_ice} | DineIn
-                      </p>
+                      <div className="flex gap-x-2">
+                        <p>{result.orders_products_qty} Pcs</p>
+                        <p>|</p>
+                        <p>{result.sizes_name}</p>
+                        <p>|</p>
+                        <p>{result.hot_or_ice}</p>
+                      </div>
                     </div>
                     <div className="flex gap-x-4 items-center">
                       <p className="text-xs text-[#D00000] font-medium line-through">
@@ -349,8 +352,13 @@ function CheckoutProduct() {
               </span>
             </div>
             <button
-              className="p-[10px] text-sm font-medium rounded-md text-dark bg-primary hover:bg-amber-600 active:ring active:ring-orange-300"
+              className={`p-[10px] text-sm font-medium rounded-md text-dark bg-primary hover:bg-amber-600 active:ring active:ring-orange-300 ${
+                !wrapBody.length
+                  ? "disabled:bg-slate-200 disabled:ring-slate-300"
+                  : ""
+              }`}
               onClick={OnSubmitHandler}
+              disabled
             >
               Checkout
             </button>

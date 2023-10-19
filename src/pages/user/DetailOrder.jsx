@@ -20,7 +20,6 @@ function DetailOrder() {
   const [searchParams] = useSearchParams();
   const url = import.meta.env.VITE_BACKEND_HOST;
   const token = localStorage.getItem("token");
-  const id = localStorage.getItem("userInfo");
   const paramsId = searchParams.get("id");
   const authAxios = axios.create({
     baseURL: url,
@@ -48,6 +47,7 @@ function DetailOrder() {
       })
       .catch((err) => console.log(err));
   }, []);
+
   return (
     <>
       <NavbarLogin
@@ -148,15 +148,43 @@ function DetailOrder() {
                 />
               </div>
               <p className="flex-1 text-secondary font-medium">Status</p>
-              <p className="text-sm text-dark font-bold py-2 px-4 rounded-full bg-[#00A70033]">
-                {user.orders_status}
-              </p>
+              {(() => {
+                switch (user.orders_status) {
+                  case "Pending":
+                    return (
+                      <p className="text-sm text-primary font-bold py-2 px-4 rounded-full bg-[#FF890633]">
+                        {user.orders_status}
+                      </p>
+                    );
+                    // eslint-disable-next-line no-unreachable
+                    break;
+                  case "On Progress/Paid":
+                    return (
+                      <p className="text-sm text-blue-600 font-bold py-2 px-4 rounded-full bg-[#2463eb4d]">
+                        {user.orders_status}
+                      </p>
+                    );
+                    // eslint-disable-next-line no-unreachable
+                    break;
+                  case "Done":
+                    return (
+                      <p className="text-sm text-green-600 font-bold py-2 px-4 rounded-full bg-[#16a2494d]">
+                        {user.orders_status}
+                      </p>
+                    );
+                    // eslint-disable-next-line no-unreachable
+                    break;
+
+                  default:
+                    return null;
+                    // eslint-disable-next-line no-unreachable
+                    break;
+                }
+              })()}
             </div>
             <div className="flex gap-x-3 items-center justify-between py-5 px-3.5">
               <p className="text-secondary font-medium">Total Transaksi</p>
-              <p className="text-sm text-dark font-bold">
-                IDR. {user.orders_total}
-              </p>
+              <p className="text-dark font-bold">IDR. {user.orders_total}</p>
             </div>
           </section>
         </section>
@@ -187,14 +215,17 @@ function DetailOrder() {
                     {result.products_name}
                   </p>
                   <div className="text-sm text-secondary font-normal md:text-lg lg:text-base xl:text-lg flex">
-                    <p>
-                      {result.orders_products_qty} Pcs | {result.sizes_name} |
-                      Ice | DineIn
-                    </p>
+                    <div className="flex gap-x-2">
+                      <p>{result.orders_products_qty} Pcs</p>
+                      <p>|</p>
+                      <p>{result.sizes_name}</p>
+                      <p>|</p>
+                      <p>{result.hot_or_ice}</p>
+                    </div>
                   </div>
                   <div className="flex gap-x-4 items-center">
                     <p className="text-xs text-[#D00000] font-medium line-through">
-                      IDR40.000
+                      IDR10.000
                     </p>
                     <p className="text-lg text-[#0B0909] font-medium lg:text-[22px]">
                       IDR. {result.products_price}
