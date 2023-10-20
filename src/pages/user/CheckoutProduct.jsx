@@ -109,6 +109,7 @@ function CheckoutProduct() {
   }
 
   const OnSubmitHandler = () => {
+    console.log("ok");
     authAxios
       .post("/orders", wrapBody)
       .then((res) => {
@@ -351,17 +352,21 @@ function CheckoutProduct() {
                 IDR. {price}
               </span>
             </div>
-            <button
-              className={`p-[10px] text-sm font-medium rounded-md text-dark bg-primary hover:bg-amber-600 active:ring active:ring-orange-300 ${
-                !wrapBody.length
-                  ? "disabled:bg-slate-200 disabled:ring-slate-300"
-                  : ""
-              }`}
-              onClick={OnSubmitHandler}
-              disabled
-            >
-              Checkout
-            </button>
+            {!wrapBody.length ? (
+              <button
+                className="p-[10px] text-sm font-medium rounded-md text-dark bg-primary hover:bg-amber-600 active:ring active:ring-orange-300 disabled:bg-slate-200 disabled:ring-slate-300"
+                disabled
+              >
+                Checkout
+              </button>
+            ) : (
+              <button
+                className="p-[10px] text-sm font-medium rounded-md text-dark bg-primary hover:bg-amber-600 active:ring active:ring-orange-300 "
+                onClick={OnSubmitHandler}
+              >
+                Checkout
+              </button>
+            )}
             <div>
               <span className="text-sm lg:text-base">We Accept</span>
               <div className="flex justify-between items-center my-5">

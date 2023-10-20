@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import getImageUrl from "../../utils/imageGetter";
 import NavbarLogin from "../../components/NavbarLogin";
@@ -17,10 +17,10 @@ function DetailOrder() {
   const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
-  const [searchParams] = useSearchParams();
+  const params = useParams();
+  const paramsId = params.id;
   const url = import.meta.env.VITE_BACKEND_HOST;
   const token = localStorage.getItem("token");
-  const paramsId = searchParams.get("id");
   const authAxios = axios.create({
     baseURL: url,
     headers: {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { UseProductContext } from "../../context/ProductContext";
 
@@ -19,9 +19,9 @@ function DetailProduct() {
   const token = localStorage.getItem("token");
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
-  const [searchParams] = useSearchParams();
+  const params = useParams();
+  const paramsId = params.id;
   const url = import.meta.env.VITE_BACKEND_HOST;
-  const paramsId = searchParams.get("id");
   const authAxios = axios.create({
     baseURL: url,
     headers: {

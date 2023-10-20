@@ -43,7 +43,7 @@ const router = createBrowserRouter([
     // errorElement: "",
   },
   {
-    path: "/detail-product",
+    path: "/detail-product/:id",
     element: <DetailProduct />,
     // errorElement: "",
   },
@@ -58,7 +58,7 @@ const router = createBrowserRouter([
     // errorElement: "",
   },
   {
-    path: "/detail-order",
+    path: "/detail-order/:id",
     element: <DetailOrder />,
     // errorElement: "",
   },

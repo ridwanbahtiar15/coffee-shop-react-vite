@@ -159,13 +159,13 @@ function HistoryOrder() {
                         Status
                       </span>
                     </div>
-                    <span className="text-xs md:text-xs font-bold text-dark py-2 px-4 rounded-full bg-[#FF890633]">
+                    <span className="text-xs md:text-xs font-bold text-primary py-2 px-4 rounded-full bg-[#FF890633]">
                       {result.orders_status}
                     </span>
                   </div>
                   <Link
-                    to={`/detail-order?id=${result.orders_id}`}
-                    className="text-sm font-medium text-dark underline underline-offset-2 max-sm:w-full text-center sm:text-left"
+                    to={`/detail-order/${result.orders_id}`}
+                    className="text-sm font-medium text-primary underline underline-offset-2 max-sm:w-full text-center sm:text-left"
                   >
                     Views Order Detail
                   </Link>

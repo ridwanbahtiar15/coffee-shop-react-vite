@@ -18,7 +18,7 @@ function ItemProduct({ id, img, name, desc, price }) {
         </p>
         <div className="flex flex-col gap-y-2 md:flex-row md:justify-between md:gap-x-2">
           <Link
-            to={`/detail-product?id=${id}`}
+            to={`/detail-product/${id}`}
             className="text-sm xl:text-base font-medium text-dark bg-primary p-2 rounded-md hover:bg-amber-600 active:ring active:ring-orange-300 md:w-3/4 text-center"
           >
             Buy

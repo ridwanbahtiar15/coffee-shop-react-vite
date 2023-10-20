@@ -49,6 +49,7 @@ function Product() {
       .catch((err) => console.log(err));
   }, []);
 
+  // eslint-disable-next-line no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState();
   const [category, setCategory] = useState();
@@ -69,7 +70,7 @@ function Product() {
         ...prev,
         name: search,
       }));
-      urlProduct = `/products?name=${search}`;
+      urlProduct = `/products?name=${search.toLowerCase()}`;
     }
 
     if (category) {
@@ -77,7 +78,7 @@ function Product() {
         ...prev,
         category: category,
       }));
-      urlProduct = `/products?category=${category}`;
+      urlProduct = `/products?category=${category.toLowerCase()}`;
     }
 
     if (search && category) {
@@ -86,7 +87,7 @@ function Product() {
         name: search,
         category: category,
       }));
-      urlProduct = `/products?name=${search}&category=${category}`;
+      urlProduct = `/products?name=${search.toLowerCase()}&category=${category.toLowerCase()}`;
     }
 
     if (!search && !category) {
@@ -211,7 +212,7 @@ function Product() {
                   id="coffee"
                   name="category"
                   className="appearance-none w-[24px] h-[24px] bg-none border border-[#a0a3bd] rounded-lg flex items-center justify-center after:font-awesome after:content-['\f00c'] after:font-black after:text-normal after:text-[#0b0909] after:hidden checked:bg-primary checked:border-none checked:after:block"
-                  value="Coffee"
+                  value="coffee"
                   onChange={setCategoryHandler}
                 />
                 <label htmlFor="coffee">Coffee</label>
@@ -222,7 +223,7 @@ function Product() {
                   id="non-coffee"
                   name="category"
                   className="appearance-none w-[24px] h-[24px] bg-none border border-[#a0a3bd] rounded-lg flex items-center justify-center after:font-awesome after:content-['\f00c'] after:font-black after:text-normal after:text-[#0b0909] after:hidden checked:bg-primary checked:border-none checked:after:block"
-                  value="Non-Coffee"
+                  value="non-coffee"
                   onChange={setCategoryHandler}
                 />
                 <label htmlFor="non-coffee">Non Coffee</label>
@@ -233,7 +234,7 @@ function Product() {
                   id="milk"
                   name="category"
                   className="appearance-none w-[24px] h-[24px] bg-none border border-[#a0a3bd] rounded-lg flex items-center justify-center after:font-awesome after:content-['\f00c'] after:font-black after:text-normal after:text-[#0b0909] after:hidden checked:bg-primary checked:border-none checked:after:block"
-                  value="Milk"
+                  value="milk"
                   onChange={setCategoryHandler}
                 />
                 <label htmlFor="milk">Milk</label>
@@ -298,11 +299,13 @@ function Product() {
               />
             </div>
           </div>
-          <div className="text-sm font-medium text-[#0B0909] py-3 px-4 bg-primary text-center rounded-md hover:bg-amber-600 active:ring active:ring-orange-300 mt-4">
-            <button type="button" onClick={OnSubmitHandler}>
-              Apply Filter
-            </button>
-          </div>
+          <button
+            className="text-sm font-medium text-[#0B0909] py-3 px-4 bg-primary text-center rounded-md hover:bg-amber-600 active:ring active:ring-orange-300 mt-4"
+            type="button"
+            onClick={OnSubmitHandler}
+          >
+            Apply Filter
+          </button>
         </section>
         {product.length > 0 ? (
           <section className="xl:w-4/6">
