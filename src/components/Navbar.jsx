@@ -27,7 +27,7 @@ function Navbar(props) {
         />
         <Link
           to="/home"
-          className="text-light hover:border-b-2 border-primary border-b-2 hidden lg:block"
+          className="text-light hover:border-b-2 hover:border-primary focus:border-b-2 focus:border-primary hidden lg:block"
         >
           Home
         </Link>

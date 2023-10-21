@@ -55,24 +55,50 @@ function Product() {
     setCategory(e.target.value);
   };
 
+  const [rangeOne, setRangeOne] = useState(10000);
+  const [rangeTwo, setRangeTwo] = useState(99000);
+
+  const rangeOneHandler = (e) => {
+    setRangeOne(e.target.value);
+  };
+  const rangeTwoHandler = (e) => {
+    setRangeTwo(e.target.value);
+  };
+
   const OnSubmitHandler = (e) => {
     e.preventDefault();
 
+    console.log(rangeOne);
+    console.log(rangeTwo);
+
     let urlProduct = `/products`;
+    if (rangeOne && rangeTwo) {
+      setSearchParams((prev) => ({
+        ...prev,
+        minrange: rangeOne,
+        maxrange: rangeTwo,
+      }));
+      urlProduct = `/products?minrange=${rangeOne}&maxrange=${rangeTwo}`;
+    }
+
     if (search) {
       setSearchParams((prev) => ({
         ...prev,
         name: search,
+        minrange: rangeOne,
+        maxrange: rangeTwo,
       }));
-      urlProduct = `/products?name=${search.toLowerCase()}`;
+      urlProduct = `/products?name=${search.toLowerCase()}&minrange=${rangeOne}&maxrange=${rangeTwo}`;
     }
 
     if (category) {
       setSearchParams((prev) => ({
         ...prev,
         category: category,
+        minrange: rangeOne,
+        maxrange: rangeTwo,
       }));
-      urlProduct = `/products?category=${category.toLowerCase()}`;
+      urlProduct = `/products?category=${category.toLowerCase()}&minrange=${rangeOne}&maxrange=${rangeTwo}`;
     }
 
     if (search && category) {
@@ -80,26 +106,28 @@ function Product() {
         ...prev,
         name: search,
         category: category,
+        minrange: rangeOne,
+        maxrange: rangeTwo,
       }));
-      urlProduct = `/products?name=${search.toLowerCase()}&category=${category.toLowerCase()}`;
+      urlProduct = `/products?name=${search.toLowerCase()}&category=${category.toLowerCase()}&minrange=${rangeOne}&maxrange=${rangeTwo}`;
     }
 
-    if (!search && !category) {
-      setSearchParams((prev) => ({
-        ...prev,
-      }));
-      urlProduct = `/products`;
-    }
+    // if (!search && !category) {
+    //   setSearchParams((prev) => ({
+    //     ...prev,
+    //   }));
+    //   urlProduct = `/products`;
+    // }
     authAxios
       .get(urlProduct)
       .then((res) => setProduct(res.data.result))
-      .catch((err) => console.log(err));
+      .catch(() => setProduct([]));
   };
 
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />
-      <header className="hidden md:w-full md:h-[305px] md:bg-[url('/src/assets/img/Rectangle299.webp')] md:flex md:items-center md:px-24 lg:px-[130px]">
+      <header className="hidden md:w-full md:h-[305px] md:bg-[url('/src/assets/img/Rectangle299.webp')] md:flex md:items-center md:px-24 lg:px-[130px] bg-no-repeat bg-cover">
         <h1 className="font-plusJakartaSans text-5xl font-medium w-[80%] text-light leading-tight">
           We Provide Good Coffee and Healthy Meals
         </h1>
@@ -266,22 +294,34 @@ function Product() {
           </div>
           <div className="range">
             <span className="text-lg font-bold">Range Price</span>
-            <div className="h-2 bg-light rounded mt-5">
-              <div className="h-2 absolute left-[18%] right-[70%] rounded bg-primary"></div>
+            <div className="h-2 rounded mt-5 ">
+              <div className="h-2 left-[18%] right-[70%] rounded bg-light"></div>
             </div>
             <div className="relative">
               <input
                 type="range"
-                className="w-full h-[8px] pointer-events-none absolute top-[-8px] appearance-none rounded"
+                className="w-full h-[8px] absolute top-[-6px] pointer-events-none appearance-none rounded"
                 min="0"
-                max="10000"
+                max="120000"
+                onChange={rangeOneHandler}
+                defaultValue={rangeOne}
               />
               <input
                 type="range"
-                className="w-full h-[8px] pointer-events-none absolute top-[-8px] appearance-none rounded"
-                min="10000"
-                max="20000"
+                className="w-full h-[8px] absolute top-[-6px] right-0 pointer-events-none appearance-none rounded"
+                min="0"
+                max="120000"
+                onChange={rangeTwoHandler}
+                defaultValue={rangeTwo}
               />
+            </div>
+            <div className="flex w-full gap-x-5">
+              <div className="w-1/2 bg-light h-10 mt-6 rounded-md text-dark font-bold flex justify-center items-center">
+                Idr. {rangeOne}
+              </div>
+              <div className="w-1/2 bg-light h-10 mt-6 rounded-md text-dark font-bold flex justify-center items-center">
+                Idr. {rangeTwo}
+              </div>
             </div>
           </div>
           <button
