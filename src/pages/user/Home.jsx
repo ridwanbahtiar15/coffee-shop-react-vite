@@ -6,7 +6,6 @@ import getImageUrl from "../../utils/imageGetter";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import DropdownMobile from "../../components/DropdownMobile";
-import NavbarLogin from "../../components/NavbarLogin";
 import Modal from "../../components/modal/Modal";
 
 function Home() {
@@ -14,32 +13,14 @@ function Home() {
     document.title = "Home";
   });
 
-  const token = localStorage.getItem("token");
-  const [isLogin, setIsLogin] = useState(false);
-  useEffect(() => {
-    if (token) {
-      setIsLogin(true);
-    }
-  }, []);
-
+  // eslint-disable-next-line no-unused-vars
   const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
   return (
     <>
-      {isLogin && (
-        <NavbarLogin
-          isClick={() => setIsDropdownShow(true)}
-          isLogoutClick={() => {
-            setOpenModal({ isOpen: true, status: "logout" });
-            setMessage({ msg: "Are you sure?", isError: null });
-          }}
-          message={Message}
-        />
-      )}
-      {!isLogin && <Navbar isClick={() => setIsDropdownShow(true)} />}
-
+      <Navbar isClick={() => setIsDropdownShow(true)} />
       <header className="flex flex-wrap font-plusJakartaSans">
         <div className="w-full max-sm:h-screen select-none flex items-center py-4 px-5 md:px-24 lg:px-[130px] max-[1400px]:h-[700px] min-[1400px]:h-[1024px] xl:w-1/2 header-section">
           <article className="flex flex-col gap-y-6 items-baseline relative">

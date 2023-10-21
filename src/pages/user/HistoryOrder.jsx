@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 import getImageUrl from "../../utils/imageGetter";
-import NavbarLogin from "../../components/NavbarLogin";
+import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Modal from "../../components/modal/Modal";
 import DropdownMobile from "../../components/DropdownMobile";
@@ -13,6 +13,7 @@ function HistoryOrder() {
     document.title = "History Order";
   });
 
+  // eslint-disable-next-line no-unused-vars
   const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
@@ -33,21 +34,13 @@ function HistoryOrder() {
       .get("/orders/" + id)
       .then((res) => {
         setProductByUser(res.data.result);
-        // console.log(res.data.result);
       })
       .catch((err) => console.log(err));
   }, []);
 
   return (
     <>
-      <NavbarLogin
-        isClick={() => setIsDropdownShow(true)}
-        isLogoutClick={() => {
-          setOpenModal({ isOpen: true, status: "logout" });
-          setMessage({ msg: "Are you sure?", isError: null });
-        }}
-        message={Message}
-      />
+      <Navbar isClick={() => setIsDropdownShow(true)} />
       <header className="font-plusJakartaSans py-8 px-5 md:px-24 lg:py-10 lg:px-[130px] min-[1400px]:pt-[78px] min-[1400px]:pb-[64px] flex justify-between items-end md:justify-normal md:gap-7">
         <h1 className="text-2xl font-medium text-dark md:text-3xl xl:text-5xl">
           History Order

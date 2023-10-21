@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import getImageUrl from "../../utils/imageGetter";
 import { UseProductContext } from "../../context/ProductContext.jsx";
-import NavbarLogin from "../../components/NavbarLogin";
+import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import DropdownMobile from "../../components/DropdownMobile";
 import Modal from "../../components/modal/Modal";
@@ -55,11 +55,11 @@ function CheckoutProduct() {
   const product = UseProductContext();
   const { wrapBody, deleteData } = product;
 
-  const token = localStorage.getItem("token");
   const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState({ isOpen: false, status: null });
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
+  const token = localStorage.getItem("token");
   const url = import.meta.env.VITE_BACKEND_HOST;
   const authAxios = axios.create({
     baseURL: url,
@@ -135,14 +135,7 @@ function CheckoutProduct() {
 
   return (
     <>
-      <NavbarLogin
-        isClick={() => setIsDropdownShow(true)}
-        isLogoutClick={() => {
-          setOpenModal({ isOpen: true, status: "logout" });
-          setMessage({ msg: "Are you sure?", isError: null });
-        }}
-        message={Message}
-      />
+      <Navbar isClick={() => setIsDropdownShow(true)} />
       <header className="font-plusJakartaSans py-8 px-5 md:px-24 lg:py-10 lg:px-[130px] min-[1400px]:pt-[78px] min-[1400px]:pb-[64px]">
         <h1 className="text-2xl font-medium text-dark md:text-3xl xl:text-5xl">
           Payment Details

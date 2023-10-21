@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 import getImageUrl from "../../utils/imageGetter";
-import NavbarLogin from "../../components/NavbarLogin";
+import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import DropdownMobile from "../../components/DropdownMobile";
 import Modal from "../../components/modal/Modal";
@@ -13,6 +13,7 @@ function DetailOrder() {
     document.title = "History Order";
   });
 
+  // eslint-disable-next-line no-unused-vars
   const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
@@ -50,14 +51,7 @@ function DetailOrder() {
 
   return (
     <>
-      <NavbarLogin
-        isClick={() => setIsDropdownShow(true)}
-        isLogoutClick={() => {
-          setOpenModal(true);
-          setMessage({ msg: "Are you sure?", isError: null });
-        }}
-        message={Message}
-      />
+      <Navbar isClick={() => setIsDropdownShow(true)} />
       <header className="font-plusJakartaSans py-8 px-5 md:px-24 lg:py-10 lg:px-[130px] min-[1400px]:pt-[78px] min-[1400px]:pb-[64px]">
         <h1 className="text-2xl font-medium text-dark md:text-3xl lg:text-3xl xl:text-5xl">
           Order <span className="font-bold">#{paramsId}</span>

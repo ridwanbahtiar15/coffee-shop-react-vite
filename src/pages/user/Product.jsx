@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
 
-import getImageUrl from "../../utils/imageGetter";
 import "../../style/style.css";
-import NavbarLogin from "../../components/NavbarLogin";
+import getImageUrl from "../../utils/imageGetter";
+import Navbar from "../../components/Navbar";
 import DropdownMobile from "../../components/DropdownMobile";
 import Footer from "../../components/Footer";
 import PromoCard from "../../components/PromoCard";
@@ -16,6 +16,7 @@ function Product() {
     document.title = "Product";
   });
 
+  // eslint-disable-next-line no-unused-vars
   const [Message, setMessage] = useState({
     msg: null,
     isError: null,
@@ -24,13 +25,6 @@ function Product() {
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
   const token = localStorage.getItem("token");
-  const [isLogin, setIsLogin] = useState(false);
-  useEffect(() => {
-    if (token) {
-      setIsLogin(true);
-    }
-  }, []);
-
   const url = import.meta.env.VITE_BACKEND_HOST;
   const authAxios = axios.create({
     baseURL: url,
@@ -104,16 +98,7 @@ function Product() {
 
   return (
     <>
-      {isLogin && (
-        <NavbarLogin
-          isClick={() => setIsDropdownShow(true)}
-          isLogoutClick={() => {
-            setOpenModal({ isOpen: true, status: "logout" });
-            setMessage({ msg: "Are you sure?", isError: null });
-          }}
-          message={Message}
-        />
-      )}
+      <Navbar isClick={() => setIsDropdownShow(true)} />
       <header className="hidden md:w-full md:h-[305px] md:bg-[url('/src/assets/img/Rectangle299.webp')] md:flex md:items-center md:px-24 lg:px-[130px]">
         <h1 className="font-plusJakartaSans text-5xl font-medium w-[80%] text-light leading-tight">
           We Provide Good Coffee and Healthy Meals

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { UseProductContext } from "../../context/ProductContext";
 
 import getImageUrl from "../../utils/imageGetter";
-import NavbarLogin from "../../components/NavbarLogin";
+import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import DropdownMobile from "../../components/DropdownMobile";
 import Modal from "../../components/modal/Modal";
@@ -29,6 +29,7 @@ function DetailProduct() {
     },
   });
 
+  // eslint-disable-next-line no-unused-vars
   const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState({ isOpen: false, status: null });
 
@@ -94,14 +95,7 @@ function DetailProduct() {
 
   return (
     <>
-      <NavbarLogin
-        isClick={() => setIsDropdownShow(true)}
-        isLogoutClick={() => {
-          setOpenModal({ isOpen: true, status: "logout" });
-          setMessage({ msg: "Are you sure?", isError: null });
-        }}
-        message={Message}
-      />
+      <Navbar isClick={() => setIsDropdownShow(true)} />
       <main className="font-plusJakartaSans px-5 lg:px-[130px] md:px-24 mt-5 md:mt-[87px]">
         <section className="flex flex-col lg:flex-row gap-x-5">
           <section className="w-full flex flex-col gap-y-4 md:flex-row max-lg:justify-between lg:gap-y-7 lg:flex-col lg:w-3/5 xl:1/2">

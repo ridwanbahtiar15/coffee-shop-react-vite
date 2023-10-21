@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 import getImageUrl from "../../utils/imageGetter";
-
-import NavbarLogin from "../../components/NavbarLogin";
+import Navbar from "../../components/Navbar";
 import DropdownMobile from "../../components/DropdownMobile";
 import Modal from "../../components/modal/Modal";
 import Footer from "../../components/Footer";
@@ -14,6 +13,7 @@ function Profile() {
   });
 
   const [isDropdownShown, setIsDropdownShow] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const [isPassShown, setIsPassShown] = useState(false);
   const showPassHandler = () => {
@@ -24,7 +24,6 @@ function Profile() {
     msg: null,
     isError: null,
   });
-  const [openModal, setOpenModal] = useState(false);
 
   const token = localStorage.getItem("token");
   const url = import.meta.env.VITE_BACKEND_HOST;
@@ -98,14 +97,7 @@ function Profile() {
 
   return (
     <>
-      <NavbarLogin
-        isClick={() => setIsDropdownShow(true)}
-        isLogoutClick={() => {
-          setOpenModal(true);
-          setMessage({ msg: "Are you sure?", isError: null });
-        }}
-        message={Message}
-      />
+      <Navbar isClick={() => setIsDropdownShow(true)} />
       <header className="pt-10 pb-7 px-5 md:px-24 lg:px-[130px]">
         <h1 className="font-plusJakartaSans text-2xl font-medium text-[#0B0909] md:text-3xl xl:text-5xl">
           Profile

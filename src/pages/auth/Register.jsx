@@ -28,8 +28,14 @@ function Register() {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    if (e.target.password.value !== e.target.confirmPassword.value)
-      return console.log("Password dont match");
+    if (e.target.password.value !== e.target.confirmPassword.value) {
+      setMessage({
+        msg: "Password don't match!",
+        isError: true,
+      });
+      setOpenModal({ isOpen: true, status: "error" });
+      return;
+    }
 
     const body = {
       users_fullname: e.target.fullname.value,
