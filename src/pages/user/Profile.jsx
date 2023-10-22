@@ -12,18 +12,14 @@ function Profile() {
     document.title = "Profile";
   });
 
-  const [isDropdownShown, setIsDropdownShow] = useState(false);
+  const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState(false);
+  const [isDropdownShown, setIsDropdownShow] = useState(false);
 
   const [isPassShown, setIsPassShown] = useState(false);
   const showPassHandler = () => {
     setIsPassShown((state) => !state);
   };
-
-  const [Message, setMessage] = useState({
-    msg: null,
-    isError: null,
-  });
 
   const token = localStorage.getItem("token");
   const url = import.meta.env.VITE_BACKEND_HOST;
@@ -34,7 +30,6 @@ function Profile() {
     },
   });
 
-  const [image, setImage] = useState();
   const [user, setUser] = useState({
     users_fullname: "",
     users_email: "",
@@ -66,6 +61,11 @@ function Profile() {
     setUser(dataClone);
   };
 
+  const [image, setImage] = useState("");
+  const changeImageHandler = (e) => {
+    setImage(e.target.files[0]);
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
 
@@ -84,20 +84,20 @@ function Profile() {
           msg: res.data.msg,
           isError: false,
         });
-        setOpenModal(true);
+        setOpenModal({ isOpen: true, status: "success" });
       })
       .catch((err) => {
         setMessage({
           msg: err.response.data.msg,
           isError: true,
         });
-        setOpenModal(true);
+        setOpenModal({ isOpen: true, status: "error" });
       });
   };
 
   return (
     <>
-      <Navbar isClick={() => setIsDropdownShow(true)} />
+      <Navbar isClick={() => setIsDropdownShow(true)} imageProfile={image} />
       <header className="pt-10 pb-7 px-5 md:px-24 lg:px-[130px]">
         <h1 className="font-plusJakartaSans text-2xl font-medium text-[#0B0909] md:text-3xl xl:text-5xl">
           Profile
@@ -112,19 +112,35 @@ function Profile() {
             <span className="text-sm font-normal text-secondary">
               {user.users_email}
             </span>
-            <img
-              src={user.users_image}
-              alt="user-image"
-              className="w-20 h-20 rounded-full"
-              name="users_image"
-            />
+            {image ? (
+              <img
+                src={URL.createObjectURL(image)}
+                alt="user-image"
+                className="w-20 h-20 rounded-full"
+                name="users_image"
+              />
+            ) : (
+              <img
+                src={user.users_image}
+                alt="user-image"
+                className="w-20 h-20 rounded-full"
+                name="users_image"
+              />
+            )}
+
             <input
               type="file"
               id="image"
               name="users_image"
-              className="text-sm font-medium text-dark py-3 px-6 bg-primary hover:bg-amber-600 rounded-md w-full lg:text-xs xl:text-sm active:ring active:ring-orange-300 outline-none file:hidden"
-              onChange={(e) => setImage(e.target.files[0])}
+              className="hidden"
+              onChange={changeImageHandler}
             />
+            <label
+              htmlFor="image"
+              className="text-sm font-medium text-dark py-3 px-6 bg-primary hover:bg-amber-600 rounded-md w-full lg:text-xs xl:text-sm active:ring active:ring-orange-300 outline-none flex justify-center items-center text-center cursor-pointer"
+            >
+              Upload New Image
+            </label>
             <span className="text-base font-normal text-secondary lg:text-xs xl:text-sm">
               Since <span className="font-medium">20 January 2022</span>
             </span>
@@ -288,7 +304,9 @@ function Profile() {
       {isDropdownShown && (
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />
       )}
-      {openModal && <Modal closeModal={setOpenModal} message={Message} />}
+      {openModal.isOpen && (
+        <Modal modal={openModal} closeModal={setOpenModal} message={Message} />
+      )}
     </>
   );
 }

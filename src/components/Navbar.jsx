@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
+
 import getImageUrl from "../utils/imageGetter";
 
 function Navbar(props) {
@@ -16,6 +18,25 @@ function Navbar(props) {
   const btnArrowHandle = () => {
     setBtnArrow((state) => !state);
   };
+
+  const url = import.meta.env.VITE_BACKEND_HOST;
+  const authAxios = axios.create({
+    baseURL: url,
+    headers: {
+      Authorization: `Barer ${token}`,
+    },
+  });
+
+  const [image, setImage] = useState("");
+
+  useEffect(() => {
+    authAxios
+      .get("/users/profile")
+      .then((res) => {
+        setImage(res.data.result[0].users_image);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <nav className="w-full flex justify-between py-4 px-5 items-center font-plusJakartaSans bg-[#0B0909] md:px-24 lg:px-[130px]">
@@ -70,13 +91,25 @@ function Navbar(props) {
           </Link>
         )}
         {isLogin && (
-          <Link to="/profile" className="hidden lg:block">
-            <img
-              src={getImageUrl("profile", "jpg")}
-              alt="icon-profile"
-              className="rounded-full w-8 h-8"
-            />
-          </Link>
+          <div>
+            {props.imageProfile ? (
+              <Link to="/profile">
+                <img
+                  src={URL.createObjectURL(props.imageProfile)}
+                  alt="icon-profile"
+                  className="rounded-full w-8 h-8"
+                />
+              </Link>
+            ) : (
+              <Link to="/profile">
+                <img
+                  src={image}
+                  alt="icon-profile"
+                  className="rounded-full w-8 h-8"
+                />
+              </Link>
+            )}
+          </div>
         )}
         {isLogin && (
           <button

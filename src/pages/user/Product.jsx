@@ -68,9 +68,6 @@ function Product() {
   const OnSubmitHandler = (e) => {
     e.preventDefault();
 
-    console.log(rangeOne);
-    console.log(rangeTwo);
-
     let urlProduct = `/products`;
     if (rangeOne && rangeTwo) {
       setSearchParams((prev) => ({
@@ -254,7 +251,7 @@ function Product() {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-y-4">
+          {/* <div className="flex flex-col gap-y-4">
             <span className="text-lg font-bold">Sort By</span>
             <div className="flex flex-col gap-y-4 text-lg font-normal">
               <div className="flex gap-3.5 items-center">
@@ -291,7 +288,7 @@ function Product() {
                 <label htmlFor="cheap">Cheap</label>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="range">
             <span className="text-lg font-bold">Range Price</span>
             <div className="h-2 rounded mt-5 ">
