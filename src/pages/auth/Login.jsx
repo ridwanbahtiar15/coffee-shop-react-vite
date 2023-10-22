@@ -33,8 +33,10 @@ function Login() {
       .post(url, body)
       .then((res) => {
         localStorage.setItem("token", res.data.data.token);
-        localStorage.setItem("userInfo", res.data.data.userInfo.users_id);
-        navigate("/home");
+        localStorage.setItem("users_id", res.data.data.userInfo.users_id);
+        localStorage.setItem("roles_id", res.data.data.userInfo.roles_id);
+        if (res.data.data.userInfo.roles_id == 1) return navigate("/dashboard");
+        navigate("/");
       })
       .catch((err) => {
         setMessage({

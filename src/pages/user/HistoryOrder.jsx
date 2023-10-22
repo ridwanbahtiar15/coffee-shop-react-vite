@@ -20,6 +20,7 @@ function HistoryOrder() {
 
   const token = localStorage.getItem("token");
   const id = localStorage.getItem("userInfo");
+  console.log(id);
   const url = import.meta.env.VITE_BACKEND_HOST;
   const authAxios = axios.create({
     baseURL: url,

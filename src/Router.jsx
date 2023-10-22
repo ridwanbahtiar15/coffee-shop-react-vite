@@ -10,10 +10,11 @@ import DetailProduct from "./pages/user/DetailProduct";
 import CheckoutProduct from "./pages/user/CheckoutProduct";
 import HistoryOrder from "./pages/user/HistoryOrder";
 import DetailOrder from "./pages/user/DetailOrder";
+import Dashboard from "./pages/admin/Dashboard";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/login",
     element: <Login />,
     // errorElement: "",
   },
@@ -28,7 +29,7 @@ const router = createBrowserRouter([
     // errorElement: "",
   },
   {
-    path: "/home",
+    path: "/",
     element: <Home />,
     // errorElement: "",
   },
@@ -60,6 +61,11 @@ const router = createBrowserRouter([
   {
     path: "/detail-order/:id",
     element: <DetailOrder />,
+    // errorElement: "",
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard path="/dashboard" />,
     // errorElement: "",
   },
 ]);

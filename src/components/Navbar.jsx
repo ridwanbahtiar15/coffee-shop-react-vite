@@ -7,6 +7,7 @@ import getImageUrl from "../utils/imageGetter";
 
 function Navbar(props) {
   const token = localStorage.getItem("token");
+  const roles_id = localStorage.getItem("roles_id");
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
     if (token) {
@@ -39,44 +40,73 @@ function Navbar(props) {
   }, []);
 
   return (
-    <nav className="w-full flex justify-between py-4 px-5 items-center font-plusJakartaSans bg-[#0B0909] md:px-24 lg:px-[130px]">
+    <nav
+      className={`w-full flex justify-between py-4 px-5 items-center font-plusJakartaSans  md:px-24${
+        isLogin && roles_id == 1
+          ? " bg-light lg:px-11 border-b border-[#E8E8E8]"
+          : " bg-[#0B0909] lg:px-[130px]"
+      }`}
+    >
       <div className="nav-start flex items-center gap-x-[60px] text-sm font-normal">
-        <img
-          src={getImageUrl("coffee-shop-white", "svg")}
-          alt="logo"
-          className="w-32 h-8"
-        />
-        <Link
-          to="/home"
-          className="text-light hover:border-b-2 hover:border-primary focus:border-b-2 focus:border-primary hidden lg:block"
-        >
-          Home
-        </Link>
-        <Link
-          to="/product"
-          className="text-light hover:border-b-2 hover:border-primary focus:border-b-2 focus:border-primary hidden lg:block"
-        >
-          Product
-        </Link>
+        {roles_id == 1 ? (
+          <img
+            src={getImageUrl("coffee-shop", "svg")}
+            alt="logo"
+            className="w-32 h-8"
+          />
+        ) : (
+          <img
+            src={getImageUrl("coffee-shop-white", "svg")}
+            alt="logo"
+            className="w-32 h-8"
+          />
+        )}
+
+        {roles_id == 2 ? (
+          <div className="flex items-center gap-x-[60px] ">
+            <Link
+              to="/"
+              className="text-light hover:border-b-2 hover:border-primary focus:border-b-2 focus:border-primary hidden lg:block"
+            >
+              Home
+            </Link>
+            <Link
+              to="/product"
+              className="text-light hover:border-b-2 hover:border-primary focus:border-b-2 focus:border-primary hidden lg:block"
+            >
+              Product
+            </Link>
+          </div>
+        ) : (
+          <div></div>
+        )}
       </div>
       <div className="nav-end flex gap-x-[22px] items-center">
         <Link to="#" className="icon-search hidden lg:block">
           <img
-            src={getImageUrl("Search-white", "svg")}
+            src={
+              roles_id == 1
+                ? getImageUrl("Search", "svg")
+                : getImageUrl("Search-white", "svg")
+            }
             alt="Search"
             className="w-full h-full"
           />
         </Link>
         <Link to="#" className="hidden lg:block">
           <img
-            src={getImageUrl("ShoppingCart-white", "svg")}
+            src={
+              roles_id == 1
+                ? getImageUrl("ShoppingCart", "svg")
+                : getImageUrl("ShoppingCart-white", "svg")
+            }
             alt="ShoppingCart"
             className="w-full h-full"
           />
         </Link>
         {!isLogin && (
           <Link
-            to="/"
+            to="/login"
             className="text-light text-sm font-medium py-3 px-[18px] border border-[#ebeaea] hover:bg-light hover:text-dark rounded-md hidden lg:block active:ring active:ring-slate-300"
           >
             Sign In
@@ -117,7 +147,11 @@ function Navbar(props) {
             className="hidden lg:block cursor-pointer"
           >
             <img
-              src={getImageUrl("down-white", "svg")}
+              src={
+                roles_id == 1
+                  ? getImageUrl("down", "svg")
+                  : getImageUrl("down-white", "svg")
+              }
               alt="down"
               className="w-full h-full"
               onClick={btnArrowHandle}
@@ -126,16 +160,30 @@ function Navbar(props) {
         )}
         {isLogin && (
           <div
-            className={`absolute top-20 right-24 bg-[#0B0909] text-light text-sm font-normal py-2 px-6 ${
-              btnArrow ? "" : "hidden"
-            } lg:right-32 max-lg:hidden`}
+            className={`absolute top-20 right-24 text-light text-sm font-normal py-2 px-6 lg:right-32 max-lg:hidden${
+              btnArrow ? "" : " hidden"
+            } ${
+              roles_id == 1 ? "bg-light" : "bg-[#0B0909]"
+            } border border-[#E8E8E8]`}
             id="dropdown-menu"
           >
             <ul className="flex flex-col gap-y-2">
-              <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
+              <li
+                className={`p-1  hover:text-[#0B0909]${
+                  roles_id == 1
+                    ? " text-secondary"
+                    : " text-light hover:bg-light"
+                }`}
+              >
                 <Link to="/history-order">History Order</Link>
               </li>
-              <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
+              <li
+                className={`p-1  hover:text-[#0B0909]${
+                  roles_id == 1
+                    ? " text-secondary"
+                    : " text-light hover:bg-light"
+                }`}
+              >
                 {/*  eslint-disable-next-line react/prop-types */}
                 <button onClick={() => props.isLogoutClick()}>Logout</button>
               </li>

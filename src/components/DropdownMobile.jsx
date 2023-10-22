@@ -44,7 +44,7 @@ function DropdownMobile(props) {
             </div>
           </li>
           <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
-            <Link to="/home">Home</Link>
+            <Link to="/">Home</Link>
           </li>
           <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
             <Link to="/product">Product</Link>
@@ -54,7 +54,7 @@ function DropdownMobile(props) {
           </li>
           {!isLogin && (
             <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
-              <Link to="/">Sign In</Link>
+              <Link to="/login">Sign In</Link>
             </li>
           )}
           {!isLogin && (

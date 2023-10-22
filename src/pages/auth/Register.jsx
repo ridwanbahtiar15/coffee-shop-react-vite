@@ -37,6 +37,12 @@ function Register() {
       return;
     }
 
+    setMessage({
+      msg: "Loading...",
+      isError: false,
+    });
+    setOpenModal({ isOpen: true, status: false });
+
     const body = {
       users_fullname: e.target.fullname.value,
       users_email: e.target.email.value,
@@ -51,7 +57,7 @@ function Register() {
           msg: res.data.msg,
           isError: false,
         });
-        setOpenModal({ isOpen: true, status: "success" });
+        setOpenModal({ isOpen: true, status: "register" });
       })
       .catch((err) => {
         setMessage({
@@ -232,7 +238,7 @@ function Register() {
             <span>
               Have An Account?
               <span>
-                <Link to="/" className="font-medium underline">
+                <Link to="/login" className="font-medium underline">
                   Login
                 </Link>
               </span>

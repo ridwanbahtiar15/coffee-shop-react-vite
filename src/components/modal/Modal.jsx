@@ -30,6 +30,10 @@ function Modal({
                       closeModal({ isOpen: false, status: null });
                       navigate("/history-order");
                       break;
+                    case "register":
+                      closeModal({ isOpen: false, status: null });
+                      navigate("/login");
+                      break;
                     default:
                       closeModal({ isOpen: false, status: null });
                       break;
