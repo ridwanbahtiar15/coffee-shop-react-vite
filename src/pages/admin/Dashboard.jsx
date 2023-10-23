@@ -21,7 +21,7 @@ function Dashboard(props) {
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />
       <main className="flex w-full font-plusJakartaSans">
-        <aside className=" w-1/5 border-r border-[#E8E8E8] py-6 px-11">
+        <aside className="xl:w-1/5 border-r border-[#E8E8E8] py-6 px-11 hidden lg:block">
           <div className="flex flex-col gap-y-4">
             <Link
               to="/dashboard"
@@ -255,9 +255,9 @@ function Dashboard(props) {
             </Link>
           </div>
         </aside>
-        <section className="w-4/5 py-6 px-10 text-light flex flex-col gap-y-6">
-          <div className="flex gap-x-5">
-            <div className="w-1/3 bg-[#6FC276] rounded-md">
+        <section className="w-full py-5 px-5 md:px-10 lg:w-4/5 lg:py-6 lg:px-10 text-light flex flex-col gap-y-6">
+          <div className="flex flex-col gap-y-4 md:flex-row md:gap-x-5">
+            <div className="w-full lg:w-1/3 bg-[#6FC276] rounded-md">
               <div className="py-4 px-6 flex flex-col gap-y-4">
                 <div className="flex items-center gap-x-2">
                   <div className="bg-light p-3 rounded-full">
@@ -282,7 +282,7 @@ function Dashboard(props) {
                 </div>
               </div>
             </div>
-            <div className="w-1/3 bg-[#6C69D4] rounded-md">
+            <div className="w-full lg:w-1/3 bg-[#6C69D4] rounded-md">
               <div className="py-4 px-6 flex flex-col gap-y-4">
                 <div className="flex items-center gap-x-2">
                   <div className="bg-light p-3 rounded-full">
@@ -307,7 +307,7 @@ function Dashboard(props) {
                 </div>
               </div>
             </div>
-            <div className="w-1/3 bg-[#C56FBC] rounded-md">
+            <div className="w-full lg:w-1/3 bg-[#C56FBC] rounded-md">
               <div className="py-4 px-6 flex flex-col gap-y-4">
                 <div className="flex items-center gap-x-2">
                   <div className="bg-light p-3 rounded-full">
@@ -405,7 +405,7 @@ function Dashboard(props) {
             </div>
           </div>
           <div className="p-6 border border-[#E8E8E8] rounded-md">
-            <div className="flex flex-row justify-between mb-8">
+            <div className="flex flex-row justify-between mb-8 items-center">
               <div className="flex flex-col gap-y-2">
                 <p className="text-sm font-semibold text-[#0B0909]">
                   Best Selling Product
@@ -441,7 +441,7 @@ function Dashboard(props) {
                 </div>
               </div>
             </div>
-            <div className="text-xs font-medium text-secondary">
+            <div className="text-xs font-medium text-secondary overflow-x-scroll">
               <table className="table-auto w-full">
                 <thead className="">
                   <tr className="border-b border-[#E8E8E84D]">

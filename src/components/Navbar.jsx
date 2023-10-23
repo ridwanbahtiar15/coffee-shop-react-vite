@@ -41,10 +41,10 @@ function Navbar(props) {
 
   return (
     <nav
-      className={`w-full flex justify-between py-4 px-5 items-center font-plusJakartaSans  md:px-24${
+      className={`w-full flex justify-between py-4 px-5 items-center font-plusJakartaSans  ${
         isLogin && roles_id == 1
-          ? " bg-light lg:px-11 border-b border-[#E8E8E8]"
-          : " bg-[#0B0909] lg:px-[130px]"
+          ? " bg-light md:px-11 lg:px-11 border-b border-[#E8E8E8]"
+          : " bg-[#0B0909] md:px-24 lg:px-[130px]"
       }`}
     >
       <div className="nav-start flex items-center gap-x-[60px] text-sm font-normal">
@@ -127,7 +127,7 @@ function Navbar(props) {
                 <img
                   src={URL.createObjectURL(props.imageProfile)}
                   alt="icon-profile"
-                  className="rounded-full w-8 h-8"
+                  className="rounded-full w-8 h-8 hidden lg:block"
                 />
               </Link>
             ) : (
@@ -135,7 +135,7 @@ function Navbar(props) {
                 <img
                   src={image}
                   alt="icon-profile"
-                  className="rounded-full w-8 h-8"
+                  className="rounded-full w-8 h-8 hidden lg:block"
                 />
               </Link>
             )}
@@ -144,14 +144,12 @@ function Navbar(props) {
         {isLogin && (
           <button
             id="dropdown-arrow"
-            className="hidden lg:block cursor-pointer"
+            className={`hidden lg:block cursor-pointer${
+              roles_id == 1 ? " lg:hidden" : ""
+            }`}
           >
             <img
-              src={
-                roles_id == 1
-                  ? getImageUrl("down", "svg")
-                  : getImageUrl("down-white", "svg")
-              }
+              src={getImageUrl("down-white", "svg")}
               alt="down"
               className="w-full h-full"
               onClick={btnArrowHandle}
@@ -160,11 +158,13 @@ function Navbar(props) {
         )}
         {isLogin && (
           <div
-            className={`absolute top-20 right-24 text-light text-sm font-normal py-2 px-6 lg:right-32 max-lg:hidden${
-              btnArrow ? "" : " hidden"
+            className={`absolute top-20 right-24 text-light text-sm font-normal py-2 px-6 lg:right-32 max-lg:hidden ${
+              btnArrow ? "" : "hidden"
             } ${
-              roles_id == 1 ? "bg-light" : "bg-[#0B0909]"
-            } border border-[#E8E8E8]`}
+              roles_id == 1
+                ? "bg-light border border-[#E8E8E8]"
+                : "bg-[#0B0909]"
+            } `}
             id="dropdown-menu"
           >
             <ul className="flex flex-col gap-y-2">
@@ -184,7 +184,6 @@ function Navbar(props) {
                     : " text-light hover:bg-light"
                 }`}
               >
-                {/*  eslint-disable-next-line react/prop-types */}
                 <button onClick={() => props.isLogoutClick()}>Logout</button>
               </li>
             </ul>
@@ -193,7 +192,11 @@ function Navbar(props) {
 
         <button className="text-2xl lg:hidden" onClick={() => props.isClick()}>
           <img
-            src={getImageUrl("burger-menu", "svg")}
+            src={
+              roles_id == 1
+                ? getImageUrl("burger-menu-dark", "svg")
+                : getImageUrl("burger-menu", "svg")
+            }
             alt="burger-menu"
             id="burger-menu"
             className="w-full h-full"

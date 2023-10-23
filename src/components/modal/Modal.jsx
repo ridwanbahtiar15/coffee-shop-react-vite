@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router-dom";
+/* eslint-disable no-unused-vars */
+import { useNavigate, Link } from "react-router-dom";
 
 function Modal({
   /*  eslint-disable-next-line react/prop-types */
@@ -20,7 +21,7 @@ function Modal({
           <div className="flex items-start gap-x-4">
             <h1 className="text-xl font-medium text-dark text-center">{msg}</h1>
           </div>
-          {msg != "Are you sure?" ? (
+          {status != "logout" ? (
             <div className="flex gap-x-6">
               <button
                 className="p-[10px] px-4 bg-light border-2 hover:bg-slate-200 rounded-md text-dark text-base font-medium active:ring active:ring-slate-300"
@@ -45,9 +46,12 @@ function Modal({
             </div>
           ) : (
             <div className="flex gap-x-6">
-              <button className="p-[10px] bg-primary hover:bg-amber-600 rounded-md text-dark text-base font-medium active:ring active:ring-orange-300">
+              <Link
+                to="/login"
+                className="p-[10px] bg-primary hover:bg-amber-600 rounded-md text-dark text-base font-medium active:ring active:ring-orange-300"
+              >
                 Confirm
-              </button>
+              </Link>
               <button
                 className="p-[10px] bg-light border-2 hover:bg-slate-200 rounded-md text-dark text-base font-medium active:ring active:ring-slate-300"
                 onClick={() => closeModal({ isOpen: false, status: null })}

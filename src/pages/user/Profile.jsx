@@ -97,7 +97,14 @@ function Profile() {
 
   return (
     <>
-      <Navbar isClick={() => setIsDropdownShow(true)} imageProfile={image} />
+      <Navbar
+        isClick={() => setIsDropdownShow(true)}
+        imageProfile={image}
+        isLogoutClick={() => {
+          setOpenModal({ isOpen: true, status: "logout" });
+          setMessage({ msg: "Are You Sure?" });
+        }}
+      />
       <header className="pt-10 pb-7 px-5 md:px-24 lg:px-[130px]">
         <h1 className="font-plusJakartaSans text-2xl font-medium text-[#0B0909] md:text-3xl xl:text-5xl">
           Profile

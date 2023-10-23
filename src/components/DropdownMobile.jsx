@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 function DropdownMobile(props) {
   const token = localStorage.getItem("token");
+  const roles_id = localStorage.getItem("roles_id");
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
     if (token) {
@@ -17,13 +18,25 @@ function DropdownMobile(props) {
       id="dropdownMobile"
       className="w-screen font-plusJakartaSans lg:hidden"
     >
-      <div className="fixed left-0 top-0 bg-[#0B0909] w-screen h-screen pt-4 px-5 md:px-24 lg:px-[130px]">
+      <div
+        className={`fixed left-0 top-0  w-screen h-screen pt-4 px-5 md:px-24 lg:px-[130px] ${
+          roles_id == 1 ? "bg-light" : "bg-[#0B0909]"
+        }`}
+      >
         <div className="mb-5 flex justify-between">
-          <img
-            src={getImageUrl("coffee-shop-white", "svg")}
-            alt="logo"
-            className="w-32 h-8"
-          />
+          {roles_id == 1 ? (
+            <img
+              src={getImageUrl("coffee-shop", "svg")}
+              alt="logo"
+              className="w-32 h-8"
+            />
+          ) : (
+            <img
+              src={getImageUrl("coffee-shop-white", "svg")}
+              alt="logo"
+              className="w-32 h-8"
+            />
+          )}
           <button className="lg:hidden" onClick={() => props.isClick()}>
             <img src={getImageUrl("x", "svg")} alt="x" />
           </button>

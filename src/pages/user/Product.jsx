@@ -123,7 +123,13 @@ function Product() {
 
   return (
     <>
-      <Navbar isClick={() => setIsDropdownShow(true)} />
+      <Navbar
+        isClick={() => setIsDropdownShow(true)}
+        isLogoutClick={() => {
+          setOpenModal({ isOpen: true, status: "logout" });
+          setMessage({ msg: "Are You Sure?" });
+        }}
+      />
       <header className="hidden md:w-full md:h-[305px] md:bg-[url('/src/assets/img/Rectangle299.webp')] md:flex md:items-center md:px-24 lg:px-[130px] bg-no-repeat bg-cover">
         <h1 className="font-plusJakartaSans text-5xl font-medium w-[80%] text-light leading-tight">
           We Provide Good Coffee and Healthy Meals

@@ -95,7 +95,13 @@ function DetailProduct() {
 
   return (
     <>
-      <Navbar isClick={() => setIsDropdownShow(true)} />
+      <Navbar
+        isClick={() => setIsDropdownShow(true)}
+        isLogoutClick={() => {
+          setOpenModal({ isOpen: true, status: "logout" });
+          setMessage({ msg: "Are You Sure?" });
+        }}
+      />
       <main className="font-plusJakartaSans px-5 lg:px-[130px] md:px-24 mt-5 md:mt-[87px]">
         <section className="flex flex-col lg:flex-row gap-x-5">
           <section className="w-full flex flex-col gap-y-4 md:flex-row max-lg:justify-between lg:gap-y-7 lg:flex-col lg:w-3/5 xl:1/2">

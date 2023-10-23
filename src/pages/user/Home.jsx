@@ -14,13 +14,19 @@ function Home() {
   });
 
   // eslint-disable-next-line no-unused-vars
-  const [Message, setMessage] = useState({ msg: null, isError: null });
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState({ isOpen: false, status: null });
+  const [Message, setMessage] = useState({ msg: null });
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
   return (
     <>
-      <Navbar isClick={() => setIsDropdownShow(true)} />
+      <Navbar
+        isClick={() => setIsDropdownShow(true)}
+        isLogoutClick={() => {
+          setOpenModal({ isOpen: true, status: "logout" });
+          setMessage({ msg: "Are You Sure?" });
+        }}
+      />
       <header className="flex flex-wrap font-plusJakartaSans">
         <div className="w-full max-sm:h-screen select-none flex items-center py-4 px-5 md:px-24 lg:px-[130px] max-[1400px]:h-[700px] min-[1400px]:h-[1024px] xl:w-1/2 header-section">
           <article className="flex flex-col gap-y-6 items-baseline relative">

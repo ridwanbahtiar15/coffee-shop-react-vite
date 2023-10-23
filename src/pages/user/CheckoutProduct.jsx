@@ -135,7 +135,13 @@ function CheckoutProduct() {
 
   return (
     <>
-      <Navbar isClick={() => setIsDropdownShow(true)} />
+      <Navbar
+        isClick={() => setIsDropdownShow(true)}
+        isLogoutClick={() => {
+          setOpenModal({ isOpen: true, status: "logout" });
+          setMessage({ msg: "Are You Sure?" });
+        }}
+      />
       <header className="font-plusJakartaSans py-8 px-5 md:px-24 lg:py-10 lg:px-[130px] min-[1400px]:pt-[78px] min-[1400px]:pb-[64px]">
         <h1 className="text-2xl font-medium text-dark md:text-3xl xl:text-5xl">
           Payment Details
