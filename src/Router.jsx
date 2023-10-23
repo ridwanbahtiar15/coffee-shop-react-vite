@@ -11,6 +11,7 @@ import CheckoutProduct from "./pages/user/CheckoutProduct";
 import HistoryOrder from "./pages/user/HistoryOrder";
 import DetailOrder from "./pages/user/DetailOrder";
 import Dashboard from "./pages/admin/Dashboard";
+import Order from "./pages/admin/Order";
 
 const router = createBrowserRouter([
   {
@@ -66,6 +67,11 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard path="/dashboard" />,
+    // errorElement: "",
+  },
+  {
+    path: "/admin/order",
+    element: <Order path="/admin/order" />,
     // errorElement: "",
   },
 ]);

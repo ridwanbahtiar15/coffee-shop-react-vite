@@ -152,7 +152,7 @@ function DetailOrder() {
                 switch (user.orders_status) {
                   case "Pending":
                     return (
-                      <p className="text-sm text-primary font-bold py-2 px-4 rounded-full bg-[#FF890633]">
+                      <p className="text-sm text-[#D00000] font-bold py-2 px-4 rounded-full bg-[#D0000033]">
                         {user.orders_status}
                       </p>
                     );
@@ -160,7 +160,7 @@ function DetailOrder() {
                     break;
                   case "On Progress/Paid":
                     return (
-                      <p className="text-sm text-blue-600 font-bold py-2 px-4 rounded-full bg-[#2463eb4d]">
+                      <p className="text-sm text-primary font-bold py-2 px-4 rounded-full bg-[#FF890633]">
                         {user.orders_status}
                       </p>
                     );
@@ -168,7 +168,7 @@ function DetailOrder() {
                     break;
                   case "Done":
                     return (
-                      <p className="text-sm text-green-600 font-bold py-2 px-4 rounded-full bg-[#16a2494d]">
+                      <p className="text-sm text-[#00A700] font-bold py-2 px-4 rounded-full bg-[#00A70033]">
                         {user.orders_status}
                       </p>
                     );

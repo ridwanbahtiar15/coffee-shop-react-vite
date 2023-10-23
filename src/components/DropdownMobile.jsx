@@ -19,8 +19,10 @@ function DropdownMobile(props) {
       className="w-screen font-plusJakartaSans lg:hidden"
     >
       <div
-        className={`fixed left-0 top-0  w-screen h-screen pt-4 px-5 md:px-24 lg:px-[130px] ${
-          roles_id == 1 ? "bg-light" : "bg-[#0B0909]"
+        className={`fixed left-0 top-0  w-screen h-screen pt-4 px-5 ${
+          roles_id == 1
+            ? "md:px-11 lg:px-11 bg-light"
+            : "md:px-24 lg:px-[130px] bg-[#0B0909]"
         }`}
       >
         <div className="mb-5 flex justify-between">
@@ -38,7 +40,15 @@ function DropdownMobile(props) {
             />
           )}
           <button className="lg:hidden" onClick={() => props.isClick()}>
-            <img src={getImageUrl("x", "svg")} alt="x" />
+            <img
+              src={
+                roles_id == 1
+                  ? getImageUrl("close-dark", "svg")
+                  : getImageUrl("close", "svg")
+              }
+              alt="x"
+              className="w-6 h-6"
+            />
           </button>
         </div>
         <ul className="flex flex-col gap-y-2 w-full">
@@ -56,15 +66,30 @@ function DropdownMobile(props) {
               />
             </div>
           </li>
-          <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
+          <li
+            className={`p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium${
+              roles_id == 1 ? " hidden text-light" : ""
+            }`}
+          >
             <Link to="/">Home</Link>
           </li>
-          <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
+          <li
+            className={`p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium${
+              roles_id == 1 ? " hidden" : ""
+            }`}
+          >
             <Link to="/product">Product</Link>
           </li>
-          <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
+          <li
+            className={`p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium${
+              roles_id == 1
+                ? " text-secondary hover:bg-secondary hover:text-light"
+                : " text-light hover:bg-light hover:text-[#0B0909]"
+            }`}
+          >
             <Link to="/cart">Cart</Link>
           </li>
+
           {!isLogin && (
             <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
               <Link to="/login">Sign In</Link>
@@ -76,12 +101,44 @@ function DropdownMobile(props) {
             </li>
           )}
           {isLogin && (
-            <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
+            <li
+              className={`p-1 hover:font-medium${
+                roles_id == 1
+                  ? " text-secondary hover:bg-secondary hover:text-light"
+                  : " text-light hover:bg-light hover:text-[#0B0909]"
+              }`}
+            >
               <Link to="/profile">Profile</Link>
             </li>
           )}
+          {roles_id == 1 && (
+            <li className="p-1 hover:font-medium text-secondary hover:bg-secondary hover:text-light">
+              <Link to="/dashboard">Dashboard</Link>
+            </li>
+          )}
+          {roles_id == 1 && (
+            <li className="p-1 hover:font-medium text-secondary hover:bg-secondary hover:text-light">
+              <Link to="/admin/product">Product</Link>
+            </li>
+          )}
+          {roles_id == 1 && (
+            <li className="p-1 hover:font-medium text-secondary hover:bg-secondary hover:text-light">
+              <Link to="/admin/order">Order</Link>
+            </li>
+          )}
+          {roles_id == 1 && (
+            <li className="p-1 hover:font-medium text-secondary hover:bg-secondary hover:text-light">
+              <Link to="/admin/user">User</Link>
+            </li>
+          )}
           {isLogin && (
-            <li className="p-1 text-light hover:bg-light hover:text-[#0B0909] hover:font-medium">
+            <li
+              className={`p-1 hover:font-medium${
+                roles_id == 1
+                  ? " text-secondary hover:bg-secondary hover:text-light"
+                  : " text-light hover:bg-light hover:text-[#0B0909]"
+              }`}
+            >
               <button>Logout</button>
             </li>
           )}
