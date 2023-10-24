@@ -6,8 +6,8 @@ import axios from "axios";
 import getImageUrl from "../utils/imageGetter";
 
 function Navbar(props) {
+  console.log(props.path);
   const token = localStorage.getItem("token");
-  const roles_id = localStorage.getItem("roles_id");
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
     if (token) {
@@ -42,13 +42,17 @@ function Navbar(props) {
   return (
     <nav
       className={`w-full flex justify-between py-4 px-5 items-center font-plusJakartaSans  ${
-        isLogin && roles_id == 1
+        props.path == "/dashboard" ||
+        props.path == "/admin/order" ||
+        props.path == "/admin/product"
           ? " bg-light md:px-11 lg:px-11 border-b border-[#E8E8E8]"
           : " bg-[#0B0909] md:px-24 lg:px-[130px]"
       }`}
     >
       <div className="nav-start flex items-center gap-x-[60px] text-sm font-normal">
-        {roles_id == 1 ? (
+        {props.path == "/dashboard" ||
+        props.path == "/admin/order" ||
+        props.path == "/admin/product" ? (
           <img
             src={getImageUrl("coffee-shop", "svg")}
             alt="logo"
@@ -62,30 +66,38 @@ function Navbar(props) {
           />
         )}
 
-        {roles_id == 2 ? (
-          <div className="flex items-center gap-x-[60px] ">
-            <Link
-              to="/"
-              className="text-light hover:border-b-2 hover:border-primary focus:border-b-2 focus:border-primary hidden lg:block"
-            >
-              Home
-            </Link>
-            <Link
-              to="/product"
-              className="text-light hover:border-b-2 hover:border-primary focus:border-b-2 focus:border-primary hidden lg:block"
-            >
-              Product
-            </Link>
-          </div>
-        ) : (
-          <div></div>
-        )}
+        <Link
+          to="/"
+          className={`hover:border-b-2 hover:border-primary focus:border-b-2 focus:border-primary hidden lg:block ${
+            props.path == "/dashboard" ||
+            props.path == "/admin/order" ||
+            props.path == "/admin/product"
+              ? "text-secondary"
+              : "text-light"
+          }`}
+        >
+          Home
+        </Link>
+        <Link
+          to="/product"
+          className={`hover:border-b-2 hover:border-primary focus:border-b-2 focus:border-primary hidden lg:block ${
+            props.path == "/dashboard" ||
+            props.path == "/admin/order" ||
+            props.path == "/admin/product"
+              ? "text-secondary"
+              : "text-light"
+          }`}
+        >
+          Product
+        </Link>
       </div>
       <div className="nav-end flex gap-x-[22px] items-center">
         <Link to="#" className="icon-search hidden lg:block">
           <img
             src={
-              roles_id == 1
+              props.path == "/dashboard" ||
+              props.path == "/admin/order" ||
+              props.path == "/admin/product"
                 ? getImageUrl("Search", "svg")
                 : getImageUrl("Search-white", "svg")
             }
@@ -96,7 +108,9 @@ function Navbar(props) {
         <Link to="#" className="hidden lg:block">
           <img
             src={
-              roles_id == 1
+              props.path == "/dashboard" ||
+              props.path == "/admin/order" ||
+              props.path == "/admin/product"
                 ? getImageUrl("ShoppingCart", "svg")
                 : getImageUrl("ShoppingCart-white", "svg")
             }
@@ -144,12 +158,16 @@ function Navbar(props) {
         {isLogin && (
           <button
             id="dropdown-arrow"
-            className={`hidden lg:block cursor-pointer${
-              roles_id == 1 ? " lg:hidden" : ""
-            }`}
+            className={`hidden lg:block cursor-pointer`}
           >
             <img
-              src={getImageUrl("down-white", "svg")}
+              src={
+                props.path == "/dashboard" ||
+                props.path == "/admin/order" ||
+                props.path == "/admin/product"
+                  ? getImageUrl("down", "svg")
+                  : getImageUrl("down-white", "svg")
+              }
               alt="down"
               className="w-full h-full"
               onClick={btnArrowHandle}
@@ -158,19 +176,23 @@ function Navbar(props) {
         )}
         {isLogin && (
           <div
-            className={`absolute top-20 right-24 text-light text-sm font-normal py-2 px-6 lg:right-32 max-lg:hidden ${
+            className={`absolute  text-light text-sm font-normal py-2 px-6 max-lg:hidden ${
               btnArrow ? "" : "hidden"
             } ${
-              roles_id == 1
-                ? "bg-light border border-[#E8E8E8]"
-                : "bg-[#0B0909]"
+              props.path == "/dashboard" ||
+              props.path == "/admin/order" ||
+              props.path == "/admin/product"
+                ? "bg-light border border-[#E8E8E8] top-20 right-10 drop-shadow-md"
+                : "bg-[#0B0909] top-20 right-24  lg:right-32 "
             } `}
             id="dropdown-menu"
           >
             <ul className="flex flex-col gap-y-2">
               <li
                 className={`p-1  hover:text-[#0B0909]${
-                  roles_id == 1
+                  props.path == "/dashboard" ||
+                  props.path == "/admin/order" ||
+                  props.path == "/admin/product"
                     ? " text-secondary"
                     : " text-light hover:bg-light"
                 }`}
@@ -179,7 +201,9 @@ function Navbar(props) {
               </li>
               <li
                 className={`p-1  hover:text-[#0B0909]${
-                  roles_id == 1
+                  props.path == "/dashboard" ||
+                  props.path == "/admin/order" ||
+                  props.path == "/admin/product"
                     ? " text-secondary"
                     : " text-light hover:bg-light"
                 }`}
@@ -193,7 +217,9 @@ function Navbar(props) {
         <button className="text-2xl lg:hidden" onClick={() => props.isClick()}>
           <img
             src={
-              roles_id == 1
+              props.path == "/dashboard" ||
+              props.path == "/admin/order" ||
+              props.path == "/admin/product"
                 ? getImageUrl("burger-menu-dark", "svg")
                 : getImageUrl("burger-menu", "svg")
             }

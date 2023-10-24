@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -19,7 +20,7 @@ function Dashboard(props) {
 
   return (
     <>
-      <Navbar isClick={() => setIsDropdownShow(true)} />
+      <Navbar isClick={() => setIsDropdownShow(true)} path={props.path} />
       <main className="flex w-full font-plusJakartaSans">
         <aside className="xl:w-1/5 border-r border-[#E8E8E8] py-6 px-11 hidden lg:block">
           <div className="flex flex-col gap-y-4">

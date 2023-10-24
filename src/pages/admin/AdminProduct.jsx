@@ -10,14 +10,24 @@ import getImageUrl from "../../utils/imageGetter";
 
 function Order(props) {
   useEffect(() => {
-    document.title = "Order";
+    document.title = "Product";
   });
 
   // eslint-disable-next-line no-unused-vars
   const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
-  const [detailOrder, setDetailOrder] = useState(false);
+  const [formProduct, setFormProduct] = useState(false);
+  // const [colorSize, setColorSize] = useState(false);
+  // const setColorsizeHandler = () => {
+  //   setColorSize((state) => !state);
+  // };
+
+  const [sizeR, setSizeR] = useState(false);
+  const [sizeL, setSizeL] = useState(false);
+  const [sizeXL, setSizeXL] = useState(false);
+  const [size250gr, setSize250gr] = useState(false);
+  const [size500gr, setSize500gr] = useState(false);
 
   return (
     <>
@@ -262,40 +272,32 @@ function Order(props) {
             <header className="flex flex-col gap-y-4 lg:flex-row justify-between w-full">
               <div className="flex justify-between lg:flex-col lg:gap-y-5">
                 <p className="text-2xl font-medium text-[#0B0909]">
-                  Order List
+                  Product List
                 </p>
-                <button className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300">
-                  + Add Order
+                <button
+                  className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
+                  onClick={() => setFormProduct(true)}
+                >
+                  + Add Product
                 </button>
               </div>
               <div className="flex flex-col gap-y-4 lg:flex-row lg:gap-x-3 lg:items-end">
-                <div className="font-medium text-secondary">
-                  <p className="text-xs mb-4">Status</p>
-                  <div className="flex p-3 lg:w-[240px] justify-between rounded-md border border-[#E8E8E8]">
-                    <p className="text-sm">All</p>
-                    <div>
-                      <img
-                        src={getImageUrl("down", "svg")}
-                        alt="down"
-                        className="w-5 h-5"
-                      />
-                    </div>
+                <div className="font-medium text-secondary relative">
+                  <p className="text-xs mb-3">Search Product</p>
+                  <input
+                    type="text"
+                    className="text-sm p-3 border border-[#E8E8E8] rounded-md w-full lg:w-[340px] font-medium text-secondary placeholder:font-medium placeholder:text-secondary outline-none focus:border focus:border-primary"
+                    placeholder="Enter Product Name"
+                  />
+                  <div className="absolute top-10 right-3">
+                    <img
+                      src={getImageUrl("Search", "svg")}
+                      alt="Search"
+                      className="w-5 h-5"
+                    />
                   </div>
                 </div>
-                <div className="font-medium text-secondary">
-                  <p className="text-xs mb-4">Search Order</p>
-                  <div className="flex p-3 lg:w-[240px] justify-between rounded-md border border-[#E8E8E8]">
-                    <p className="text-sm">Enter Order Number</p>
-                    <div>
-                      <img
-                        src={getImageUrl("Search", "svg")}
-                        alt="Search"
-                        className="w-5 h-5"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="">
+                <div>
                   <button
                     type="button"
                     className="flex gap-x-2 p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300 max-md:w-full justify-center items-center"
@@ -310,17 +312,19 @@ function Order(props) {
             </header>
             <section className="py-4 px-3 border border-[#E8E8E8] rounded-md">
               <div className="text-xs font-medium text-secondary overflow-x-scroll">
-                <table className="table-auto w-full">
+                <table className="table-auto lg:table-fixed w-full">
                   <thead className="">
                     <tr className="border-b border-[#E8E8E84D]">
                       <th className="p-6 text-left">
                         <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
                       </th>
-                      <th className="p-6 text-center">No. Order</th>
-                      <th className="p-6 text-center">Date</th>
-                      <th className="p-6 text-center">Order</th>
-                      <th className="p-6 text-center">Status</th>
-                      <th className="p-6 text-center">Total</th>
+                      <th className="p-6 text-center">Image</th>
+                      <th className="p-6 text-center">Product Name</th>
+                      <th className="p-6 text-center">Price</th>
+                      <th className="p-6 text-center">Desc</th>
+                      <th className="p-6 text-center">Product Size</th>
+                      <th className="p-6 text-center">Method</th>
+                      <th className="p-6 text-center">Stock</th>
                       <th className="p-6 text-center">Action</th>
                     </tr>
                   </thead>
@@ -329,132 +333,40 @@ function Order(props) {
                       <td className="p-6 text-left">
                         <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
                       </td>
-                      <td className="p-6 text-center">#12354-09893</td>
-                      <td className="p-6 text-center">26 January 2023</td>
-                      <td className="p-6 flex flex-col items-center">
-                        <ul className="list-disc">
-                          <li>Hazelnut Latte R1x</li>
-                          <li>Caramel Machiato L1x</li>
-                        </ul>
-                      </td>
-                      <td className="p-6 text-center">
-                        <p className="text-xs text-[#00A700] font-bold py-2 px-2 rounded-full bg-[#00A70033]">
-                          Done
-                        </p>
-                      </td>
-                      <td className="p-6 text-center">IDR. 40.000</td>
-                      <td className="p-6 text-center">
-                        <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2">
-                          <div className="p-1 bg-[#8E64471A] rounded-full">
-                            <img
-                              src={getImageUrl("view-list", "svg")}
-                              alt="view-list"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                          <div className="p-1 bg-[#FF89061A] rounded-full">
-                            <img
-                              src={getImageUrl("fi_edit-3", "svg")}
-                              alt="fi_edit-3"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                          <div className="p-1 bg-[#D000001A] rounded-full">
-                            <img
-                              src={getImageUrl("Delete", "svg")}
-                              alt="Delete"
-                              className="w-4 h-4"
-                            />
-                          </div>
+                      <td className="p-6">
+                        <div className="flex justify-center">
+                          <img
+                            src={getImageUrl("image31", "webp")}
+                            alt="product"
+                            className="w-12 rounded-md"
+                          />
                         </div>
                       </td>
-                    </tr>
-                    <tr className="border-b border-[#E8E8E84D]">
-                      <td className="p-6 text-left">
-                        <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
-                      </td>
-                      <td className="p-6 text-center">#12354-09893</td>
-                      <td className="p-6 text-center">26 January 2023</td>
-                      <td className="p-6 flex flex-col items-center">
-                        <ul className="list-disc">
-                          <li>Hazelnut Latte R1x</li>
-                          <li>Caramel Machiato L1x</li>
-                        </ul>
-                      </td>
-                      <td className="p-6 text-center">
-                        <p className="text-xs text-[#D00000] font-bold py-2 px-2 rounded-full bg-[#D0000033]">
-                          Pending
-                        </p>
-                      </td>
+                      <td className="p-6 text-center">Caramel Machiato</td>
                       <td className="p-6 text-center">IDR. 40.000</td>
+                      <td className="p-6 text-center text-xs">
+                        Cold brewing is a method of brewing that ...
+                      </td>
+                      <td className="p-6 text-center">R,L,XL,250gr</td>
+                      <td className="p-6 text-center">Deliver, Dine In</td>
+                      <td className="p-6 text-center">200</td>
                       <td className="p-6 text-center">
                         <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2">
                           <div
-                            className="p-1 bg-[#8E64471A] rounded-full cursor-pointer"
-                            onClick={() => setDetailOrder(true)}
+                            className="p-1 bg-[#FF89061A] rounded-full cursor-pointer"
+                            onClick={() => setFormProduct(true)}
                           >
                             <img
-                              src={getImageUrl("view-list", "svg")}
-                              alt="view-list"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                          <div className="p-1 bg-[#FF89061A] rounded-full">
-                            <img
                               src={getImageUrl("fi_edit-3", "svg")}
                               alt="fi_edit-3"
-                              className="w-4 h-4"
+                              className="w-4"
                             />
                           </div>
                           <div className="p-1 bg-[#D000001A] rounded-full">
                             <img
                               src={getImageUrl("Delete", "svg")}
                               alt="Delete"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b border-[#E8E8E84D] bg-[#F9FAFB]">
-                      <td className="p-6 text-left">
-                        <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
-                      </td>
-                      <td className="p-6 text-center">#12354-09893</td>
-                      <td className="p-6 text-center">26 January 2023</td>
-                      <td className="p-6 flex flex-col items-center">
-                        <ul className="list-disc">
-                          <li>Hazelnut Latte R1x</li>
-                          <li>Caramel Machiato L1x</li>
-                        </ul>
-                      </td>
-                      <td className="p-6 text-center">
-                        <p className="text-xs text-secondary font-bold py-2 px-2 rounded-full bg-[#4F566533]">
-                          Waiting
-                        </p>
-                      </td>
-                      <td className="p-6 text-center">IDR. 40.000</td>
-                      <td className="p-6 text-center">
-                        <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2">
-                          <div className="p-1 bg-[#8E64471A] rounded-full">
-                            <img
-                              src={getImageUrl("view-list", "svg")}
-                              alt="view-list"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                          <div className="p-1 bg-[#FF89061A] rounded-full">
-                            <img
-                              src={getImageUrl("fi_edit-3", "svg")}
-                              alt="fi_edit-3"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                          <div className="p-1 bg-[#D000001A] rounded-full">
-                            <img
-                              src={getImageUrl("Delete", "svg")}
-                              alt="Delete"
-                              className="w-4 h-4"
+                              className="w-4"
                             />
                           </div>
                         </div>
@@ -464,41 +376,37 @@ function Order(props) {
                       <td className="p-6 text-left">
                         <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
                       </td>
-                      <td className="p-6 text-center">#12354-09893</td>
-                      <td className="p-6 text-center">26 January 2023</td>
-                      <td className="p-6 flex flex-col items-center">
-                        <ul className="list-disc">
-                          <li>Hazelnut Latte R1x</li>
-                          <li>Caramel Machiato L1x</li>
-                        </ul>
+                      <td className="p-6">
+                        <div className="flex justify-center">
+                          <img
+                            src={getImageUrl("image31", "webp")}
+                            alt="product"
+                            className="w-12 rounded-md"
+                          />
+                        </div>
                       </td>
-                      <td className="p-6 text-center">
-                        <p className="text-xs text-primary font-bold py-2 px-2 w-full rounded-full bg-[#FF890633]">
-                          On Progress
-                        </p>
-                      </td>
+                      <td className="p-6 text-center">Caramel Machiato</td>
                       <td className="p-6 text-center">IDR. 40.000</td>
+                      <td className="p-6 text-center text-xs">
+                        Cold brewing is a method of brewing that ...
+                      </td>
+                      <td className="p-6 text-center">R,L,XL,250gr</td>
+                      <td className="p-6 text-center">Deliver, Dine In</td>
+                      <td className="p-6 text-center">200</td>
                       <td className="p-6 text-center">
                         <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2">
-                          <div className="p-1 bg-[#8E64471A] rounded-full">
-                            <img
-                              src={getImageUrl("view-list", "svg")}
-                              alt="view-list"
-                              className="w-4 h-4"
-                            />
-                          </div>
                           <div className="p-1 bg-[#FF89061A] rounded-full">
                             <img
                               src={getImageUrl("fi_edit-3", "svg")}
                               alt="fi_edit-3"
-                              className="w-4 h-4"
+                              className="w-4"
                             />
                           </div>
                           <div className="p-1 bg-[#D000001A] rounded-full">
                             <img
                               src={getImageUrl("Delete", "svg")}
                               alt="Delete"
-                              className="w-4 h-4"
+                              className="w-4"
                             />
                           </div>
                         </div>
@@ -511,17 +419,15 @@ function Order(props) {
           </div>
         </section>
       </main>
-      {detailOrder && (
+      {formProduct && (
         <div className="font-plusJakartaSans fixed top-0 left-0 right-0 bg-black bg-opacity-50 h-full">
           <div className="bg-light w-full flex flex-col gap-y-6 p-7 md:w-[60%] lg:w-[50%] xl:w-[35%] absolute right-0 top-0 h-screen overflow-y-scroll">
             <header className="flex justify-between items-center">
-              <p className="text-2xl font-medium text-[#0B0909]">
-                Order #12345-09343
-              </p>
+              <p className="text-2xl font-medium text-[#0B0909]">Add Product</p>
               <button
                 type="button"
                 className="outline-none"
-                onClick={() => setDetailOrder(false)}
+                onClick={() => setFormProduct(false)}
               >
                 <img
                   src={getImageUrl("XCircle", "svg")}
@@ -531,172 +437,146 @@ function Order(props) {
               </button>
             </header>
             <section>
-              <header className="mb-4">
-                <h2 className="text-xl text-dark font-medium lg:text-[22px]">
-                  Order Information
-                </h2>
-              </header>
               <section className="text-sm">
-                <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
-                  <div className="flex-none">
-                    <img
-                      src={getImageUrl("Profile", "svg")}
-                      alt="profile"
-                      className="w-full h-full"
-                    />
-                  </div>
-                  <p className="flex-1 text-secondary font-medium">Fullname</p>
-                  <p className="flex-1 text-dark font-bold text-right">
-                    Ridwan Bahtiar
-                  </p>
-                </div>
-                <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
-                  <div className="flex-none">
-                    <img
-                      src={getImageUrl("Location", "svg")}
-                      alt="Location"
-                      className="w-full h-full"
-                    />
-                  </div>
-                  <p className="flex-1 text-secondary font-medium">Address</p>
-                  <p className="flex-1 text-dark font-bold text-right">
-                    Bekasi
-                  </p>
-                </div>
-                <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
-                  <div className="flex-none">
-                    <img
-                      src={getImageUrl("PhoneCall", "svg")}
-                      alt="PhoneCall"
-                      className="w-full h-full"
-                    />
-                  </div>
-                  <p className="flex-1 text-secondary font-medium">Phone</p>
-                  <p className="flex-1 text-dark font-bold text-right">
-                    08127343343
-                  </p>
-                </div>
-                <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
-                  <div className="flex-none">
-                    <img
-                      src={getImageUrl("u_postcard", "svg")}
-                      alt="u_postcard"
-                      className="w-full h-full"
-                    />
-                  </div>
-                  <p className="flex-1 text-secondary font-medium">Dine In</p>
-                  <p className="flex-1 text-dark font-bold text-right">Cash</p>
-                </div>
-                <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
-                  <div className="flex-none">
-                    <img
-                      src={getImageUrl("truck", "svg")}
-                      alt="truck"
-                      className="w-full h-full"
-                    />
-                  </div>
-                  <p className="flex-1 text-secondary font-medium">Shipping</p>
-                  <p className="flex-1 text-dark font-bold text-right">
-                    Ridwan
-                  </p>
-                </div>
-                <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
-                  <div className="flex-none">
-                    <img
-                      src={getImageUrl("u_process", "svg")}
-                      alt="u_process"
-                      className="w-full h-full"
-                    />
-                  </div>
-                  <p className="flex-1 text-dark font-medium">Status</p>
-                  <div className="flex items-center justify-center gap-x-2 p-2 bg-[#F1F1F1] rounded-md">
-                    <p>On Progress</p>
-                    <div>
+                <form className="flex flex-col gap-y-6">
+                  <div className="flex flex-col gap-y-2 cursor-pointer">
+                    <label htmlFor="image" className="text-dark font-semibold">
+                      Photo Product
+                    </label>
+                    <div className="p-4 bg-[#E8E8E8] self-baseline rounded-md">
                       <img
-                        src={getImageUrl("down-dark", "svg")}
-                        alt="down"
-                        className="w-4 h-4"
+                        src={getImageUrl("Image", "svg")}
+                        alt="image"
+                        className="w-6"
                       />
                     </div>
+                    <button
+                      type="button"
+                      className="py-2 px-5 bg-primary self-baseline rounded-md text-xs font-medium hover:bg-amber-600 active:ring active:ring-orange-300"
+                    >
+                      Upload
+                    </button>
                   </div>
-                </div>
-                <div className="flex gap-x-3 items-center justify-between py-5 px-3.5">
-                  <p className="text-secondary font-medium">
-                    Total Transaction
-                  </p>
-                  <p className="text-primary font-bold">IDR. 40.000</p>
-                </div>
-              </section>
-            </section>
-            <section>
-              <header className="mb-4">
-                <h2 className="text-xl text-dark font-medium lg:text-[22px]">
-                  Your Order
-                </h2>
-              </header>
-              <section className="flex flex-col gap-y-4">
-                <div className="bg-[#E8E8E84D] flex flex-col gap-y-4 p-4 sm:flex-row sm:gap-x-4 sm:items-center">
-                  <div className="w-full md:w-1/3">
-                    <img
-                      src={getImageUrl("image31", "webp")}
-                      alt="coffee"
-                      className="w-full h-full"
+                  <div className="flex flex-col gap-y-4">
+                    <label
+                      htmlFor="products_name"
+                      className="font-semibold text-dark"
+                    >
+                      Product Name
+                    </label>
+                    <input
+                      type="text"
+                      id="products_name"
+                      name="products_name"
+                      className="text-xs text-secondary border border-[#DEDEDE] p-3 rounded-lg tracking-wide placeholder:text-xs placeholder:text-secondary placeholder:tracking-wide outline-none focus:border focus:border-primary"
+                      placeholder="Enter Product Name"
                     />
                   </div>
-                  <div className="product-info flex flex-col items-start gap-y-4 md:w-2/3">
-                    <p className="text-sm text-[#0B0909] font-bold">
-                      Hazelnut Latte
-                    </p>
-                    <div className="text-xs text-secondary font-normal flex">
-                      <div className="flex gap-x-2">
-                        <p>2 Pcs</p>
-                        <p>|</p>
-                        <p>Regular</p>
-                        <p>|</p>
-                        <p>Ice</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-x-4 items-center">
-                      <p className="text-xs text-[#D00000] font-medium line-through">
-                        IDR10.000
-                      </p>
-                      <p className="text-sm text-primary font-medium">
-                        IDR. 40.000
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-[#E8E8E84D] flex flex-col gap-y-4 p-4 sm:flex-row sm:gap-x-4 sm:items-center">
-                  <div className="w-full md:w-1/3">
-                    <img
-                      src={getImageUrl("image31", "webp")}
-                      alt="coffee"
-                      className="w-full h-full"
+                  <div className="flex flex-col gap-y-4">
+                    <label
+                      htmlFor="products_price"
+                      className="font-semibold text-dark"
+                    >
+                      Price
+                    </label>
+                    <input
+                      type="number"
+                      id="products_price"
+                      name="products_price"
+                      className="text-xs text-secondary border border-[#DEDEDE] p-3 rounded-lg tracking-wide placeholder:text-xs placeholder:text-secondary placeholder:tracking-wide outline-none focus:border focus:border-primary"
+                      placeholder="Enter Product Price"
                     />
                   </div>
-                  <div className="product-info flex flex-col items-start gap-y-4 md:w-2/3">
-                    <p className="text-sm text-[#0B0909] font-bold">
-                      Hazelnut Latte
-                    </p>
-                    <div className="text-xs text-secondary font-normal flex">
-                      <div className="flex gap-x-2">
-                        <p>2 Pcs</p>
-                        <p>|</p>
-                        <p>Regular</p>
-                        <p>|</p>
-                        <p>Ice</p>
+                  <div className="flex flex-col gap-y-4">
+                    <label
+                      htmlFor="products_desc"
+                      className="font-semibold text-dark"
+                    >
+                      Description
+                    </label>
+                    <textarea
+                      type="number"
+                      rows="6"
+                      id="products_desc"
+                      name="products_desc"
+                      className="text-xs text-secondary border border-[#DEDEDE] p-3 rounded-lg tracking-wide placeholder:text-xs placeholder:text-secondary placeholder:tracking-wide outline-none focus:border focus:border-primary"
+                      placeholder="Enter Product Description"
+                    ></textarea>
+                  </div>
+                  <div className="flex flex-col gap-y-4">
+                    <label
+                      htmlFor="products_desc"
+                      className="font-semibold text-dark"
+                    >
+                      Product Size
+                    </label>
+                    <div className="flex flex-col md:flex-row gap-y-4 text-xs justify-between">
+                      <div
+                        className={`p-2 px-6 rounded-md cursor-pointer text-center ${
+                          sizeR
+                            ? "text-dark bg-primary"
+                            : "text-secondary border border-[#E8E8E8]"
+                        }`}
+                        onClick={() => setSizeR((state) => !state)}
+                      >
+                        R
+                      </div>
+                      <div
+                        className={`p-2 px-6 rounded-md cursor-pointer text-center ${
+                          sizeL
+                            ? "text-dark bg-primary"
+                            : "text-secondary border border-[#E8E8E8]"
+                        }`}
+                        onClick={() => setSizeL((state) => !state)}
+                      >
+                        L
+                      </div>
+                      <div
+                        className={`p-2 px-6 rounded-md cursor-pointer text-center ${
+                          sizeXL
+                            ? "text-dark bg-primary"
+                            : "text-secondary border border-[#E8E8E8]"
+                        }`}
+                        onClick={() => setSizeXL((state) => !state)}
+                      >
+                        XL
+                      </div>
+                      <div
+                        className={`p-2 px-6 rounded-md cursor-pointer text-center ${
+                          size250gr
+                            ? "text-dark bg-primary"
+                            : "text-secondary border border-[#E8E8E8]"
+                        }`}
+                        onClick={() => setSize250gr((state) => !state)}
+                      >
+                        250gr
+                      </div>
+                      <div
+                        className={`p-2 px-6 rounded-md cursor-pointer text-center ${
+                          size500gr
+                            ? "text-dark bg-primary"
+                            : "text-secondary border border-[#E8E8E8]"
+                        }`}
+                        onClick={() => setSize500gr((state) => !state)}
+                      >
+                        500gr
                       </div>
                     </div>
-                    <div className="flex gap-x-4 items-center">
-                      <p className="text-xs text-[#D00000] font-medium line-through">
-                        IDR10.000
-                      </p>
-                      <p className="text-sm text-primary font-medium">
-                        IDR. 40.000
-                      </p>
+                  </div>
+                  <div className="font-medium text-secondary">
+                    <p className="text-xs mb-4">Status</p>
+                    <div className="flex p-3 lg:w-[240px] justify-between rounded-md border border-[#E8E8E8]">
+                      <p className="text-sm">All</p>
+                      <div>
+                        <img
+                          src={getImageUrl("down", "svg")}
+                          alt="down"
+                          className="w-5 h-5"
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
+                </form>
               </section>
             </section>
           </div>
