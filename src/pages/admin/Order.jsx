@@ -16,11 +16,12 @@ function Order(props) {
   const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
+  const [detailOrder, setDetailOrder] = useState(false);
 
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />
-      <main className="flex w-full font-plusJakartaSans">
+      <main className="flex w-full font-plusJakartaSans justify-between">
         <aside className="xl:w-1/5 border-r border-[#E8E8E8] py-6 px-11 hidden lg:block">
           <div className="flex flex-col gap-y-4">
             <Link
@@ -47,7 +48,7 @@ function Order(props) {
                   />
                 </svg>
               </div>
-              <p>Dashboard</p>
+              <p className="max-xl:hidden">Dashboard</p>
             </Link>
             <Link
               to="/admin/product"
@@ -75,7 +76,7 @@ function Order(props) {
                   />
                 </svg>
               </div>
-              <p>Product</p>
+              <p className="max-xl:hidden">Product</p>
             </Link>
             <Link
               to="/admin/order"
@@ -138,7 +139,7 @@ function Order(props) {
                   />
                 </svg>
               </div>
-              <p>Order</p>
+              <p className="max-xl:hidden">Order</p>
             </Link>
             <Link
               to="/admin/user"
@@ -203,7 +204,7 @@ function Order(props) {
                   />
                 </svg>
               </div>
-              <p>User</p>
+              <p className="max-xl:hidden">User</p>
             </Link>
             <Link
               to="/logout"
@@ -251,11 +252,11 @@ function Order(props) {
                   />
                 </svg>
               </div>
-              <p>Logout</p>
+              <p className="max-xl:hidden">Logout</p>
             </Link>
           </div>
         </aside>
-        <section className="w-full py-5 px-5 md:px-10 lg:w-4/5 lg:py-6 lg:px-10 text-light flex flex-col gap-y-6">
+        <section className="w-full py-5 px-5 md:px-10 xl:w-4/5 lg:py-6 lg:px-10 text-light flex flex-col gap-y-6">
           <div className="flex flex-col gap-y-4 md:gap-x-5">
             <header className="flex flex-col gap-y-4 lg:flex-row justify-between w-full">
               <div className="flex justify-between lg:flex-col lg:gap-y-5">
@@ -387,7 +388,10 @@ function Order(props) {
                       <td className="p-6 text-center">IDR. 40.000</td>
                       <td className="p-6 text-center">
                         <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2">
-                          <div className="p-1 bg-[#8E64471A] rounded-full">
+                          <div
+                            className="p-1 bg-[#8E64471A] rounded-full cursor-pointer"
+                            onClick={() => setDetailOrder(true)}
+                          >
                             <img
                               src={getImageUrl("view-list", "svg")}
                               alt="view-list"
@@ -506,6 +510,197 @@ function Order(props) {
           </div>
         </section>
       </main>
+      {detailOrder && (
+        <div className="font-plusJakartaSans fixed top-0 left-0 right-0 bg-black bg-opacity-50 h-full">
+          <div className="bg-light w-full flex flex-col gap-y-6 p-7 xl:w-[35%] absolute right-0 top-0 h-screen overflow-y-scroll">
+            <header className="flex justify-between items-center">
+              <p className="text-2xl font-medium text-[#0B0909]">
+                Order #12345-09343
+              </p>
+              <button
+                type="button"
+                className="outline-none"
+                onClick={() => setDetailOrder(false)}
+              >
+                <img
+                  src={getImageUrl("XCircle", "svg")}
+                  alt="XCircle"
+                  className="w-6 h-6"
+                />
+              </button>
+            </header>
+            <section>
+              <header className="mb-4">
+                <h2 className="text-xl text-dark font-medium lg:text-[22px]">
+                  Order Information
+                </h2>
+              </header>
+              <section className="text-sm">
+                <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
+                  <div className="flex-none">
+                    <img
+                      src={getImageUrl("Profile", "svg")}
+                      alt="profile"
+                      className="w-full h-full"
+                    />
+                  </div>
+                  <p className="flex-1 text-secondary font-medium">Fullname</p>
+                  <p className="flex-1 text-dark font-bold text-right">
+                    Ridwan Bahtiar
+                  </p>
+                </div>
+                <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
+                  <div className="flex-none">
+                    <img
+                      src={getImageUrl("Location", "svg")}
+                      alt="Location"
+                      className="w-full h-full"
+                    />
+                  </div>
+                  <p className="flex-1 text-secondary font-medium">Address</p>
+                  <p className="flex-1 text-dark font-bold text-right">
+                    Bekasi
+                  </p>
+                </div>
+                <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
+                  <div className="flex-none">
+                    <img
+                      src={getImageUrl("PhoneCall", "svg")}
+                      alt="PhoneCall"
+                      className="w-full h-full"
+                    />
+                  </div>
+                  <p className="flex-1 text-secondary font-medium">Phone</p>
+                  <p className="flex-1 text-dark font-bold text-right">
+                    08127343343
+                  </p>
+                </div>
+                <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
+                  <div className="flex-none">
+                    <img
+                      src={getImageUrl("u_postcard", "svg")}
+                      alt="u_postcard"
+                      className="w-full h-full"
+                    />
+                  </div>
+                  <p className="flex-1 text-secondary font-medium">Dine In</p>
+                  <p className="flex-1 text-dark font-bold text-right">Cash</p>
+                </div>
+                <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
+                  <div className="flex-none">
+                    <img
+                      src={getImageUrl("truck", "svg")}
+                      alt="truck"
+                      className="w-full h-full"
+                    />
+                  </div>
+                  <p className="flex-1 text-secondary font-medium">Shipping</p>
+                  <p className="flex-1 text-dark font-bold text-right">
+                    Ridwan
+                  </p>
+                </div>
+                <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
+                  <div className="flex-none">
+                    <img
+                      src={getImageUrl("u_process", "svg")}
+                      alt="u_process"
+                      className="w-full h-full"
+                    />
+                  </div>
+                  <p className="flex-1 text-dark font-medium">Status</p>
+                  <div className="flex items-center justify-center gap-x-2 p-2 bg-[#F1F1F1] rounded-md">
+                    <p>On Progress</p>
+                    <div>
+                      <img
+                        src={getImageUrl("down-dark", "svg")}
+                        alt="down"
+                        className="w-4 h-4"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-x-3 items-center justify-between py-5 px-3.5">
+                  <p className="text-secondary font-medium">
+                    Total Transaction
+                  </p>
+                  <p className="text-primary font-bold">IDR. 40.000</p>
+                </div>
+              </section>
+            </section>
+            <section>
+              <header className="mb-4">
+                <h2 className="text-xl text-dark font-medium lg:text-[22px]">
+                  Your Order
+                </h2>
+              </header>
+              <section className="flex flex-col gap-y-4">
+                <div className="bg-[#E8E8E84D] flex flex-col gap-y-4 p-4 sm:flex-row sm:gap-x-4 sm:items-center">
+                  <div className="w-[80%] h-[80%] sm:w-[60%] sm:h-[60%] lg:w-1/3">
+                    <img
+                      src={getImageUrl("image31", "webp")}
+                      alt="coffee"
+                      className="w-full h-full"
+                    />
+                  </div>
+                  <div className="product-info flex flex-col items-start gap-y-4 lg:w-2/3">
+                    <p className="text-sm text-[#0B0909] font-bold">
+                      Hazelnut Latte
+                    </p>
+                    <div className="text-xs text-secondary font-normal flex">
+                      <div className="flex gap-x-2">
+                        <p>2 Pcs</p>
+                        <p>|</p>
+                        <p>Regular</p>
+                        <p>|</p>
+                        <p>Ice</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-x-4 items-center">
+                      <p className="text-xs text-[#D00000] font-medium line-through">
+                        IDR10.000
+                      </p>
+                      <p className="text-sm text-primary font-medium">
+                        IDR. 40.000
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-[#E8E8E84D] flex flex-col gap-y-4 p-4 sm:flex-row sm:gap-x-4 sm:items-center">
+                  <div className="w-[80%] h-[80%] sm:w-[60%] sm:h-[60%] lg:w-1/3">
+                    <img
+                      src={getImageUrl("image31", "webp")}
+                      alt="coffee"
+                      className="w-full h-full"
+                    />
+                  </div>
+                  <div className="product-info flex flex-col items-start gap-y-4 lg:w-2/3">
+                    <p className="text-sm text-[#0B0909] font-bold">
+                      Hazelnut Latte
+                    </p>
+                    <div className="text-xs text-secondary font-normal flex">
+                      <div className="flex gap-x-2">
+                        <p>2 Pcs</p>
+                        <p>|</p>
+                        <p>Regular</p>
+                        <p>|</p>
+                        <p>Ice</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-x-4 items-center">
+                      <p className="text-xs text-[#D00000] font-medium line-through">
+                        IDR10.000
+                      </p>
+                      <p className="text-sm text-primary font-medium">
+                        IDR. 40.000
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </section>
+          </div>
+        </div>
+      )}
       {isDropdownShown && (
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />
       )}
