@@ -8,24 +8,46 @@ Chart.defaults.font.size = 13;
 Chart.defaults.font.weight = 500;
 Chart.defaults.font.family = "Plus Jakarta Sans";
 
-function ChartSales() {
+function ChartSales(props) {
+  // if (props.dateSales.length > 0) {
+  //   console.log(props.dateSales[0].order_date);
+  // }
+
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const dateArr = [];
+  const cupArr = [];
+  props.dateSales.forEach((e) => {
+    const dateFormat = new Date(e.order_date);
+    dateArr.push(
+      `${dateFormat.getDate()} ${monthNames[dateFormat.getMonth() + 1]}`
+    );
+    cupArr.push(e.cup);
+  });
+  console.log(cupArr);
+
+  // console.log(props.dateSales);
   return (
     <Line
       data={{
-        labels: [
-          "16 Januari",
-          "17 januari",
-          "18 Januari",
-          "19 Januari",
-          "20 Januari",
-          "21 Januari",
-          "22 Januari",
-          "23 Januari",
-        ],
+        labels: dateArr,
         datasets: [
           {
             label: "# of votes",
-            data: [90, 100, 140, 150, 160, 140, 200, 220],
+            data: cupArr,
             backgroundColor: "#00A7001A",
             borderColor: "#00A700",
             borderWidth: 2,

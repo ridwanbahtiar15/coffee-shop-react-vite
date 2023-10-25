@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import axios from "axios";
 
+import "react-datepicker/dist/react-datepicker.css";
 import Navbar from "../../components/Navbar";
 import DropdownMobile from "../../components/DropdownMobile";
 import Modal from "../../components/modal/Modal";
@@ -26,10 +27,18 @@ function Dashboard(props) {
 
   const dateOne = new Date(startDate);
   const dateTwo = new Date(endDate);
+
   let startDay = dateOne.getDate(startDate);
   let startMonth = dateOne.getMonth(startDate);
+  let startDateFormat = `${dateOne.getFullYear(startDate)}-${
+    dateOne.getMonth(startDate) + 1
+  }-${dateOne.getDate(startDate)}`;
+
   let endDay = dateTwo.getDate(endDate);
   let endMonth = dateTwo.getMonth(endDate);
+  let endDateFormat = `${dateTwo.getFullYear(endDate)}-${
+    dateTwo.getMonth(endDate) + 1
+  }-${dateTwo.getDate(endDate)}`;
 
   const monthNames = [
     "January",
@@ -45,10 +54,36 @@ function Dashboard(props) {
     "November",
     "December",
   ];
-  // console.log(monthNames[startMonth]);
 
-  // console.log(startDate, endDate);
+  const token = localStorage.getItem("token");
+  const url = import.meta.env.VITE_BACKEND_HOST;
+  const authAxios = axios.create({
+    baseURL: url,
+    headers: {
+      Authorization: `Barer ${token}`,
+    },
+  });
 
+  const [dateSales, setDateSales] = useState([]);
+
+  // if (startDate != null && endDate != null) {
+  const OnTotalSalesHandler = () => {
+    const body = {
+      start_date: startDateFormat,
+      end_date: endDateFormat,
+    };
+
+    authAxios
+      .post("/products/totalsales", body)
+      .then((res) => {
+        setDateSales(res.data.result);
+        // console.log(res.data.result);
+      })
+      .catch((err) => console.log(err));
+  };
+  // }
+
+  // dateSales.map((e) => console.log(e));
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} path={props.path} />
@@ -375,50 +410,58 @@ function Dashboard(props) {
                   1000 cup (16 - 23 January 2023)
                 </p>
               </div>
-              <div className="bg-[#F1F1F1] flex items-center justify-center p-3 gap-x-2 rounded-md">
-                {/* <input type="date" id="date-total-sales" className="hidden" />*/}
-                <div>
-                  <img src={getImageUrl("Calendar", "svg")} alt="Calendar" />
-                </div>
-                <label
-                  htmlFor="date-total-sales"
-                  className="text-sm font-normal text-dark "
-                >
-                  {`${startDay} ${monthNames[startMonth]} - ${endDay} ${monthNames[endMonth]}`}
-                </label>
-                <div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="17"
-                    height="17"
-                    viewBox="0 0 17 17"
-                    fill="none"
+              <div className="flex gap-x-4">
+                <div className="bg-[#F1F1F1] flex items-center justify-center p-3 gap-x-2 rounded-md">
+                  {/* <input type="date" id="date-total-sales" className="hidden" />*/}
+                  <div>
+                    <img src={getImageUrl("Calendar", "svg")} alt="Calendar" />
+                  </div>
+                  <label
+                    htmlFor="date-total-sales"
+                    className="text-sm font-normal text-dark "
                   >
-                    <path
-                      d="M12.833 6.5L8.83301 10.5L4.83301 6.5"
-                      stroke="#0B132A"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </div>
+                    {`${startDay} ${monthNames[startMonth]} - ${endDay} ${monthNames[endMonth]}`}
+                  </label>
+                  <div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="17"
+                      height="17"
+                      viewBox="0 0 17 17"
+                      fill="none"
+                    >
+                      <path
+                        d="M12.833 6.5L8.83301 10.5L4.83301 6.5"
+                        stroke="#0B132A"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
 
-                <DatePicker
-                  className="text-dark bg-[#F1F1F1] p-3 rounded-md text-sm outline-none text-center hidden"
-                  selectsRange={true}
-                  startDate={startDate}
-                  endDate={endDate}
-                  onChange={(update) => {
-                    setDateRange(update);
-                  }}
-                  dateFormat={"dd / M / yyyy"}
-                  id="date-total-sales"
-                ></DatePicker>
+                  <DatePicker
+                    className="text-dark bg-[#F1F1F1] p-3 rounded-md text-sm outline-none text-center hidden"
+                    selectsRange={true}
+                    startDate={startDate}
+                    endDate={endDate}
+                    onChange={(update) => {
+                      setDateRange(update);
+                    }}
+                    dateFormat={"dd / M / yyyy"}
+                    id="date-total-sales"
+                  ></DatePicker>
+                </div>
+                <button
+                  className="bg-[#F1F1F1] flex items-center justify-center p-3 gap-x-2 rounded-md text-dark text-sm"
+                  onClick={OnTotalSalesHandler}
+                >
+                  Submit
+                </button>
               </div>
             </div>
             <div className="flex gap-x-4 items-start w-full">
-              <ChartSales></ChartSales>
+              <ChartSales dateSales={dateSales}></ChartSales>
             </div>
           </div>
           <div className="p-6 border border-[#E8E8E8] rounded-md">
