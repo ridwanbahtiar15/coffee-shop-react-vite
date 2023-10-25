@@ -2,11 +2,14 @@
 /* eslint-disable react/no-unknown-property */
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import Navbar from "../../components/Navbar";
 import DropdownMobile from "../../components/DropdownMobile";
 import Modal from "../../components/modal/Modal";
 import getImageUrl from "../../utils/imageGetter";
+import ChartSales from "../../components/ChartSales";
 
 function Dashboard(props) {
   useEffect(() => {
@@ -17,6 +20,34 @@ function Dashboard(props) {
   const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
+
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [startDate, endDate] = dateRange;
+
+  const dateOne = new Date(startDate);
+  const dateTwo = new Date(endDate);
+  let startDay = dateOne.getDate(startDate);
+  let startMonth = dateOne.getMonth(startDate);
+  let endDay = dateTwo.getDate(endDate);
+  let endMonth = dateTwo.getMonth(endDate);
+
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  // console.log(monthNames[startMonth]);
+
+  // console.log(startDate, endDate);
 
   return (
     <>
@@ -345,7 +376,7 @@ function Dashboard(props) {
                 </p>
               </div>
               <div className="bg-[#F1F1F1] flex items-center justify-center p-3 gap-x-2 rounded-md">
-                <input type="date" id="date-total-sales" className="hidden" />
+                {/* <input type="date" id="date-total-sales" className="hidden" />*/}
                 <div>
                   <img src={getImageUrl("Calendar", "svg")} alt="Calendar" />
                 </div>
@@ -353,7 +384,7 @@ function Dashboard(props) {
                   htmlFor="date-total-sales"
                   className="text-sm font-normal text-dark "
                 >
-                  16 - 23 January
+                  {`${startDay} ${monthNames[startMonth]} - ${endDay} ${monthNames[endMonth]}`}
                 </label>
                 <div>
                   <svg
@@ -372,37 +403,22 @@ function Dashboard(props) {
                     />
                   </svg>
                 </div>
+
+                <DatePicker
+                  className="text-dark bg-[#F1F1F1] p-3 rounded-md text-sm outline-none text-center hidden"
+                  selectsRange={true}
+                  startDate={startDate}
+                  endDate={endDate}
+                  onChange={(update) => {
+                    setDateRange(update);
+                  }}
+                  dateFormat={"dd / M / yyyy"}
+                  id="date-total-sales"
+                ></DatePicker>
               </div>
             </div>
-            <div className="flex gap-x-4 items-start">
-              <div className="flex flex-col gap-y-4 text-[13px] font-medium text-[#52525B] text-right">
-                <p>300c</p>
-                <p>250c</p>
-                <p>200c</p>
-                <p>150c</p>
-                <p>50c</p>
-                <p>0</p>
-              </div>
-              <div className="w-full mt-3">
-                <div className="flex flex-col gap-y-8 justify-center mb-3 bg-[url('./src/assets/img/Graph1.svg')]">
-                  <div className="border border-dashed border-[#E8E8E8]"></div>
-                  <div className="border border-dashed border-[#E8E8E8]"></div>
-                  <div className="border border-dashed border-[#E8E8E8]"></div>
-                  <div className="border border-dashed border-[#E8E8E8]"></div>
-                  <div className="border border-dashed border-[#E8E8E8]"></div>
-                  <div className="border border-[#E8E8E8]"></div>
-                </div>
-                <div className="text-[13px] font-medium text-[#52525B] flex justify-between">
-                  <p>16 Jan</p>
-                  <p>17 Jan</p>
-                  <p>18 Jan</p>
-                  <p>19 Jan</p>
-                  <p>20 Jan</p>
-                  <p>21 Jan</p>
-                  <p>22 Jan</p>
-                  <p>23 Jan</p>
-                </div>
-              </div>
+            <div className="flex gap-x-4 items-start w-full">
+              <ChartSales></ChartSales>
             </div>
           </div>
           <div className="p-6 border border-[#E8E8E8] rounded-md">
