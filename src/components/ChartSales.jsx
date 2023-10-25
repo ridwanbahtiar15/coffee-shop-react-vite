@@ -9,10 +9,6 @@ Chart.defaults.font.weight = 500;
 Chart.defaults.font.family = "Plus Jakarta Sans";
 
 function ChartSales(props) {
-  // if (props.dateSales.length > 0) {
-  //   console.log(props.dateSales[0].order_date);
-  // }
-
   const monthNames = [
     "January",
     "February",
@@ -30,6 +26,7 @@ function ChartSales(props) {
 
   const dateArr = [];
   const cupArr = [];
+  // eslint-disable-next-line react/prop-types
   props.dateSales.forEach((e) => {
     const dateFormat = new Date(e.order_date);
     dateArr.push(
@@ -37,9 +34,7 @@ function ChartSales(props) {
     );
     cupArr.push(e.cup);
   });
-  console.log(cupArr);
 
-  // console.log(props.dateSales);
   return (
     <Line
       data={{

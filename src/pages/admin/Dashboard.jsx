@@ -77,13 +77,46 @@ function Dashboard(props) {
       .post("/products/totalsales", body)
       .then((res) => {
         setDateSales(res.data.result);
-        // console.log(res.data.result);
       })
       .catch((err) => console.log(err));
   };
-  // }
 
-  // dateSales.map((e) => console.log(e));
+  const [dateRangeProduct, setDateRangeProduct] = useState([null, null]);
+  const [startDateProduct, endDateProduct] = dateRangeProduct;
+
+  const dateOneProduct = new Date(startDateProduct);
+  const dateTwoProduct = new Date(endDateProduct);
+
+  let startDayProduct = dateOneProduct.getDate(startDateProduct);
+  let startMonthProduct = dateOneProduct.getMonth(startDateProduct);
+  let startDateFormatProduct = `${dateOneProduct.getFullYear(
+    startDateProduct
+  )}-${dateOneProduct.getMonth(startDateProduct) + 1}-${dateOneProduct.getDate(
+    startDateProduct
+  )}`;
+
+  let endDayProduct = dateTwoProduct.getDate(endDateProduct);
+  let endMonthProduct = dateTwoProduct.getMonth(endDateProduct);
+  let endDateFormatProduct = `${dateTwoProduct.getFullYear(endDateProduct)}-${
+    dateTwoProduct.getMonth(endDateProduct) + 1
+  }-${dateTwoProduct.getDate(endDateProduct)}`;
+
+  const [bestProduct, setBestProduct] = useState([]);
+
+  const OnBestProduct = () => {
+    const body = {
+      start_date: startDateFormatProduct,
+      end_date: endDateFormatProduct,
+    };
+
+    authAxios
+      .post("/products/bestproduct", body)
+      .then((res) => {
+        setBestProduct(res.data.result);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} path={props.path} />
@@ -162,16 +195,16 @@ function Dashboard(props) {
                   fill="none"
                 >
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M14.5134 20.5H6.16555C3.09919 20.5 0.746786 19.3925 1.41498 14.9348L2.19301 8.89363C2.60491 6.66937 4.02367 5.81812 5.26852 5.81812H15.447C16.7102 5.81812 18.0466 6.73345 18.5225 8.89363L19.3006 14.9348C19.8681 18.8891 17.5797 20.5 14.5134 20.5Z"
                     stroke={
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M14.6502 5.59848C14.6502 3.21241 12.716 1.27812 10.3299 1.27812V1.27812C9.18088 1.27325 8.07727 1.72628 7.26308 2.53703C6.44889 3.34778 5.9912 4.44947 5.99121 5.59848H5.99121"
@@ -179,9 +212,9 @@ function Dashboard(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M13.296 10.102H13.2502"
@@ -189,9 +222,9 @@ function Dashboard(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M7.46492 10.102H7.41916"
@@ -199,9 +232,9 @@ function Dashboard(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </div>
@@ -225,28 +258,28 @@ function Dashboard(props) {
                   fill="none"
                 >
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M7.59102 13.2068C11.28 13.2068 14.433 13.7658 14.433 15.9988C14.433 18.2318 11.301 18.8068 7.59102 18.8068C3.90102 18.8068 0.749023 18.2528 0.749023 16.0188C0.749023 13.7848 3.88002 13.2068 7.59102 13.2068Z"
                     stroke={
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M7.59108 10.0198C5.16908 10.0198 3.20508 8.05676 3.20508 5.63476C3.20508 3.21276 5.16908 1.24976 7.59108 1.24976C10.0121 1.24976 11.9761 3.21276 11.9761 5.63476C11.9851 8.04776 10.0351 10.0108 7.62208 10.0198H7.59108Z"
                     stroke={
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M14.4824 8.88153C16.0834 8.65653 17.3164 7.28253 17.3194 5.61953C17.3194 3.98053 16.1244 2.62053 14.5574 2.36353"
@@ -254,9 +287,9 @@ function Dashboard(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M16.5947 12.7322C18.1457 12.9632 19.2287 13.5072 19.2287 14.6272C19.2287 15.3982 18.7187 15.8982 17.8947 16.2112"
@@ -264,9 +297,9 @@ function Dashboard(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </div>
@@ -295,8 +328,8 @@ function Dashboard(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/logout" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
                   />
                   <path
                     d="M4 14L1.44194 11.4419C1.19786 11.1979 1.19786 10.8021 1.44194 10.5581L4 8"
@@ -304,8 +337,8 @@ function Dashboard(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/logout" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
                   />
                   <path
                     d="M9 11L2 11"
@@ -313,8 +346,8 @@ function Dashboard(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/logout" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
                   />
                 </svg>
               </div>
@@ -418,7 +451,7 @@ function Dashboard(props) {
                   </div>
                   <label
                     htmlFor="date-total-sales"
-                    className="text-sm font-normal text-dark "
+                    className="text-sm font-normal text-dark cursor-pointer"
                   >
                     {`${startDay} ${monthNames[startMonth]} - ${endDay} ${monthNames[endMonth]}`}
                   </label>
@@ -433,9 +466,9 @@ function Dashboard(props) {
                       <path
                         d="M12.833 6.5L8.83301 10.5L4.83301 6.5"
                         stroke="#0B132A"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                     </svg>
                   </div>
@@ -471,39 +504,58 @@ function Dashboard(props) {
                   Best Selling Product
                 </p>
               </div>
-              <div className="bg-[#F1F1F1] flex items-center justify-center p-3 gap-x-2 rounded-md">
-                <input type="date" id="date-total-sales" className="hidden" />
-                <div>
-                  <img src={getImageUrl("Calendar", "svg")} alt="Calendar" />
-                </div>
-                <label
-                  htmlFor="date-total-sales"
-                  className="text-sm font-normal text-dark "
-                >
-                  16 - 23 January
-                </label>
-                <div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="17"
-                    height="17"
-                    viewBox="0 0 17 17"
-                    fill="none"
+              <div className="flex gap-x-4">
+                <div className="bg-[#F1F1F1] flex items-center justify-center p-3 gap-x-2 rounded-md">
+                  <div>
+                    <img src={getImageUrl("Calendar", "svg")} alt="Calendar" />
+                  </div>
+                  <label
+                    htmlFor="date-best-product"
+                    className="text-sm font-normal text-dark cursor-pointer"
                   >
-                    <path
-                      d="M12.833 6.5L8.83301 10.5L4.83301 6.5"
-                      stroke="#0B132A"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
+                    {`${startDayProduct} ${monthNames[startMonthProduct]} - ${endDayProduct} ${monthNames[endMonthProduct]}`}
+                  </label>
+                  <div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="17"
+                      height="17"
+                      viewBox="0 0 17 17"
+                      fill="none"
+                    >
+                      <path
+                        d="M12.833 6.5L8.83301 10.5L4.83301 6.5"
+                        stroke="#0B132A"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </div>
+
+                  <DatePicker
+                    className="text-dark bg-[#F1F1F1] p-3 rounded-md text-sm outline-none text-center hidden"
+                    selectsRange={true}
+                    startDate={startDateProduct}
+                    endDate={endDateProduct}
+                    onChange={(update) => {
+                      setDateRangeProduct(update);
+                    }}
+                    dateFormat={"dd / M / yyyy"}
+                    id="date-best-product"
+                  ></DatePicker>
                 </div>
+                <button
+                  className="bg-[#F1F1F1] flex items-center justify-center p-3 gap-x-2 rounded-md text-dark text-sm"
+                  onClick={OnBestProduct}
+                >
+                  Submit
+                </button>
               </div>
             </div>
             <div className="text-xs font-medium text-secondary overflow-x-scroll">
               <table className="table-auto w-full">
-                <thead className="">
+                <thead>
                   <tr className="border-b border-[#E8E8E84D]">
                     <th className="p-6 text-left">No</th>
                     <th className="p-6 text-center">Product Name</th>
@@ -512,86 +564,23 @@ function Dashboard(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b border-[#E8E8E84D] bg-[#F9FAFB]">
-                    <td className="p-6 text-left">1</td>
-                    <td className="p-6 text-center">Caramel Machiato</td>
-                    <td className="p-6 text-center">300 Cup</td>
-                    <td className="p-6 text-center text-[#00A700]">
-                      IDR 9.000.000
-                    </td>
-                  </tr>
-                  <tr className="border-b border-[#E8E8E84D]">
-                    <td className="p-6 text-left">2</td>
-                    <td className="p-6 text-center">Caramel Machiato</td>
-                    <td className="p-6 text-center">300 Cup</td>
-                    <td className="p-6 text-center text-[#00A700]">
-                      IDR 9.000.000
-                    </td>
-                  </tr>
-                  <tr className="border-b border-[#E8E8E84D] bg-[#F9FAFB]">
-                    <td className="p-6 text-left">3</td>
-                    <td className="p-6 text-center">Caramel Machiato</td>
-                    <td className="p-6 text-center">300 Cup</td>
-                    <td className="p-6 text-center text-[#00A700]">
-                      IDR 9.000.000
-                    </td>
-                  </tr>
-                  <tr className="border-b border-[#E8E8E84D]">
-                    <td className="p-6 text-left">4</td>
-                    <td className="p-6 text-center">Caramel Machiato</td>
-                    <td className="p-6 text-center">300 Cup</td>
-                    <td className="p-6 text-center text-[#00A700]">
-                      IDR 9.000.000
-                    </td>
-                  </tr>
-                  <tr className="border-b border-[#E8E8E84D] bg-[#F9FAFB]">
-                    <td className="p-6 text-left">5</td>
-                    <td className="p-6 text-center">Caramel Machiato</td>
-                    <td className="p-6 text-center">300 Cup</td>
-                    <td className="p-6 text-center text-[#00A700]">
-                      IDR 9.000.000
-                    </td>
-                  </tr>
-                  <tr className="border-b border-[#E8E8E84D]">
-                    <td className="p-6 text-left">6</td>
-                    <td className="p-6 text-center">Caramel Machiato</td>
-                    <td className="p-6 text-center">300 Cup</td>
-                    <td className="p-6 text-center text-[#00A700]">
-                      IDR 9.000.000
-                    </td>
-                  </tr>
-                  <tr className="border-b border-[#E8E8E84D] bg-[#F9FAFB]">
-                    <td className="p-6 text-left">7</td>
-                    <td className="p-6 text-center">Caramel Machiato</td>
-                    <td className="p-6 text-center">300 Cup</td>
-                    <td className="p-6 text-center text-[#00A700]">
-                      IDR 9.000.000
-                    </td>
-                  </tr>
-                  <tr className="border-b border-[#E8E8E84D]">
-                    <td className="p-6 text-left">8</td>
-                    <td className="p-6 text-center">Caramel Machiato</td>
-                    <td className="p-6 text-center">300 Cup</td>
-                    <td className="p-6 text-center text-[#00A700]">
-                      IDR 9.000.000
-                    </td>
-                  </tr>
-                  <tr className="border-b border-[#E8E8E84D] bg-[#F9FAFB]">
-                    <td className="p-6 text-left">9</td>
-                    <td className="p-6 text-center">Caramel Machiato</td>
-                    <td className="p-6 text-center">300 Cup</td>
-                    <td className="p-6 text-center text-[#00A700]">
-                      IDR 9.000.000
-                    </td>
-                  </tr>
-                  <tr className="border-b border-[#E8E8E84D]">
-                    <td className="p-6 text-left">10</td>
-                    <td className="p-6 text-center">Caramel Machiato</td>
-                    <td className="p-6 text-center">300 Cup</td>
-                    <td className="p-6 text-center text-[#00A700]">
-                      IDR 9.000.000
-                    </td>
-                  </tr>
+                  {bestProduct.map((result, i) => (
+                    <tr
+                      className={`border-b border-[#E8E8E84D] ${
+                        i % 2 == 0 ? "bg-[#F9FAFB]" : ""
+                      }`}
+                      key={i}
+                    >
+                      <td className="p-6 text-left">{i + 1}</td>
+                      <td className="p-6 text-center">
+                        {result.products_name}
+                      </td>
+                      <td className="p-6 text-center">{result.sold} Cup</td>
+                      <td className="p-6 text-center text-[#00A700]">
+                        IDR {result.profit}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
