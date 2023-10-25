@@ -48,7 +48,7 @@ function Dashboard(props) {
                   />
                 </svg>
               </div>
-              <p>Dashboard</p>
+              <p className="max-xl:hidden">Dashboard</p>
             </Link>
             <Link
               to="/admin/product"
@@ -76,7 +76,7 @@ function Dashboard(props) {
                   />
                 </svg>
               </div>
-              <p>Product</p>
+              <p className="max-xl:hidden">Product</p>
             </Link>
             <Link
               to="/admin/order"
@@ -139,7 +139,7 @@ function Dashboard(props) {
                   />
                 </svg>
               </div>
-              <p>Order</p>
+              <p className="max-xl:hidden">Order</p>
             </Link>
             <Link
               to="/admin/user"
@@ -204,7 +204,7 @@ function Dashboard(props) {
                   />
                 </svg>
               </div>
-              <p>User</p>
+              <p className="max-xl:hidden">User</p>
             </Link>
             <Link
               to="/logout"
@@ -252,7 +252,7 @@ function Dashboard(props) {
                   />
                 </svg>
               </div>
-              <p>Logout</p>
+              <p className="max-xl:hidden">Logout</p>
             </Link>
           </div>
         </aside>

@@ -10,20 +10,25 @@ import getImageUrl from "../../utils/imageGetter";
 
 function Order(props) {
   useEffect(() => {
-    document.title = "Product";
+    document.title = "User";
   });
 
   // eslint-disable-next-line no-unused-vars
   const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
-  const [formProduct, setFormProduct] = useState(false);
+  const [formUser, setFormUser] = useState(false);
 
-  const [sizeR, setSizeR] = useState(false);
-  const [sizeL, setSizeL] = useState(false);
-  const [sizeXL, setSizeXL] = useState(false);
-  const [size250gr, setSize250gr] = useState(false);
-  const [size500gr, setSize500gr] = useState(false);
+  const [isPassShown, setIsPassShown] = useState(false);
+  const [isPassShown2, setIsPassShown2] = useState(false);
+
+  const showPassHandler = () => {
+    setIsPassShown((state) => !state);
+  };
+
+  const showPassHandler2 = () => {
+    setIsPassShown2((state) => !state);
+  };
 
   return (
     <>
@@ -267,23 +272,21 @@ function Order(props) {
           <div className="flex flex-col gap-y-4 md:gap-x-5">
             <header className="flex flex-col gap-y-4 lg:flex-row justify-between w-full">
               <div className="flex justify-between lg:flex-col lg:gap-y-5">
-                <p className="text-2xl font-medium text-[#0B0909]">
-                  Product List
-                </p>
+                <p className="text-2xl font-medium text-[#0B0909]">User List</p>
                 <button
                   className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
-                  onClick={() => setFormProduct(true)}
+                  onClick={() => setFormUser(true)}
                 >
-                  + Add Product
+                  + Add User
                 </button>
               </div>
               <div className="flex flex-col gap-y-4 lg:flex-row lg:gap-x-3 lg:items-end">
                 <div className="font-medium text-secondary relative">
-                  <p className="text-xs mb-3">Search Product</p>
+                  <p className="text-xs mb-3">Search User</p>
                   <input
                     type="text"
                     className="text-sm p-3 border border-[#E8E8E8] rounded-md w-full lg:w-[340px] font-medium text-secondary placeholder:font-medium placeholder:text-secondary outline-none focus:border focus:border-primary"
-                    placeholder="Enter Product Name"
+                    placeholder="Search User Name"
                   />
                   <div className="absolute top-10 right-3">
                     <img
@@ -315,12 +318,10 @@ function Order(props) {
                         <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
                       </th>
                       <th className="p-6 text-center">Image</th>
-                      <th className="p-6 text-center">Product Name</th>
-                      <th className="p-6 text-center">Price</th>
-                      <th className="p-6 text-center">Desc</th>
-                      <th className="p-6 text-center">Product Size</th>
-                      <th className="p-6 text-center">Method</th>
-                      <th className="p-6 text-center">Stock</th>
+                      <th className="p-6 text-center">Full Name</th>
+                      <th className="p-6 text-center">Phone</th>
+                      <th className="p-6 text-center">Address</th>
+                      <th className="p-6 text-center">Email</th>
                       <th className="p-6 text-center">Action</th>
                     </tr>
                   </thead>
@@ -338,19 +339,15 @@ function Order(props) {
                           />
                         </div>
                       </td>
-                      <td className="p-6 text-center">Caramel Machiato</td>
-                      <td className="p-6 text-center">IDR. 40.000</td>
-                      <td className="p-6 text-center text-xs">
-                        Cold brewing is a method of brewing that ...
-                      </td>
-                      <td className="p-6 text-center">R,L,XL,250gr</td>
-                      <td className="p-6 text-center">Deliver, Dine In</td>
-                      <td className="p-6 text-center">200</td>
+                      <td className="p-6 text-center">Eleanor Pena</td>
+                      <td className="p-6 text-center">0812383374</td>
+                      <td className="p-6 text-center">Bekasi</td>
+                      <td className="p-6 text-center">eleanor@mail.com</td>
                       <td className="p-6 text-center">
-                        <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2">
+                        <div className="flex flex-col gap-y-2 items-center xl:flex-row xl:justify-center xl:gap-x-2">
                           <div
                             className="p-1 bg-[#FF89061A] rounded-full cursor-pointer"
-                            onClick={() => setFormProduct(true)}
+                            onClick={() => setFormUser(true)}
                           >
                             <img
                               src={getImageUrl("fi_edit-3", "svg")}
@@ -381,17 +378,16 @@ function Order(props) {
                           />
                         </div>
                       </td>
-                      <td className="p-6 text-center">Caramel Machiato</td>
-                      <td className="p-6 text-center">IDR. 40.000</td>
-                      <td className="p-6 text-center text-xs">
-                        Cold brewing is a method of brewing that ...
-                      </td>
-                      <td className="p-6 text-center">R,L,XL,250gr</td>
-                      <td className="p-6 text-center">Deliver, Dine In</td>
-                      <td className="p-6 text-center">200</td>
+                      <td className="p-6 text-center">Eleanor Pena</td>
+                      <td className="p-6 text-center">0812383374</td>
+                      <td className="p-6 text-center">Bekasi</td>
+                      <td className="p-6 text-center">eleanor@mail.com</td>
                       <td className="p-6 text-center">
-                        <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2">
-                          <div className="p-1 bg-[#FF89061A] rounded-full">
+                        <div className="flex flex-col gap-y-2 items-center xl:flex-row xl:justify-center xl:gap-x-2">
+                          <div
+                            className="p-1 bg-[#FF89061A] rounded-full cursor-pointer"
+                            onClick={() => setFormUser(true)}
+                          >
                             <img
                               src={getImageUrl("fi_edit-3", "svg")}
                               alt="fi_edit-3"
@@ -415,15 +411,15 @@ function Order(props) {
           </div>
         </section>
       </main>
-      {formProduct && (
+      {formUser && (
         <div className="font-plusJakartaSans fixed top-0 left-0 right-0 bg-black bg-opacity-50 h-full">
           <div className="bg-light w-full flex flex-col gap-y-6 p-7 md:w-[60%] lg:w-[50%] xl:w-[35%] absolute right-0 top-0 h-screen overflow-y-scroll">
             <header className="flex justify-between items-center">
-              <p className="text-2xl font-medium text-[#0B0909]">Add Product</p>
+              <p className="text-2xl font-medium text-[#0B0909]">Insert User</p>
               <button
                 type="button"
                 className="outline-none"
-                onClick={() => setFormProduct(false)}
+                onClick={() => setFormUser(false)}
               >
                 <img
                   src={getImageUrl("XCircle", "svg")}
@@ -437,7 +433,7 @@ function Order(props) {
                 <form className="flex flex-col gap-y-6">
                   <div className="flex flex-col gap-y-2 cursor-pointer">
                     <label htmlFor="image" className="text-dark font-semibold">
-                      Photo Product
+                      Image User
                     </label>
                     <div className="p-4 bg-[#E8E8E8] self-baseline rounded-md">
                       <img
@@ -453,122 +449,197 @@ function Order(props) {
                       Upload
                     </button>
                   </div>
-                  <div className="flex flex-col gap-y-4">
+                  <div className="flex flex-col gap-y-3 relative">
                     <label
-                      htmlFor="products_name"
-                      className="font-semibold text-dark"
+                      htmlFor="fullname"
+                      className="text-sm md:text-base font-semibold text-[#0B132A] lg:text-base"
                     >
-                      Product Name
+                      Full Name
                     </label>
                     <input
                       type="text"
-                      id="products_name"
-                      name="products_name"
-                      className="text-xs text-secondary border border-[#DEDEDE] p-3 rounded-lg tracking-wide placeholder:text-xs placeholder:text-secondary placeholder:tracking-wide outline-none focus:border focus:border-primary"
-                      placeholder="Enter Product Name"
+                      id="fullname"
+                      placeholder="Enter Your Full Name"
+                      className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
                     />
+                    <div className="icon-email absolute top-[46px] left-4 md:top-[50px]">
+                      <img
+                        src={getImageUrl("Profile", "svg")}
+                        alt="mail.svg"
+                        className="w-full h-full"
+                      />
+                    </div>
                   </div>
-                  <div className="flex flex-col gap-y-4">
+                  <div className="flex flex-col gap-y-3 relative">
                     <label
-                      htmlFor="products_price"
-                      className="font-semibold text-dark"
+                      htmlFor="email"
+                      className="text-sm md:text-base font-semibold text-[#0B132A] lg:text-base"
                     >
-                      Price
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      placeholder="Enter Your Email"
+                      className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
+                    />
+                    <div className="icon-email absolute top-[46px] left-4 md:top-[50px]">
+                      <img
+                        src={getImageUrl("mail", "svg")}
+                        alt="mail.svg"
+                        className="w-full h-full"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-y-3 relative">
+                    <label
+                      htmlFor="phone"
+                      className="text-sm md:text-base font-semibold text-[#0B132A] lg:text-base"
+                    >
+                      Phone
                     </label>
                     <input
                       type="number"
-                      id="products_price"
-                      name="products_price"
-                      className="text-xs text-secondary border border-[#DEDEDE] p-3 rounded-lg tracking-wide placeholder:text-xs placeholder:text-secondary placeholder:tracking-wide outline-none focus:border focus:border-primary"
-                      placeholder="Enter Product Price"
+                      id="phone"
+                      placeholder="Enter Your Phone"
+                      className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
                     />
-                  </div>
-                  <div className="flex flex-col gap-y-4">
-                    <label
-                      htmlFor="products_desc"
-                      className="font-semibold text-dark"
-                    >
-                      Description
-                    </label>
-                    <textarea
-                      type="number"
-                      rows="6"
-                      id="products_desc"
-                      name="products_desc"
-                      className="text-xs text-secondary border border-[#DEDEDE] p-3 rounded-lg tracking-wide placeholder:text-xs placeholder:text-secondary placeholder:tracking-wide outline-none focus:border focus:border-primary"
-                      placeholder="Enter Product Description"
-                    ></textarea>
-                  </div>
-                  <div className="flex flex-col gap-y-4">
-                    <label
-                      htmlFor="products_desc"
-                      className="font-semibold text-dark"
-                    >
-                      Product Size
-                    </label>
-                    <div className="flex flex-col md:flex-row gap-y-4 text-xs justify-between">
-                      <div
-                        className={`p-2 px-6 rounded-md cursor-pointer text-center ${
-                          sizeR
-                            ? "text-dark bg-primary"
-                            : "text-secondary border border-[#E8E8E8]"
-                        }`}
-                        onClick={() => setSizeR((state) => !state)}
-                      >
-                        R
-                      </div>
-                      <div
-                        className={`p-2 px-6 rounded-md cursor-pointer text-center ${
-                          sizeL
-                            ? "text-dark bg-primary"
-                            : "text-secondary border border-[#E8E8E8]"
-                        }`}
-                        onClick={() => setSizeL((state) => !state)}
-                      >
-                        L
-                      </div>
-                      <div
-                        className={`p-2 px-6 rounded-md cursor-pointer text-center ${
-                          sizeXL
-                            ? "text-dark bg-primary"
-                            : "text-secondary border border-[#E8E8E8]"
-                        }`}
-                        onClick={() => setSizeXL((state) => !state)}
-                      >
-                        XL
-                      </div>
-                      <div
-                        className={`p-2 px-6 rounded-md cursor-pointer text-center ${
-                          size250gr
-                            ? "text-dark bg-primary"
-                            : "text-secondary border border-[#E8E8E8]"
-                        }`}
-                        onClick={() => setSize250gr((state) => !state)}
-                      >
-                        250gr
-                      </div>
-                      <div
-                        className={`p-2 px-6 rounded-md cursor-pointer text-center ${
-                          size500gr
-                            ? "text-dark bg-primary"
-                            : "text-secondary border border-[#E8E8E8]"
-                        }`}
-                        onClick={() => setSize500gr((state) => !state)}
-                      >
-                        500gr
-                      </div>
+                    <div className="icon-email absolute top-[46px] left-4 md:top-[50px]">
+                      <img
+                        src={getImageUrl("PhoneCall", "svg")}
+                        alt="mail.svg"
+                        className="w-full h-full"
+                      />
                     </div>
                   </div>
-                  <div className="font-medium text-secondary flex flex-col gap-y-4">
-                    <p className="text-xs">Stock</p>
-                    <div className="flex p-3 justify-between rounded-md border border-[#E8E8E8]">
-                      <p className="text-sm">All</p>
-                      <div>
-                        <img
-                          src={getImageUrl("down", "svg")}
-                          alt="down"
-                          className="w-5 h-5"
-                        />
+                  <div className="flex flex-col gap-y-3 relative">
+                    <label
+                      htmlFor="password"
+                      className="text-sm md:text-base font-semibold text-[#0B132A] lg:text-base"
+                    >
+                      Password
+                    </label>
+                    <input
+                      type={isPassShown ? "text" : "password"}
+                      id="password"
+                      placeholder="Enter Your Password"
+                      className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
+                    />
+                    <div className="icon-password absolute top-[46px] left-4 md:top-[50px]">
+                      <img
+                        src={getImageUrl("Password", "svg")}
+                        alt="Password"
+                        className="w-full h-full"
+                      />
+                    </div>
+                    <div
+                      className={`absolute top-[46px] right-4 md:top-[50px] ${
+                        isPassShown ? " hidden" : "block"
+                      }`}
+                      id="btnHiddenPassword"
+                      onClick={showPassHandler}
+                    >
+                      <img
+                        src={getImageUrl("EyeSlash", "svg")}
+                        alt="EyeSlash"
+                        className="w-full h-full"
+                      />
+                    </div>
+                    <div
+                      className={`absolute top-[45px] right-[15px] md:top-[49px] ${
+                        isPassShown ? " block" : " hidden"
+                      }`}
+                      id="btn-show-password"
+                      onClick={showPassHandler}
+                    >
+                      <img
+                        src={getImageUrl("eye", "svg")}
+                        alt="eye"
+                        className="w-[18px] h-[18px]"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-y-3 relative">
+                    <label
+                      htmlFor="confirmPassword"
+                      className="text-sm md:text-base font-semibold text-[#0B132A] lg:text-base"
+                    >
+                      Password
+                    </label>
+                    <input
+                      type={isPassShown2 ? "text" : "password"}
+                      id="confirmPassword"
+                      placeholder="Enter Your Password"
+                      className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
+                    />
+                    <div className="icon-password absolute top-[46px] left-4 md:top-[50px]">
+                      <img
+                        src={getImageUrl("Password", "svg")}
+                        alt="Password"
+                        className="w-full h-full"
+                      />
+                    </div>
+                    <div
+                      className={`absolute top-[46px] right-4 md:top-[50px] ${
+                        isPassShown2 ? " hidden" : "block"
+                      }`}
+                      id="btnHiddenPassword"
+                      onClick={showPassHandler2}
+                    >
+                      <img
+                        src={getImageUrl("EyeSlash", "svg")}
+                        alt="EyeSlash"
+                        className="w-full h-full"
+                      />
+                    </div>
+                    <div
+                      className={`absolute top-[45px] right-[15px] md:top-[49px] ${
+                        isPassShown2 ? " block" : " hidden"
+                      }`}
+                      id="btn-show-password"
+                      onClick={showPassHandler2}
+                    >
+                      <img
+                        src={getImageUrl("eye", "svg")}
+                        alt="eye"
+                        className="w-[18px] h-[18px]"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-y-3 relative">
+                    <label
+                      htmlFor="address"
+                      className="text-sm md:text-base font-semibold text-[#0B132A] lg:text-base"
+                    >
+                      Address
+                    </label>
+                    <input
+                      type="text"
+                      id="address"
+                      placeholder="Enter Your Address"
+                      className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
+                    />
+                    <div className="icon-email absolute top-[46px] left-4 md:top-[50px]">
+                      <img
+                        src={getImageUrl("Location", "svg")}
+                        alt="mail.svg"
+                        className="w-full h-full"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-y-3 relative">
+                    <label
+                      htmlFor="address"
+                      className="text-sm md:text-base font-semibold text-[#0B132A] lg:text-base"
+                    >
+                      Type Of User
+                    </label>
+                    <div className="flex items-center gap-x-4">
+                      <div className="p-2 text-base font-normal text-secondary border border-[#E8E8E8] w-full text-center rounded-md">
+                        Normal User
+                      </div>
+                      <div className="p-2 text-base font-normal text-secondary border border-[#E8E8E8] w-full text-center rounded-md">
+                        Admin
                       </div>
                     </div>
                   </div>
@@ -576,7 +647,7 @@ function Order(props) {
                     type="button"
                     className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
                   >
-                    Save Product
+                    Add User
                   </button>
                 </form>
               </section>

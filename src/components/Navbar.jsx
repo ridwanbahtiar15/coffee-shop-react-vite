@@ -6,7 +6,6 @@ import axios from "axios";
 import getImageUrl from "../utils/imageGetter";
 
 function Navbar(props) {
-  console.log(props.path);
   const token = localStorage.getItem("token");
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
@@ -44,7 +43,8 @@ function Navbar(props) {
       className={`w-full flex justify-between py-4 px-5 items-center font-plusJakartaSans  ${
         props.path == "/dashboard" ||
         props.path == "/admin/order" ||
-        props.path == "/admin/product"
+        props.path == "/admin/product" ||
+        props.path == "/admin/user"
           ? " bg-light md:px-11 lg:px-11 border-b border-[#E8E8E8]"
           : " bg-[#0B0909] md:px-24 lg:px-[130px]"
       }`}
@@ -52,7 +52,8 @@ function Navbar(props) {
       <div className="nav-start flex items-center gap-x-[60px] text-sm font-normal">
         {props.path == "/dashboard" ||
         props.path == "/admin/order" ||
-        props.path == "/admin/product" ? (
+        props.path == "/admin/product" ||
+        props.path == "/admin/user" ? (
           <img
             src={getImageUrl("coffee-shop", "svg")}
             alt="logo"
@@ -71,7 +72,8 @@ function Navbar(props) {
           className={`hover:border-b-2 hover:border-primary focus:border-b-2 focus:border-primary hidden lg:block ${
             props.path == "/dashboard" ||
             props.path == "/admin/order" ||
-            props.path == "/admin/product"
+            props.path == "/admin/product" ||
+            props.path == "/admin/user"
               ? "text-secondary"
               : "text-light"
           }`}
@@ -83,7 +85,8 @@ function Navbar(props) {
           className={`hover:border-b-2 hover:border-primary focus:border-b-2 focus:border-primary hidden lg:block ${
             props.path == "/dashboard" ||
             props.path == "/admin/order" ||
-            props.path == "/admin/product"
+            props.path == "/admin/product" ||
+            props.path == "/admin/user"
               ? "text-secondary"
               : "text-light"
           }`}
@@ -97,7 +100,8 @@ function Navbar(props) {
             src={
               props.path == "/dashboard" ||
               props.path == "/admin/order" ||
-              props.path == "/admin/product"
+              props.path == "/admin/product" ||
+              props.path == "/admin/user"
                 ? getImageUrl("Search", "svg")
                 : getImageUrl("Search-white", "svg")
             }
@@ -110,7 +114,8 @@ function Navbar(props) {
             src={
               props.path == "/dashboard" ||
               props.path == "/admin/order" ||
-              props.path == "/admin/product"
+              props.path == "/admin/product" ||
+              props.path == "/admin/user"
                 ? getImageUrl("ShoppingCart", "svg")
                 : getImageUrl("ShoppingCart-white", "svg")
             }
@@ -164,7 +169,8 @@ function Navbar(props) {
               src={
                 props.path == "/dashboard" ||
                 props.path == "/admin/order" ||
-                props.path == "/admin/product"
+                props.path == "/admin/product" ||
+                props.path == "/admin/user"
                   ? getImageUrl("down", "svg")
                   : getImageUrl("down-white", "svg")
               }
@@ -181,7 +187,8 @@ function Navbar(props) {
             } ${
               props.path == "/dashboard" ||
               props.path == "/admin/order" ||
-              props.path == "/admin/product"
+              props.path == "/admin/product" ||
+              props.path == "/admin/user"
                 ? "bg-light border border-[#E8E8E8] top-20 right-10 drop-shadow-md"
                 : "bg-[#0B0909] top-20 right-24  lg:right-32 "
             } `}
@@ -192,7 +199,8 @@ function Navbar(props) {
                 className={`p-1  hover:text-[#0B0909]${
                   props.path == "/dashboard" ||
                   props.path == "/admin/order" ||
-                  props.path == "/admin/product"
+                  props.path == "/admin/product" ||
+                  props.path == "/admin/user"
                     ? " text-secondary"
                     : " text-light hover:bg-light"
                 }`}
@@ -203,7 +211,8 @@ function Navbar(props) {
                 className={`p-1  hover:text-[#0B0909]${
                   props.path == "/dashboard" ||
                   props.path == "/admin/order" ||
-                  props.path == "/admin/product"
+                  props.path == "/admin/product" ||
+                  props.path == "/admin/user"
                     ? " text-secondary"
                     : " text-light hover:bg-light"
                 }`}
@@ -219,7 +228,8 @@ function Navbar(props) {
             src={
               props.path == "/dashboard" ||
               props.path == "/admin/order" ||
-              props.path == "/admin/product"
+              props.path == "/admin/product" ||
+              props.path == "/admin/user"
                 ? getImageUrl("burger-menu-dark", "svg")
                 : getImageUrl("burger-menu", "svg")
             }

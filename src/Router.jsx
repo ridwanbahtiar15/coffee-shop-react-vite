@@ -13,6 +13,7 @@ import DetailOrder from "./pages/user/DetailOrder";
 import Dashboard from "./pages/admin/Dashboard";
 import Order from "./pages/admin/Order";
 import AdminProduct from "./pages/admin/AdminProduct";
+import AdminUser from "./pages/admin/AdminUser";
 
 const router = createBrowserRouter([
   {
@@ -78,6 +79,11 @@ const router = createBrowserRouter([
   {
     path: "/admin/product",
     element: <AdminProduct path="/admin/product" />,
+    // errorElement: "",
+  },
+  {
+    path: "/admin/user",
+    element: <AdminUser path="/admin/user" />,
     // errorElement: "",
   },
 ]);
