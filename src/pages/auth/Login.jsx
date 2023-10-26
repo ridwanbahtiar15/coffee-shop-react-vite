@@ -1,54 +1,62 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
 
 import "../../style/style.css";
 import getImageUrl from "../../utils/imageGetter";
 import Modal from "../../components/modal/Modal";
+import { userAction } from "../../redux/slice/user";
 
 function Login() {
   useEffect(() => {
     document.title = "Login";
   });
 
+  const user = useSelector((state) => state.user);
+  const disPatch = useDispatch();
+
   const [isPassShown, setIsPassShown] = useState(false);
   const showPassHandler = () => {
     setIsPassShown((state) => !state);
   };
 
-  const [Message, setMessage] = useState({ msg: null, isError: null });
+  const [message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState({ isOpen: false, status: null });
   const navigate = useNavigate();
 
-  const submitHandler = (e) => {
+  const SubmitHandler = async (e) => {
     e.preventDefault();
 
     const body = {
       users_email: e.target.email.value,
       users_password: e.target.password.value,
     };
+    const { loginThunk } = userAction;
+    disPatch(loginThunk(body));
 
-    const url = import.meta.env.VITE_BACKEND_HOST + "/auth/login";
-    axios
-      .post(url, body)
-      .then((res) => {
-        localStorage.setItem("token", res.data.data.token);
-        localStorage.setItem("users_id", res.data.data.userInfo.users_id);
-        localStorage.setItem("roles_id", res.data.data.userInfo.roles_id);
-        if (res.data.data.userInfo.roles_id == 1) return navigate("/dashboard");
-        navigate("/");
-      })
-      .catch((err) => {
-        setMessage({
-          msg: err.response.data.msg,
-          isError: true,
-        });
-        setOpenModal({ isOpen: true, status: "error" });
-      });
+    // const url = import.meta.env.VITE_BACKEND_HOST + "/auth/login";
+    // axios
+    //   .post(url, body)
+    //   .then((res) => {
+    //     localStorage.setItem("token", res.data.data.token);
+    //     localStorage.setItem("users_id", res.data.data.userInfo.users_id);
+    //     localStorage.setItem("roles_id", res.data.data.userInfo.roles_id);
+    //     if (res.data.data.userInfo.roles_id == 1) return navigate("/dashboard");
+    //     navigate("/");
+    //   })
+    //   .catch((err) => {
+    //     setMessage({
+    //       msg: err.response.data.msg,
+    //       isError: true,
+    //     });
+    //     setOpenModal({ isOpen: true, status: "error" });
+    //   });
   };
 
   return (
     <>
+      {/* {user.err && <div>wkwkw</div>} */}
       <main className="flex gap-[70px] lg:items-center">
         <aside className="hidden lg:block lg:w-2/5 xl:w-1/3">
           <img
@@ -69,7 +77,7 @@ function Login() {
               Fill out the form correctly
             </span>
           </header>
-          <form className="flex flex-col gap-y-5" onSubmit={submitHandler}>
+          <form className="flex flex-col gap-y-5" onSubmit={SubmitHandler}>
             <div className="flex flex-col gap-y-3 relative">
               <label
                 htmlFor="email"
@@ -81,7 +89,9 @@ function Login() {
                 type="email"
                 id="email"
                 placeholder="Enter Your Email"
-                className={`py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary`}
+                className={`py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary${
+                  user.err.login ? " border-red-500" : ""
+                }`}
               />
               <div className="icon-email absolute top-[46px] left-4 md:top-[50px]">
                 <img
@@ -102,7 +112,9 @@ function Login() {
                 type={isPassShown ? "text" : "password"}
                 id="password"
                 placeholder="Enter Your Password"
-                className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary"
+                className={`py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary${
+                  user.err.login ? " border-red-500" : ""
+                }`}
               />
               <div className="icon-password absolute top-[46px] left-4 md:top-[50px]">
                 <img
@@ -138,6 +150,11 @@ function Login() {
                 />
               </div>
             </div>
+            {user.err.login && (
+              <p className="text-sm md:text-base font-medium text-red-500 text-center">
+                {user.err.login.message}
+              </p>
+            )}
             <Link
               to="/forgot-password"
               className="text-sm md:text-base font-medium self-end underline"
@@ -196,9 +213,6 @@ function Login() {
           </div>
         </section>
       </main>
-      {openModal.isOpen && (
-        <Modal modal={openModal} closeModal={setOpenModal} message={Message} />
-      )}
     </>
   );
 }

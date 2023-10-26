@@ -65,10 +65,12 @@ function ChartSales(props) {
           y: {
             ticks: {
               callback: (value) => value + "c",
+              stepSize: 2,
             },
             border: {
               dash: [10],
             },
+            beginAtZero: true,
           },
         },
       }}

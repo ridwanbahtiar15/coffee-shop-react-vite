@@ -119,7 +119,14 @@ function Dashboard(props) {
 
   return (
     <>
-      <Navbar isClick={() => setIsDropdownShow(true)} path={props.path} />
+      <Navbar
+        isClick={() => setIsDropdownShow(true)}
+        path={props.path}
+        isLogoutClick={() => {
+          setOpenModal({ isOpen: true, status: "logout" });
+          setMessage({ msg: "Are You Sure?" });
+        }}
+      />
       <main className="flex w-full font-plusJakartaSans">
         <aside className="xl:w-1/5 border-r border-[#E8E8E8] py-6 px-11 hidden lg:block">
           <div className="flex flex-col gap-y-4">
@@ -553,7 +560,7 @@ function Dashboard(props) {
                 </button>
               </div>
             </div>
-            <div className="text-xs font-medium text-secondary overflow-x-scroll">
+            <div className="text-xs md:text-sm font-medium text-secondary overflow-x-scroll">
               <table className="table-auto w-full">
                 <thead>
                   <tr className="border-b border-[#E8E8E84D]">

@@ -25,9 +25,18 @@ function Order(props) {
   const [size250gr, setSize250gr] = useState(false);
   const [size500gr, setSize500gr] = useState(false);
 
+  const [isAddProduct, setIsAddProduct] = useState(false);
+
   return (
     <>
-      <Navbar isClick={() => setIsDropdownShow(true)} path={props.path} />
+      <Navbar
+        isClick={() => setIsDropdownShow(true)}
+        path={props.path}
+        isLogoutClick={() => {
+          setOpenModal({ isOpen: true, status: "logout" });
+          setMessage({ msg: "Are You Sure?" });
+        }}
+      />
       <main className="flex w-full font-plusJakartaSans justify-between">
         <aside className="xl:w-1/5 border-r border-[#E8E8E8] py-6 px-11 hidden lg:block">
           <div className="flex flex-col gap-y-4">
@@ -272,7 +281,10 @@ function Order(props) {
                 </p>
                 <button
                   className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
-                  onClick={() => setFormProduct(true)}
+                  onClick={() => {
+                    setFormProduct(true);
+                    setIsAddProduct(true);
+                  }}
                 >
                   + Add Product
                 </button>
@@ -419,11 +431,16 @@ function Order(props) {
         <div className="font-plusJakartaSans fixed top-0 left-0 right-0 bg-black bg-opacity-50 h-full">
           <div className="bg-light w-full flex flex-col gap-y-6 p-7 md:w-[60%] lg:w-[50%] xl:w-[35%] absolute right-0 top-0 h-screen overflow-y-scroll">
             <header className="flex justify-between items-center">
-              <p className="text-2xl font-medium text-[#0B0909]">Add Product</p>
+              <p className="text-2xl font-medium text-[#0B0909]">
+                {isAddProduct ? "Add Product" : "Edit Product"}
+              </p>
               <button
                 type="button"
                 className="outline-none"
-                onClick={() => setFormProduct(false)}
+                onClick={() => {
+                  setFormProduct(false);
+                  setIsAddProduct(false);
+                }}
               >
                 <img
                   src={getImageUrl("XCircle", "svg")}
@@ -572,12 +589,21 @@ function Order(props) {
                       </div>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
-                  >
-                    Save Product
-                  </button>
+                  {isAddProduct ? (
+                    <button
+                      type="button"
+                      className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
+                    >
+                      Save Product
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
+                    >
+                      Edit Save
+                    </button>
+                  )}
                 </form>
               </section>
             </section>

@@ -21,7 +21,14 @@ function Order(props) {
 
   return (
     <>
-      <Navbar isClick={() => setIsDropdownShow(true)} path={props.path} />
+      <Navbar
+        isClick={() => setIsDropdownShow(true)}
+        path={props.path}
+        isLogoutClick={() => {
+          setOpenModal({ isOpen: true, status: "logout" });
+          setMessage({ msg: "Are You Sure?" });
+        }}
+      />
       <main className="flex w-full font-plusJakartaSans justify-between">
         <aside className="xl:w-1/5 border-r border-[#E8E8E8] py-6 px-11 hidden lg:block">
           <div className="flex flex-col gap-y-4">
