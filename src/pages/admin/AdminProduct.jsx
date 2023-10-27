@@ -2,6 +2,8 @@
 /* eslint-disable react/no-unknown-property */
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 import Navbar from "../../components/Navbar";
 import DropdownMobile from "../../components/DropdownMobile";
@@ -18,14 +20,101 @@ function Order(props) {
   const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
   const [formProduct, setFormProduct] = useState(false);
-
-  const [sizeR, setSizeR] = useState(false);
-  const [sizeL, setSizeL] = useState(false);
-  const [sizeXL, setSizeXL] = useState(false);
-  const [size250gr, setSize250gr] = useState(false);
-  const [size500gr, setSize500gr] = useState(false);
-
   const [isAddProduct, setIsAddProduct] = useState(false);
+
+  const [isCategory, setIsCategory] = useState(false);
+
+  const user = useSelector((state) => state.user);
+  const token = user.token;
+  const url = import.meta.env.VITE_BACKEND_HOST;
+  const authAxios = axios.create({
+    baseURL: url,
+    headers: {
+      Authorization: `Barer ${token}`,
+    },
+  });
+
+  const [product, setProduct] = useState([]);
+  useEffect(() => {
+    authAxios
+      .get("/products")
+      .then((res) => {
+        setProduct(res.data.result);
+        // console.log(res.data.result);
+      })
+      .catch((err) => {
+        if (err.response.status == 401) {
+          setMessage({
+            msg: err.response.data.msg,
+            isError: true,
+          });
+          setOpenModal({ isOpen: true, status: "401" });
+        }
+      });
+  }, []);
+
+  const [image, setImage] = useState("");
+  const changeImageHandler = (e) => {
+    setImage(e.target.files[0]);
+  };
+
+  const [category, setCategory] = useState({
+    name: "Select Category",
+    id: null,
+  });
+
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    authAxios
+      .get("/categories")
+      .then((res) => {
+        setCategories(res.data.result);
+        // console.log(res.data.result);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  const OnSubmitHandler = (e) => {
+    e.preventDefault();
+
+    // const body = {
+    //   products_name: e.target.products_name.value,
+    //   products_price: e.target.products_price.value,
+    //   products_desc: e.target.products_desc.value,
+    //   products_stock: e.target.products_stock.value,
+    //   categories_id: category.id,
+    // };
+
+    const formData = new FormData();
+    formData.append("products_image", image);
+    formData.append("products_name", e.target.products_name.value);
+    formData.append("products_price", e.target.products_price.value);
+    formData.append("products_desc", e.target.products_desc.value);
+    formData.append("products_stock", e.target.products_stock.value);
+    formData.append("categories_id", category.id);
+
+    authAxios
+      .post("/products", formData)
+      .then((res) => {
+        setMessage({
+          msg: res.data.msg,
+          isError: false,
+        });
+        setOpenModal({ isOpen: true, status: "adminProduct" });
+      })
+      .catch((err) => {
+        setMessage({
+          msg: err.response.data.msg,
+          isError: true,
+        });
+        setOpenModal({ isOpen: true, status: "error" });
+      });
+
+    authAxios
+      .get("/products")
+      .then((res) => setProduct(res.data.result))
+      .catch((err) => console.log(err));
+  };
 
   return (
     <>
@@ -112,16 +201,16 @@ function Order(props) {
                   fill="none"
                 >
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M14.5134 20.5H6.16555C3.09919 20.5 0.746786 19.3925 1.41498 14.9348L2.19301 8.89363C2.60491 6.66937 4.02367 5.81812 5.26852 5.81812H15.447C16.7102 5.81812 18.0466 6.73345 18.5225 8.89363L19.3006 14.9348C19.8681 18.8891 17.5797 20.5 14.5134 20.5Z"
                     stroke={
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M14.6502 5.59848C14.6502 3.21241 12.716 1.27812 10.3299 1.27812V1.27812C9.18088 1.27325 8.07727 1.72628 7.26308 2.53703C6.44889 3.34778 5.9912 4.44947 5.99121 5.59848H5.99121"
@@ -129,9 +218,9 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M13.296 10.102H13.2502"
@@ -139,9 +228,9 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M7.46492 10.102H7.41916"
@@ -149,9 +238,9 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </div>
@@ -175,28 +264,28 @@ function Order(props) {
                   fill="none"
                 >
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M7.59102 13.2068C11.28 13.2068 14.433 13.7658 14.433 15.9988C14.433 18.2318 11.301 18.8068 7.59102 18.8068C3.90102 18.8068 0.749023 18.2528 0.749023 16.0188C0.749023 13.7848 3.88002 13.2068 7.59102 13.2068Z"
                     stroke={
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M7.59108 10.0198C5.16908 10.0198 3.20508 8.05676 3.20508 5.63476C3.20508 3.21276 5.16908 1.24976 7.59108 1.24976C10.0121 1.24976 11.9761 3.21276 11.9761 5.63476C11.9851 8.04776 10.0351 10.0108 7.62208 10.0198H7.59108Z"
                     stroke={
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M14.4824 8.88153C16.0834 8.65653 17.3164 7.28253 17.3194 5.61953C17.3194 3.98053 16.1244 2.62053 14.5574 2.36353"
@@ -204,9 +293,9 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M16.5947 12.7322C18.1457 12.9632 19.2287 13.5072 19.2287 14.6272C19.2287 15.3982 18.7187 15.8982 17.8947 16.2112"
@@ -214,9 +303,9 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </div>
@@ -245,8 +334,8 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/logout" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
                   />
                   <path
                     d="M4 14L1.44194 11.4419C1.19786 11.1979 1.19786 10.8021 1.44194 10.5581L4 8"
@@ -254,8 +343,8 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/logout" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
                   />
                   <path
                     d="M9 11L2 11"
@@ -263,8 +352,8 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/logout" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
                   />
                 </svg>
               </div>
@@ -330,96 +419,63 @@ function Order(props) {
                       <th className="p-6 text-center">Product Name</th>
                       <th className="p-6 text-center">Price</th>
                       <th className="p-6 text-center">Desc</th>
-                      <th className="p-6 text-center">Product Size</th>
-                      <th className="p-6 text-center">Method</th>
                       <th className="p-6 text-center">Stock</th>
                       <th className="p-6 text-center">Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b border-[#E8E8E84D] bg-[#F9FAFB]">
-                      <td className="p-6 text-left">
-                        <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
-                      </td>
-                      <td className="p-6">
-                        <div className="flex justify-center">
-                          <img
-                            src={getImageUrl("image31", "webp")}
-                            alt="product"
-                            className="w-12 rounded-md"
-                          />
-                        </div>
-                      </td>
-                      <td className="p-6 text-center">Caramel Machiato</td>
-                      <td className="p-6 text-center">IDR. 40.000</td>
-                      <td className="p-6 text-center text-xs">
-                        Cold brewing is a method of brewing that ...
-                      </td>
-                      <td className="p-6 text-center">R,L,XL,250gr</td>
-                      <td className="p-6 text-center">Deliver, Dine In</td>
-                      <td className="p-6 text-center">200</td>
-                      <td className="p-6 text-center">
-                        <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2">
-                          <div
-                            className="p-1 bg-[#FF89061A] rounded-full cursor-pointer"
-                            onClick={() => setFormProduct(true)}
-                          >
+                    {product.map((result, i) => (
+                      <tr
+                        className="border-b border-[#E8E8E84D] bg-[#F9FAFB]"
+                        key={i}
+                      >
+                        <td className="p-6 text-left">
+                          <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
+                        </td>
+                        <td className="p-6">
+                          <div className="flex justify-center">
                             <img
-                              src={getImageUrl("fi_edit-3", "svg")}
-                              alt="fi_edit-3"
-                              className="w-4"
+                              src={result.products_image}
+                              alt="product"
+                              className="w-12 rounded-md"
                             />
                           </div>
-                          <div className="p-1 bg-[#D000001A] rounded-full">
-                            <img
-                              src={getImageUrl("Delete", "svg")}
-                              alt="Delete"
-                              className="w-4"
-                            />
+                        </td>
+                        <td className="p-6 text-center">
+                          {result.products_name}
+                        </td>
+                        <td className="p-6 text-center">
+                          {result.products_price}
+                        </td>
+                        <td className="p-6 text-center text-xs">
+                          {result.products_desc}
+                        </td>
+                        <td className="p-6 text-center">
+                          {result.products_stock}
+                        </td>
+                        <td className="p-6 text-center">
+                          <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2 justify-center">
+                            <div
+                              className="p-1 bg-[#FF89061A] rounded-full cursor-pointer"
+                              onClick={() => setFormProduct(true)}
+                            >
+                              <img
+                                src={getImageUrl("fi_edit-3", "svg")}
+                                alt="fi_edit-3"
+                                className="w-4"
+                              />
+                            </div>
+                            <div className="p-1 bg-[#D000001A] rounded-full">
+                              <img
+                                src={getImageUrl("Delete", "svg")}
+                                alt="Delete"
+                                className="w-4"
+                              />
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b border-[#E8E8E84D]">
-                      <td className="p-6 text-left">
-                        <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
-                      </td>
-                      <td className="p-6">
-                        <div className="flex justify-center">
-                          <img
-                            src={getImageUrl("image31", "webp")}
-                            alt="product"
-                            className="w-12 rounded-md"
-                          />
-                        </div>
-                      </td>
-                      <td className="p-6 text-center">Caramel Machiato</td>
-                      <td className="p-6 text-center">IDR. 40.000</td>
-                      <td className="p-6 text-center text-xs">
-                        Cold brewing is a method of brewing that ...
-                      </td>
-                      <td className="p-6 text-center">R,L,XL,250gr</td>
-                      <td className="p-6 text-center">Deliver, Dine In</td>
-                      <td className="p-6 text-center">200</td>
-                      <td className="p-6 text-center">
-                        <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2">
-                          <div className="p-1 bg-[#FF89061A] rounded-full">
-                            <img
-                              src={getImageUrl("fi_edit-3", "svg")}
-                              alt="fi_edit-3"
-                              className="w-4"
-                            />
-                          </div>
-                          <div className="p-1 bg-[#D000001A] rounded-full">
-                            <img
-                              src={getImageUrl("Delete", "svg")}
-                              alt="Delete"
-                              className="w-4"
-                            />
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -451,24 +507,46 @@ function Order(props) {
             </header>
             <section>
               <section className="text-sm">
-                <form className="flex flex-col gap-y-6">
+                <form
+                  className="flex flex-col gap-y-6"
+                  encType="multipart/form-data"
+                  onSubmit={OnSubmitHandler}
+                >
                   <div className="flex flex-col gap-y-2 cursor-pointer">
                     <label htmlFor="image" className="text-dark font-semibold">
                       Photo Product
                     </label>
-                    <div className="p-4 bg-[#E8E8E8] self-baseline rounded-md">
-                      <img
-                        src={getImageUrl("Image", "svg")}
-                        alt="image"
-                        className="w-6"
-                      />
-                    </div>
-                    <button
+                    {image ? (
+                      <div className="self-baseline rounded-md">
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt="image"
+                          className="w-14 rounded-md"
+                        />
+                      </div>
+                    ) : (
+                      <div className="p-4 bg-[#E8E8E8] self-baseline rounded-md">
+                        <img
+                          src={getImageUrl("Image", "svg")}
+                          alt="image"
+                          className="w-6"
+                        />
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      name="products_image"
+                      id="products-image"
+                      className="hidden"
+                      onChange={changeImageHandler}
+                    />
+                    <label
                       type="button"
-                      className="py-2 px-5 bg-primary self-baseline rounded-md text-xs font-medium hover:bg-amber-600 active:ring active:ring-orange-300"
+                      className="py-2 px-5 bg-primary self-baseline rounded-md text-xs font-medium hover:bg-amber-600 active:ring active:ring-orange-300 cursor-pointer"
+                      htmlFor="products-image"
                     >
                       Upload
-                    </button>
+                    </label>
                   </div>
                   <div className="flex flex-col gap-y-4">
                     <label
@@ -516,82 +594,61 @@ function Order(props) {
                       placeholder="Enter Product Description"
                     ></textarea>
                   </div>
-                  <div className="flex flex-col gap-y-4">
-                    <label
-                      htmlFor="products_desc"
-                      className="font-semibold text-dark"
+                  <div className="flex flex-col gap-y-4 text-xs text-secondary">
+                    <p className="font-semibold text-dark">Category</p>
+                    <div
+                      className={`flex justify-between w-full p-3 bg-[#FCFDFE] border border-bg[#4F5665] rounded-md cursor-pointer tracking-wider ${
+                        isCategory ? "border-primary" : ""
+                      }`}
+                      onClick={() => setIsCategory((state) => !state)}
                     >
-                      Product Size
-                    </label>
-                    <div className="flex flex-col md:flex-row gap-y-4 text-xs justify-between">
-                      <div
-                        className={`p-2 px-6 rounded-md cursor-pointer text-center ${
-                          sizeR
-                            ? "text-dark bg-primary"
-                            : "text-secondary border border-[#E8E8E8]"
-                        }`}
-                        onClick={() => setSizeR((state) => !state)}
-                      >
-                        R
-                      </div>
-                      <div
-                        className={`p-2 px-6 rounded-md cursor-pointer text-center ${
-                          sizeL
-                            ? "text-dark bg-primary"
-                            : "text-secondary border border-[#E8E8E8]"
-                        }`}
-                        onClick={() => setSizeL((state) => !state)}
-                      >
-                        L
-                      </div>
-                      <div
-                        className={`p-2 px-6 rounded-md cursor-pointer text-center ${
-                          sizeXL
-                            ? "text-dark bg-primary"
-                            : "text-secondary border border-[#E8E8E8]"
-                        }`}
-                        onClick={() => setSizeXL((state) => !state)}
-                      >
-                        XL
-                      </div>
-                      <div
-                        className={`p-2 px-6 rounded-md cursor-pointer text-center ${
-                          size250gr
-                            ? "text-dark bg-primary"
-                            : "text-secondary border border-[#E8E8E8]"
-                        }`}
-                        onClick={() => setSize250gr((state) => !state)}
-                      >
-                        250gr
-                      </div>
-                      <div
-                        className={`p-2 px-6 rounded-md cursor-pointer text-center ${
-                          size500gr
-                            ? "text-dark bg-primary"
-                            : "text-secondary border border-[#E8E8E8]"
-                        }`}
-                        onClick={() => setSize500gr((state) => !state)}
-                      >
-                        500gr
-                      </div>
-                    </div>
-                  </div>
-                  <div className="font-medium text-secondary flex flex-col gap-y-4">
-                    <p className="text-xs">Stock</p>
-                    <div className="flex p-3 justify-between rounded-md border border-[#E8E8E8]">
-                      <p className="text-sm">All</p>
+                      <p>{category.name}</p>
                       <div>
                         <img
                           src={getImageUrl("down", "svg")}
                           alt="down"
-                          className="w-5 h-5"
+                          className="w-4"
                         />
                       </div>
                     </div>
+                    {isCategory && (
+                      <div className="flex flex-col w-fullbg-[#FCFDFE] border border-bg[#4F5665] rounded-md">
+                        {categories.map((result, i) => (
+                          <div
+                            className="hover:bg-secondary hover:text-light hover:rounded-md p-3 cursor-pointer"
+                            onClick={() => {
+                              setCategory({
+                                name: result.categories_name,
+                                id: result.categories_id,
+                              });
+                              setIsCategory((state) => !state);
+                            }}
+                            key={i}
+                          >
+                            {result.categories_name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-y-4">
+                    <label
+                      htmlFor="products_stock"
+                      className="font-semibold text-dark"
+                    >
+                      Stock
+                    </label>
+                    <input
+                      type="number"
+                      id="products_stock"
+                      name="products_stock"
+                      className="text-xs text-secondary border border-[#DEDEDE] p-3 rounded-lg tracking-wide placeholder:text-xs placeholder:text-secondary placeholder:tracking-wide outline-none focus:border focus:border-primary"
+                      placeholder="Enter Product Stock"
+                    />
                   </div>
                   {isAddProduct ? (
                     <button
-                      type="button"
+                      type="submit"
                       className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
                     >
                       Save Product

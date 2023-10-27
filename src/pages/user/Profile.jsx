@@ -79,6 +79,8 @@ function Profile() {
     formData.append("users_password", e.target.password.value);
     formData.append("users_address", e.target.address.value);
 
+    console.log(formData);
+
     authAxios
       .patch("/users/profile/edit", formData)
       .then((res) => {

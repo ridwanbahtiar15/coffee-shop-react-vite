@@ -125,8 +125,7 @@ function CheckoutProduct() {
           msg: err.response.data.msg,
           isError: true,
         });
-        setOpenModal({ isOpen: true, status: "invalid token" });
-        console.log(err.response.data.msg);
+        setOpenModal({ isOpen: true, status: "401" });
       });
   };
 

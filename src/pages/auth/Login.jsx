@@ -20,8 +20,6 @@ function Login() {
     setIsPassShown((state) => !state);
   };
 
-  // const [message, setMessage] = useState({ msg: null, isError: null });
-  // const [openModal, setOpenModal] = useState({ isOpen: false, status: null });
   const navigate = useNavigate();
 
   const SubmitHandler = async (e) => {
@@ -38,29 +36,7 @@ function Login() {
         if (res.payload.userInfo.roles_id == "2") return navigate("/");
       }
     });
-
-    // const url = import.meta.env.VITE_BACKEND_HOST + "/auth/login";
-    // axios
-    //   .post(url, body)
-    //   .then((res) => {
-    //     localStorage.setItem("token", res.data.data.token);
-    //     localStorage.setItem("users_id", res.data.data.userInfo.users_id);
-    //     localStorage.setItem("roles_id", res.data.data.userInfo.roles_id);
-    //     if (res.data.data.userInfo.roles_id == 1) return navigate("/dashboard");
-    //     navigate("/");
-    //   })
-    //   .catch((err) => {
-    //     setMessage({
-    //       msg: err.response.data.msg,
-    //       isError: true,
-    //     });
-    //     setOpenModal({ isOpen: true, status: "error" });
-    //   });
   };
-
-  // const obj = JSON.parse(localStorage.getItem("persist:user"));
-  // console.log(JSON.parse(obj.token).roles_id);
-  console.log(user.userInfo.roles_id);
 
   return (
     <>

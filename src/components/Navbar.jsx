@@ -193,7 +193,7 @@ function Navbar(props) {
               props.path == "/admin/user"
                 ? "bg-light border border-[#E8E8E8] top-20 right-10 drop-shadow-md"
                 : "bg-[#0B0909] top-20 right-24  lg:right-32 "
-            } `}
+            } z-10`}
             id="dropdown-menu"
           >
             <ul className="flex flex-col gap-y-2">
