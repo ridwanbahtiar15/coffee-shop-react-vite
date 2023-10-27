@@ -35,6 +35,10 @@ function Modal({
                       closeModal({ isOpen: false, status: null });
                       navigate("/login");
                       break;
+                    case "invalid token":
+                      closeModal({ isOpen: false, status: null });
+                      navigate("/login");
+                      break;
                     default:
                       closeModal({ isOpen: false, status: null });
                       break;

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSearchParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import "../../style/style.css";
 import getImageUrl from "../../utils/imageGetter";
@@ -24,7 +25,8 @@ function Product() {
   const [openModal, setOpenModal] = useState({ isOpen: false, status: null });
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
-  const token = localStorage.getItem("token");
+  const user = useSelector((state) => state.user);
+  const token = user.token;
   const url = import.meta.env.VITE_BACKEND_HOST;
   const authAxios = axios.create({
     baseURL: url,
@@ -378,9 +380,11 @@ function Product() {
             </div>
           </section>
         ) : (
-          <section className="xl:w-4/6">
+          <section className="xl:w-4/6 self-center">
             <div className="w-full">
-              <h1 className="text-5xl text-center">Products Not Found!</h1>
+              <h1 className="text-xl md:text-3xl text-center">
+                Products Not Found!
+              </h1>
             </div>
           </section>
         )}

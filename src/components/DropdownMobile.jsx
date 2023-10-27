@@ -2,10 +2,12 @@
 import { useState, useEffect } from "react";
 import getImageUrl from "../utils/imageGetter";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function DropdownMobile(props) {
-  const token = localStorage.getItem("token");
-  const roles_id = localStorage.getItem("roles_id");
+  const user = useSelector((state) => state.user);
+  const token = user.token;
+  const roles_id = user.userInfo.roles_id;
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
     if (token) {

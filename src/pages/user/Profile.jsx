@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 import getImageUrl from "../../utils/imageGetter";
 import Navbar from "../../components/Navbar";
@@ -21,7 +22,8 @@ function Profile() {
     setIsPassShown((state) => !state);
   };
 
-  const token = localStorage.getItem("token");
+  const userInfo = useSelector((state) => state.user);
+  const token = userInfo.token;
   const url = import.meta.env.VITE_BACKEND_HOST;
   const authAxios = axios.create({
     baseURL: url,

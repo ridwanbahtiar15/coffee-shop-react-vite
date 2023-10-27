@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 
 import "../../style/style.css";
 import getImageUrl from "../../utils/imageGetter";
-import Modal from "../../components/modal/Modal";
+// import Modal from "../../components/modal/Modal";
 import { userAction } from "../../redux/slice/user";
 
 function Login() {
@@ -21,8 +20,8 @@ function Login() {
     setIsPassShown((state) => !state);
   };
 
-  const [message, setMessage] = useState({ msg: null, isError: null });
-  const [openModal, setOpenModal] = useState({ isOpen: false, status: null });
+  // const [message, setMessage] = useState({ msg: null, isError: null });
+  // const [openModal, setOpenModal] = useState({ isOpen: false, status: null });
   const navigate = useNavigate();
 
   const SubmitHandler = async (e) => {
@@ -33,7 +32,12 @@ function Login() {
       users_password: e.target.password.value,
     };
     const { loginThunk } = userAction;
-    disPatch(loginThunk(body));
+    disPatch(loginThunk(body)).then((res) => {
+      if (res.type == "user/login/fulfilled") {
+        if (res.payload.userInfo.roles_id == "1") return navigate("/dashboard");
+        if (res.payload.userInfo.roles_id == "2") return navigate("/");
+      }
+    });
 
     // const url = import.meta.env.VITE_BACKEND_HOST + "/auth/login";
     // axios
@@ -54,9 +58,12 @@ function Login() {
     //   });
   };
 
+  // const obj = JSON.parse(localStorage.getItem("persist:user"));
+  // console.log(JSON.parse(obj.token).roles_id);
+  console.log(user.userInfo.roles_id);
+
   return (
     <>
-      {/* {user.err && <div>wkwkw</div>} */}
       <main className="flex gap-[70px] lg:items-center">
         <aside className="hidden lg:block lg:w-2/5 xl:w-1/3">
           <img

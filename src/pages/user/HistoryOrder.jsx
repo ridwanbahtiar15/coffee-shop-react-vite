@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 import getImageUrl from "../../utils/imageGetter";
 import Navbar from "../../components/Navbar";
@@ -18,9 +19,9 @@ function HistoryOrder() {
   const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
-  const token = localStorage.getItem("token");
-  const id = localStorage.getItem("userInfo");
-  console.log(id);
+  const user = useSelector((state) => state.user);
+  const token = user.token;
+  const id = user.userInfo.users_id;
   const url = import.meta.env.VITE_BACKEND_HOST;
   const authAxios = axios.create({
     baseURL: url,
@@ -159,9 +160,41 @@ function HistoryOrder() {
                         Status
                       </span>
                     </div>
-                    <span className="text-xs md:text-xs font-bold text-primary py-2 px-4 rounded-full bg-[#FF890633]">
-                      {result.orders_status}
-                    </span>
+                    <div className="flex">
+                      {(() => {
+                        switch (result.orders_status) {
+                          case "Pending":
+                            return (
+                              <p className="text-sm text-[#D00000] font-bold py-2 px-4 rounded-full bg-[#D0000033]">
+                                {result.orders_status}
+                              </p>
+                            );
+                            // eslint-disable-next-line no-unreachable
+                            break;
+                          case "On Progress/Paid":
+                            return (
+                              <p className="text-sm text-primary font-bold py-2 px-4 rounded-full bg-[#FF890633]">
+                                {result.orders_status}
+                              </p>
+                            );
+                            // eslint-disable-next-line no-unreachable
+                            break;
+                          case "Done":
+                            return (
+                              <p className="text-sm text-[#00A700] font-bold py-2 px-4 rounded-full bg-[#00A70033]">
+                                {result.orders_status}
+                              </p>
+                            );
+                            // eslint-disable-next-line no-unreachable
+                            break;
+
+                          default:
+                            return null;
+                            // eslint-disable-next-line no-unreachable
+                            break;
+                        }
+                      })()}
+                    </div>
                   </div>
                   <Link
                     to={`/detail-order/${result.orders_id}`}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import getImageUrl from "../../utils/imageGetter";
 import { UseProductContext } from "../../context/ProductContext.jsx";
@@ -59,7 +60,8 @@ function CheckoutProduct() {
   const [openModal, setOpenModal] = useState({ isOpen: false, status: null });
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
-  const token = localStorage.getItem("token");
+  const userInfo = useSelector((state) => state.user);
+  const token = userInfo.token;
   const url = import.meta.env.VITE_BACKEND_HOST;
   const authAxios = axios.create({
     baseURL: url,
@@ -109,7 +111,6 @@ function CheckoutProduct() {
   }
 
   const OnSubmitHandler = () => {
-    console.log("ok");
     authAxios
       .post("/orders", wrapBody)
       .then((res) => {
@@ -124,7 +125,8 @@ function CheckoutProduct() {
           msg: err.response.data.msg,
           isError: true,
         });
-        setOpenModal(true);
+        setOpenModal({ isOpen: true, status: "invalid token" });
+        console.log(err.response.data.msg);
       });
   };
 

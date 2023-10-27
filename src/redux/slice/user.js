@@ -4,6 +4,7 @@ import { login } from "../../utils/https/auth";
 
 const initialState = {
   isUserAvailable: false,
+  token: null,
   userInfo: null,
   err: {
     login: null,
@@ -20,7 +21,7 @@ const loginThunk = createAsyncThunk(
   async (body, { rejectWithValue }) => {
     try {
       const { data } = await login(body);
-      return data.data.userInfo;
+      return { token: data.data.token, userInfo: data.data.userInfo };
     } catch (err) {
       const errObj = {
         status: err.response.status,
@@ -66,7 +67,8 @@ const userSlice = createSlice({
           ...prevState,
           isPending: false,
           isFulfilled: true,
-          userInfo: payload,
+          token: payload.token,
+          userInfo: payload.userInfo,
         };
       });
   },

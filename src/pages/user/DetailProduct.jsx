@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { UseProductContext } from "../../context/ProductContext";
+import { useSelector } from "react-redux";
 
 import getImageUrl from "../../utils/imageGetter";
 import Navbar from "../../components/Navbar";
@@ -15,8 +16,9 @@ function DetailProduct() {
     document.title = "Product";
   });
 
+  const user = useSelector((state) => state.user);
+  const token = user.token;
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
   const [isDropdownShown, setIsDropdownShow] = useState(false);
 
   const params = useParams();

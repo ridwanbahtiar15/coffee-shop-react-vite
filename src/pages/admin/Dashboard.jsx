@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 import "react-datepicker/dist/react-datepicker.css";
 import Navbar from "../../components/Navbar";
@@ -55,7 +56,8 @@ function Dashboard(props) {
     "December",
   ];
 
-  const token = localStorage.getItem("token");
+  const user = useSelector((state) => state.user);
+  const token = user.token;
   const url = import.meta.env.VITE_BACKEND_HOST;
   const authAxios = axios.create({
     baseURL: url,
@@ -66,7 +68,6 @@ function Dashboard(props) {
 
   const [dateSales, setDateSales] = useState([]);
 
-  // if (startDate != null && endDate != null) {
   const OnTotalSalesHandler = () => {
     const body = {
       start_date: startDateFormat,
@@ -441,7 +442,7 @@ function Dashboard(props) {
             </div>
           </div>
           <div className="p-6 border border-[#E8E8E8] rounded-md">
-            <div className="flex flex-row justify-between mb-4">
+            <div className="flex flex-col gap-y-4  md:flex-row justify-between mb-4">
               <div className="flex flex-col gap-y-2">
                 <p className="text-sm font-semibold text-[#0B0909]">
                   Total Sales
@@ -450,9 +451,8 @@ function Dashboard(props) {
                   1000 cup (16 - 23 January 2023)
                 </p>
               </div>
-              <div className="flex gap-x-4">
+              <div className="flex flex-col gap-y-4 md:flex-row md:gap-x-4">
                 <div className="bg-[#F1F1F1] flex items-center justify-center p-3 gap-x-2 rounded-md">
-                  {/* <input type="date" id="date-total-sales" className="hidden" />*/}
                   <div>
                     <img src={getImageUrl("Calendar", "svg")} alt="Calendar" />
                   </div>
@@ -505,13 +505,13 @@ function Dashboard(props) {
             </div>
           </div>
           <div className="p-6 border border-[#E8E8E8] rounded-md">
-            <div className="flex flex-row justify-between mb-8 items-center">
+            <div className="flex flex-col gap-y-4 md:flex-row justify-between mb-8">
               <div className="flex flex-col gap-y-2">
                 <p className="text-sm font-semibold text-[#0B0909]">
                   Best Selling Product
                 </p>
               </div>
-              <div className="flex gap-x-4">
+              <div className="flex flex-col gap-y-4 md:flex-row md:gap-x-4">
                 <div className="bg-[#F1F1F1] flex items-center justify-center p-3 gap-x-2 rounded-md">
                   <div>
                     <img src={getImageUrl("Calendar", "svg")} alt="Calendar" />

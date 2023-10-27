@@ -2,11 +2,13 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 import getImageUrl from "../utils/imageGetter";
 
 function Navbar(props) {
-  const token = localStorage.getItem("token");
+  const user = useSelector((state) => state.user);
+  const token = user.token;
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
     if (token) {
