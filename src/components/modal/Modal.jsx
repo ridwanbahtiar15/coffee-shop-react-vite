@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 function Modal({
   /*  eslint-disable-next-line react/prop-types */
-  modal: { isOpen, status },
+  modal: { isOpen, status, id },
   /*  eslint-disable-next-line react/prop-types */
   closeModal,
   /*  eslint-disable-next-line react/prop-types */
@@ -39,9 +39,13 @@ function Modal({
                       closeModal({ isOpen: false, status: null });
                       navigate("/login");
                       break;
-                    case "adminProduct":
+                    case "addProduct":
                       closeModal({ isOpen: false, status: null });
                       navigate("/admin/product");
+                      break;
+                    case "updateProduct":
+                      closeModal({ isOpen: false, status: null });
+                      navigate("/admin/product?id=" + id);
                       break;
                     default:
                       closeModal({ isOpen: false, status: null });

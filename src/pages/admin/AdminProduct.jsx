@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { useSearchParams } from "react-router-dom";
 
 import Navbar from "../../components/Navbar";
 import DropdownMobile from "../../components/DropdownMobile";
@@ -17,10 +18,17 @@ function Order(props) {
 
   // eslint-disable-next-line no-unused-vars
   const [Message, setMessage] = useState({ msg: null, isError: null });
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState({
+    isOpen: false,
+    status: null,
+    id: null,
+  });
   const [isDropdownShown, setIsDropdownShow] = useState(false);
-  const [formProduct, setFormProduct] = useState(false);
-  const [isAddProduct, setIsAddProduct] = useState(false);
+  const [formAddProduct, setFormAddProduct] = useState(false);
+  const [formUpdateProduct, setFormUpdateProduct] = useState(false);
+  // const [isAddProduct, setIsAddProduct] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  // console.log(searchParams.get("id"));
 
   const [isCategory, setIsCategory] = useState(false);
 
@@ -53,6 +61,14 @@ function Order(props) {
       });
   }, []);
 
+  const [productById, setProductById] = useState([]);
+
+  const handleChange = (e) => {
+    const dataClone = { ...productById };
+    dataClone[e.target.name] = e.target.value;
+    setProductById(dataClone);
+  };
+
   const [image, setImage] = useState("");
   const changeImageHandler = (e) => {
     setImage(e.target.files[0]);
@@ -69,21 +85,38 @@ function Order(props) {
       .get("/categories")
       .then((res) => {
         setCategories(res.data.result);
-        // console.log(res.data.result);
       })
       .catch((err) => console.log(err));
   }, []);
 
-  const OnSubmitHandler = (e) => {
-    e.preventDefault();
+  const GetProductHandler = (id) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      id: id,
+    }));
+    setFormUpdateProduct(true);
+    authAxios
+      .get("/products/" + id)
+      .then((res) => {
+        setProductById(res.data.result[0]);
+        setCategory({
+          name: res.data.result[0].categories_name,
+          id: res.data.result[0].categories_id,
+        });
+      })
+      .catch((err) => {
+        if (err.response.status == 401) {
+          setMessage({
+            msg: err.response.data.msg,
+            isError: true,
+          });
+          setOpenModal({ isOpen: true, status: "401" });
+        }
+      });
+  };
 
-    // const body = {
-    //   products_name: e.target.products_name.value,
-    //   products_price: e.target.products_price.value,
-    //   products_desc: e.target.products_desc.value,
-    //   products_stock: e.target.products_stock.value,
-    //   categories_id: category.id,
-    // };
+  const OnAddHandler = (e) => {
+    e.preventDefault();
 
     const formData = new FormData();
     formData.append("products_image", image);
@@ -100,7 +133,51 @@ function Order(props) {
           msg: res.data.msg,
           isError: false,
         });
-        setOpenModal({ isOpen: true, status: "adminProduct" });
+        setOpenModal({ isOpen: true, status: "addProduct" });
+        setOpenModal({ isOpen: true, status: "error" });
+        authAxios
+          .get("/products")
+          .then((res) => setProduct(res.data.result))
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => {
+        if (err.response.status == 401) {
+          setMessage({
+            msg: err.response.data.msg,
+            isError: true,
+          });
+          setOpenModal({ isOpen: true, status: "401" });
+        }
+      });
+  };
+
+  const OnUpdateHandler = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("products_image", image);
+    formData.append("products_name", e.target.products_name.value);
+    formData.append("products_price", e.target.products_price.value);
+    formData.append("products_desc", e.target.products_desc.value);
+    formData.append("products_stock", e.target.products_stock.value);
+    formData.append("categories_id", category.id);
+
+    authAxios
+      .patch("/products/" + searchParams.get("id"), formData)
+      .then((res) => {
+        setMessage({
+          msg: res.data.msg,
+          isError: false,
+        });
+        setOpenModal({
+          isOpen: true,
+          status: "updateProduct",
+          id: searchParams.get("id"),
+        });
+        authAxios
+          .get("/products")
+          .then((res) => setProduct(res.data.result))
+          .catch((err) => console.log(err));
       })
       .catch((err) => {
         setMessage({
@@ -108,12 +185,14 @@ function Order(props) {
           isError: true,
         });
         setOpenModal({ isOpen: true, status: "error" });
+        // if (err.response.status == 401) {
+        //   setMessage({
+        //     msg: err.response.data.msg,
+        //     isError: true,
+        //   });
+        //   setOpenModal({ isOpen: true, status: "401" });
+        // }
       });
-
-    authAxios
-      .get("/products")
-      .then((res) => setProduct(res.data.result))
-      .catch((err) => console.log(err));
   };
 
   return (
@@ -371,8 +450,7 @@ function Order(props) {
                 <button
                   className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
                   onClick={() => {
-                    setFormProduct(true);
-                    setIsAddProduct(true);
+                    setFormAddProduct(true);
                   }}
                 >
                   + Add Product
@@ -408,13 +486,11 @@ function Order(props) {
               </div>
             </header>
             <section className="py-4 px-3 border border-[#E8E8E8] rounded-md">
-              <div className="text-xs font-medium text-secondary overflow-x-scroll">
-                <table className="table-auto lg:table-fixed w-full">
+              <div className="text-xs xl:text-sm font-medium text-secondary overflow-x-scroll">
+                <table className="table-auto w-full">
                   <thead className="">
                     <tr className="border-b border-[#E8E8E84D]">
-                      <th className="p-6 text-left">
-                        <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
-                      </th>
+                      <th className="p-6 text-center">No</th>
                       <th className="p-6 text-center">Image</th>
                       <th className="p-6 text-center">Product Name</th>
                       <th className="p-6 text-center">Price</th>
@@ -426,12 +502,12 @@ function Order(props) {
                   <tbody>
                     {product.map((result, i) => (
                       <tr
-                        className="border-b border-[#E8E8E84D] bg-[#F9FAFB]"
+                        className={`border-b border-[#E8E8E84D] ${
+                          i % 2 == 0 ? "bg-[#F9FAFB]" : ""
+                        }`}
                         key={i}
                       >
-                        <td className="p-6 text-left">
-                          <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
-                        </td>
+                        <td className="p-6 text-center">{i + 1}</td>
                         <td className="p-6">
                           <div className="flex justify-center">
                             <img
@@ -445,7 +521,7 @@ function Order(props) {
                           {result.products_name}
                         </td>
                         <td className="p-6 text-center">
-                          {result.products_price}
+                          IDR {result.products_price}
                         </td>
                         <td className="p-6 text-center text-xs">
                           {result.products_desc}
@@ -457,7 +533,9 @@ function Order(props) {
                           <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2 justify-center">
                             <div
                               className="p-1 bg-[#FF89061A] rounded-full cursor-pointer"
-                              onClick={() => setFormProduct(true)}
+                              onClick={() =>
+                                GetProductHandler(result.products_id)
+                              }
                             >
                               <img
                                 src={getImageUrl("fi_edit-3", "svg")}
@@ -483,19 +561,16 @@ function Order(props) {
           </div>
         </section>
       </main>
-      {formProduct && (
+      {formAddProduct && (
         <div className="font-plusJakartaSans fixed top-0 left-0 right-0 bg-black bg-opacity-50 h-full">
           <div className="bg-light w-full flex flex-col gap-y-6 p-7 md:w-[60%] lg:w-[50%] xl:w-[35%] absolute right-0 top-0 h-screen overflow-y-scroll">
             <header className="flex justify-between items-center">
-              <p className="text-2xl font-medium text-[#0B0909]">
-                {isAddProduct ? "Add Product" : "Edit Product"}
-              </p>
+              <p className="text-2xl font-medium text-[#0B0909]">Add Product</p>
               <button
                 type="button"
                 className="outline-none"
                 onClick={() => {
-                  setFormProduct(false);
-                  setIsAddProduct(false);
+                  setFormAddProduct(false);
                 }}
               >
                 <img
@@ -510,7 +585,7 @@ function Order(props) {
                 <form
                   className="flex flex-col gap-y-6"
                   encType="multipart/form-data"
-                  onSubmit={OnSubmitHandler}
+                  onSubmit={OnAddHandler}
                 >
                   <div className="flex flex-col gap-y-2 cursor-pointer">
                     <label htmlFor="image" className="text-dark font-semibold">
@@ -597,7 +672,7 @@ function Order(props) {
                   <div className="flex flex-col gap-y-4 text-xs text-secondary">
                     <p className="font-semibold text-dark">Category</p>
                     <div
-                      className={`flex justify-between w-full p-3 bg-[#FCFDFE] border border-bg[#4F5665] rounded-md cursor-pointer tracking-wider ${
+                      className={`flex justify-between w-full p-3 border border-bg[#4F5665] rounded-md cursor-pointer tracking-wider ${
                         isCategory ? "border-primary" : ""
                       }`}
                       onClick={() => setIsCategory((state) => !state)}
@@ -615,7 +690,7 @@ function Order(props) {
                       <div className="flex flex-col w-fullbg-[#FCFDFE] border border-bg[#4F5665] rounded-md">
                         {categories.map((result, i) => (
                           <div
-                            className="hover:bg-secondary hover:text-light hover:rounded-md p-3 cursor-pointer"
+                            className="hover:bg-primary hover:text-dark hover:rounded-md p-3 cursor-pointer"
                             onClick={() => {
                               setCategory({
                                 name: result.categories_name,
@@ -646,21 +721,197 @@ function Order(props) {
                       placeholder="Enter Product Stock"
                     />
                   </div>
-                  {isAddProduct ? (
-                    <button
-                      type="submit"
-                      className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
-                    >
-                      Save Product
-                    </button>
-                  ) : (
-                    <button
+                  <button
+                    type="submit"
+                    className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
+                  >
+                    Save Product
+                  </button>
+                </form>
+              </section>
+            </section>
+          </div>
+        </div>
+      )}
+      {formUpdateProduct && (
+        <div className="font-plusJakartaSans fixed top-0 left-0 right-0 bg-black bg-opacity-50 h-full">
+          <div className="bg-light w-full flex flex-col gap-y-6 p-7 md:w-[60%] lg:w-[50%] xl:w-[35%] absolute right-0 top-0 h-screen overflow-y-scroll">
+            <header className="flex justify-between items-center">
+              <p className="text-2xl font-medium text-[#0B0909]">
+                Edit Product
+              </p>
+              <button
+                type="button"
+                className="outline-none"
+                onClick={() => {
+                  setFormUpdateProduct(false);
+                  setSearchParams((prev) => ({
+                    ...prev,
+                  }));
+                }}
+              >
+                <img
+                  src={getImageUrl("XCircle", "svg")}
+                  alt="XCircle"
+                  className="w-6 h-6"
+                />
+              </button>
+            </header>
+            <section>
+              <section className="text-sm">
+                <form
+                  className="flex flex-col gap-y-6"
+                  encType="multipart/form-data"
+                  onSubmit={OnUpdateHandler}
+                >
+                  <div className="flex flex-col gap-y-2 cursor-pointer">
+                    <label htmlFor="image" className="text-dark font-semibold">
+                      Photo Product
+                    </label>
+                    {image ? (
+                      <div className="self-baseline rounded-md">
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt="image"
+                          className="w-14 rounded-md"
+                        />
+                      </div>
+                    ) : (
+                      <div className="self-baseline rounded-md">
+                        <img
+                          src={productById.products_image}
+                          alt="image"
+                          className="w-14 rounded-md"
+                        />
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      name="products_image"
+                      id="products-image"
+                      className="hidden"
+                      onChange={changeImageHandler}
+                    />
+                    <label
                       type="button"
-                      className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
+                      className="py-2 px-5 bg-primary self-baseline rounded-md text-xs font-medium hover:bg-amber-600 active:ring active:ring-orange-300 cursor-pointer"
+                      htmlFor="products-image"
                     >
-                      Edit Save
-                    </button>
-                  )}
+                      Upload
+                    </label>
+                  </div>
+                  <div className="flex flex-col gap-y-4">
+                    <label
+                      htmlFor="products_name"
+                      className="font-semibold text-dark"
+                    >
+                      Product Name
+                    </label>
+                    <input
+                      type="text"
+                      id="products_name"
+                      name="products_name"
+                      className="text-xs text-secondary border border-[#DEDEDE] p-3 rounded-lg tracking-wide placeholder:text-xs placeholder:text-secondary placeholder:tracking-wide outline-none focus:border focus:border-primary"
+                      placeholder="Enter Product Name"
+                      value={productById.products_name}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-y-4">
+                    <label
+                      htmlFor="products_price"
+                      className="font-semibold text-dark"
+                    >
+                      Price
+                    </label>
+                    <input
+                      type="number"
+                      id="products_price"
+                      name="products_price"
+                      className="text-xs text-secondary border border-[#DEDEDE] p-3 rounded-lg tracking-wide placeholder:text-xs placeholder:text-secondary placeholder:tracking-wide outline-none focus:border focus:border-primary"
+                      placeholder="Enter Product Price"
+                      value={productById.products_price}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="flex flex-col gap-y-4">
+                    <label
+                      htmlFor="products_desc"
+                      className="font-semibold text-dark"
+                    >
+                      Description
+                    </label>
+                    <textarea
+                      type="number"
+                      rows="6"
+                      id="products_desc"
+                      name="products_desc"
+                      className="text-xs text-secondary border border-[#DEDEDE] p-3 rounded-lg tracking-wide placeholder:text-xs placeholder:text-secondary placeholder:tracking-wide outline-none focus:border focus:border-primary"
+                      placeholder="Enter Product Description"
+                      value={productById.products_desc}
+                      onChange={handleChange}
+                    ></textarea>
+                  </div>
+                  <div className="flex flex-col gap-y-4 text-xs text-secondary">
+                    <p className="font-semibold text-dark">Category</p>
+                    <div
+                      className={`flex justify-between w-full p-3 border border-bg[#4F5665] rounded-md cursor-pointer tracking-wider ${
+                        isCategory ? "border-primary" : ""
+                      }`}
+                      onClick={() => setIsCategory((state) => !state)}
+                    >
+                      <p>{category.name}</p>
+                      <div>
+                        <img
+                          src={getImageUrl("down", "svg")}
+                          alt="down"
+                          className="w-4"
+                        />
+                      </div>
+                    </div>
+                    {isCategory && (
+                      <div className="flex flex-col w-fullbg-[#FCFDFE] border border-bg[#4F5665] rounded-md">
+                        {categories.map((result, i) => (
+                          <div
+                            className="hover:bg-primary hover:text-dark hover:rounded-md p-3 cursor-pointer"
+                            onClick={() => {
+                              setCategory({
+                                name: result.categories_name,
+                                id: result.categories_id,
+                              });
+                              setIsCategory((state) => !state);
+                            }}
+                            key={i}
+                          >
+                            {result.categories_name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-y-4">
+                    <label
+                      htmlFor="products_stock"
+                      className="font-semibold text-dark"
+                    >
+                      Stock
+                    </label>
+                    <input
+                      type="number"
+                      id="products_stock"
+                      name="products_stock"
+                      className="text-xs text-secondary border border-[#DEDEDE] p-3 rounded-lg tracking-wide placeholder:text-xs placeholder:text-secondary placeholder:tracking-wide outline-none focus:border focus:border-primary"
+                      placeholder="Enter Product Stock"
+                      value={productById.products_stock}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
+                  >
+                    Edit Product
+                  </button>
                 </form>
               </section>
             </section>
