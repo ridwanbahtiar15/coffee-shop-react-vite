@@ -21,7 +21,6 @@ function Order(props) {
   const [openModal, setOpenModal] = useState({
     isOpen: false,
     status: null,
-    id: null,
   });
   const [isDropdownShown, setIsDropdownShow] = useState(false);
   const [formAddProduct, setFormAddProduct] = useState(false);
@@ -94,6 +93,7 @@ function Order(props) {
       ...prev,
       id: id,
     }));
+
     setFormUpdateProduct(true);
     authAxios
       .get("/products/" + id)
@@ -141,13 +141,11 @@ function Order(props) {
           .catch((err) => console.log(err));
       })
       .catch((err) => {
-        if (err.response.status == 401) {
-          setMessage({
-            msg: err.response.data.msg,
-            isError: true,
-          });
-          setOpenModal({ isOpen: true, status: "401" });
-        }
+        setMessage({
+          msg: err.response.data.msg,
+          isError: true,
+        });
+        setOpenModal({ isOpen: true, status: "error" });
       });
   };
 
@@ -171,8 +169,6 @@ function Order(props) {
         });
         setOpenModal({
           isOpen: true,
-          status: "updateProduct",
-          id: searchParams.get("id"),
         });
         authAxios
           .get("/products")
@@ -185,14 +181,24 @@ function Order(props) {
           isError: true,
         });
         setOpenModal({ isOpen: true, status: "error" });
-        // if (err.response.status == 401) {
-        //   setMessage({
-        //     msg: err.response.data.msg,
-        //     isError: true,
-        //   });
-        //   setOpenModal({ isOpen: true, status: "401" });
-        // }
       });
+  };
+
+  const DeleteProductHandler = (id, imageUrl) => {
+    authAxios.delete(`/products?id=${id}&imageUrl=${imageUrl}`).then((res) => {
+      setMessage({
+        msg: res.data.msg,
+        isError: false,
+        status: "deleteProduct",
+      });
+      setOpenModal({
+        isOpen: true,
+      });
+      authAxios
+        .get("/products")
+        .then((res) => setProduct(res.data.result))
+        .catch((err) => console.log(err));
+    });
   };
 
   return (
@@ -543,7 +549,15 @@ function Order(props) {
                                 className="w-4"
                               />
                             </div>
-                            <div className="p-1 bg-[#D000001A] rounded-full">
+                            <div
+                              className="p-1 bg-[#D000001A] rounded-full cursor-pointer"
+                              onClick={() =>
+                                DeleteProductHandler(
+                                  result.products_id,
+                                  result.products_image
+                                )
+                              }
+                            >
                               <img
                                 src={getImageUrl("Delete", "svg")}
                                 alt="Delete"

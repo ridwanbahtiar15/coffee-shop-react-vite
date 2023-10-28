@@ -345,9 +345,11 @@ function Order(props) {
                         </ul>
                       </td>
                       <td className="p-6 text-center">
-                        <p className="text-xs text-[#00A700] font-bold py-2 px-2 rounded-full bg-[#00A70033]">
-                          Done
-                        </p>
+                        <div className="flex justify-center">
+                          <div className="text-xs text-[#00A700] font-bold py-2 px-3 rounded-full bg-[#00A70033]">
+                            Done
+                          </div>
+                        </div>
                       </td>
                       <td className="p-6 text-center">IDR. 40.000</td>
                       <td className="p-6 text-center">
@@ -389,9 +391,11 @@ function Order(props) {
                         </ul>
                       </td>
                       <td className="p-6 text-center">
-                        <p className="text-xs text-[#D00000] font-bold py-2 px-2 rounded-full bg-[#D0000033]">
-                          Pending
-                        </p>
+                        <div className="flex justify-center">
+                          <div className="text-xs text-[#D00000] font-bold py-2 px-3 rounded-full bg-[#D0000033]">
+                            Pending
+                          </div>
+                        </div>
                       </td>
                       <td className="p-6 text-center">IDR. 40.000</td>
                       <td className="p-6 text-center">
@@ -436,9 +440,11 @@ function Order(props) {
                         </ul>
                       </td>
                       <td className="p-6 text-center">
-                        <p className="text-xs text-secondary font-bold py-2 px-2 rounded-full bg-[#4F566533]">
-                          Waiting
-                        </p>
+                        <div className="flex justify-center">
+                          <div className="text-xs text-primary font-bold py-2 px-3 rounded-full bg-[#FF890633]">
+                            On Progress
+                          </div>
+                        </div>
                       </td>
                       <td className="p-6 text-center">IDR. 40.000</td>
                       <td className="p-6 text-center">
@@ -480,9 +486,11 @@ function Order(props) {
                         </ul>
                       </td>
                       <td className="p-6 text-center">
-                        <p className="text-xs text-primary font-bold py-2 px-2 w-full rounded-full bg-[#FF890633]">
-                          On Progress
-                        </p>
+                        <div className="flex justify-center">
+                          <div className="text-xs text-[#4F5665] font-bold py-2 px-3 rounded-full bg-[#4F566533]">
+                            Waiting
+                          </div>
+                        </div>
                       </td>
                       <td className="p-6 text-center">IDR. 40.000</td>
                       <td className="p-6 text-center">
