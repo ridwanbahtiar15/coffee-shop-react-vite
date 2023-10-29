@@ -141,18 +141,18 @@ function DetailProduct() {
             </div>
           </section>
           <aside className="w-full lg:w-2/5 max-lg:mt-5 xl:w-1/2 flex flex-col items-start gap-y-4">
-            <p className="text-light text-sm font-bold bg-[#D00000] p-[10px] rounded-full lg:text-lg">
+            {/* <p className="text-light text-sm font-bold bg-[#D00000] p-[10px] rounded-full lg:text-lg">
               FLASH SALE!
-            </p>
+            </p> */}
             <h1 className="text-2xl lg:text-3xl xl:text-5xl font-medium text-[#0B0909]">
               {productById.products_name}
             </h1>
             <div className="flex gap-x-3 items-center">
-              <p className="text-xs font-medium line-through text-[#D00000]">
+              {/* <p className="text-xs font-medium line-through text-[#D00000]">
                 IDR 20.000
-              </p>
-              <p className="text-[22px] font-bold text-dark">
-                Rp.{productById.products_price}
+              </p> */}
+              <p className="text-[22px] font-medium text-primary">
+                IDR {productById.products_price}
               </p>
             </div>
             <div>

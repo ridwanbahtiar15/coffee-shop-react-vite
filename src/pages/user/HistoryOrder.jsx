@@ -40,6 +40,29 @@ function HistoryOrder() {
       .catch((err) => console.log(err));
   }, []);
 
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const dateHandler = (value) => {
+    const newDate = new Date(value);
+    const date = newDate.getDate();
+    const month = monthNames[newDate.getMonth()];
+    const year = newDate.getFullYear();
+    return `${date} ${month} ${year}`;
+  };
+
   return (
     <>
       <Navbar
@@ -95,7 +118,7 @@ function HistoryOrder() {
                     className="w-full h-full"
                   />
                 </div>
-                <div className="flex flex-wrap gap-y-9 md:gap-y-4">
+                <div className="flex flex-wrap gap-y-9 md:gap-y-4 md:w-full">
                   <div className="w-1/2 md:w-1/4 text-center sm:text-left">
                     <div className="flex gap-x-2 mb-[10px] items-center justify-center sm:justify-start">
                       <div>
@@ -127,7 +150,7 @@ function HistoryOrder() {
                       </span>
                     </div>
                     <span className="text-sm font-bold text-dark">
-                      {result.created_at}
+                      {dateHandler(result.created_at)}
                     </span>
                   </div>
                   <div className="w-1/2 md:w-1/4 text-center sm:text-left">
@@ -165,7 +188,7 @@ function HistoryOrder() {
                         switch (result.orders_status) {
                           case "Pending":
                             return (
-                              <p className="text-sm text-[#D00000] font-bold py-2 px-4 rounded-full bg-[#D0000033]">
+                              <p className="text-xs text-[#D00000] font-bold py-2 px-4 rounded-full bg-[#D0000033]">
                                 {result.orders_status}
                               </p>
                             );
@@ -173,7 +196,7 @@ function HistoryOrder() {
                             break;
                           case "On Progress/Paid":
                             return (
-                              <p className="text-sm text-primary font-bold py-2 px-4 rounded-full bg-[#FF890633]">
+                              <p className="text-xs text-primary font-bold py-2 px-4 rounded-full bg-[#FF890633] text-center">
                                 {result.orders_status}
                               </p>
                             );
@@ -181,7 +204,7 @@ function HistoryOrder() {
                             break;
                           case "Done":
                             return (
-                              <p className="text-sm text-[#00A700] font-bold py-2 px-4 rounded-full bg-[#00A70033]">
+                              <p className="text-xs text-[#00A700] font-bold py-2 px-4 rounded-full bg-[#00A70033]">
                                 {result.orders_status}
                               </p>
                             );

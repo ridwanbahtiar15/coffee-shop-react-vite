@@ -51,6 +51,35 @@ function DetailOrder() {
       .catch((err) => console.log(err));
   }, []);
 
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const dateHandler = (value) => {
+    const newDate = new Date(value);
+    const date = newDate.getDate();
+    const month = monthNames[newDate.getMonth()];
+    const year = newDate.getFullYear();
+    const hours = newDate.getHours();
+    const minutes = newDate.getMinutes();
+    const format = newDate.toLocaleString("en-US", {
+      hour: "numeric",
+      hour12: true,
+    });
+    return `${date} ${month} ${year} ${hours}:${minutes} ${format}`;
+  };
+
   return (
     <>
       <Navbar
@@ -65,7 +94,7 @@ function DetailOrder() {
           Order <span className="font-bold">#{paramsId}</span>
         </h1>
         <p className="text-base font-normal text-secondary mt-2">
-          {user.created_at}
+          {dateHandler(user.created_at)}
         </p>
       </header>
       <main className="font-plusJakartaSans px-5 flex flex-col gap-y-12 md:px-24 lg:px-[130px] lg:flex-row lg:gap-x-5 justify-between">
@@ -185,8 +214,8 @@ function DetailOrder() {
               })()}
             </div>
             <div className="flex gap-x-3 items-center justify-between py-5 px-3.5">
-              <p className="text-secondary font-medium">Total Transaksi</p>
-              <p className="text-dark font-bold">IDR. {user.orders_total}</p>
+              <p className="text-secondary font-medium">Total Transaction</p>
+              <p className="text-primary font-bold">IDR {user.orders_total}</p>
             </div>
           </section>
         </section>
@@ -210,9 +239,9 @@ function DetailOrder() {
                   />
                 </div>
                 <div className="product-info flex flex-col items-start gap-y-4 lg:w-2/3">
-                  <p className="text-xs text-light bg-[#D00000] p-[10px] rounded-full font-bold">
+                  {/* <p className="text-xs text-light bg-[#D00000] p-[10px] rounded-full font-bold">
                     FLASH SALE!
-                  </p>
+                  </p> */}
                   <p className="text-lg text-[#0B0909] font-bold">
                     {result.products_name}
                   </p>
@@ -226,11 +255,11 @@ function DetailOrder() {
                     </div>
                   </div>
                   <div className="flex gap-x-4 items-center">
-                    <p className="text-xs text-[#D00000] font-medium line-through">
+                    {/* <p className="text-xs text-[#D00000] font-medium line-through">
                       IDR10.000
-                    </p>
-                    <p className="text-lg text-[#0B0909] font-medium lg:text-[22px]">
-                      IDR. {result.products_price}
+                    </p> */}
+                    <p className="text-lg text-primary font-medium lg:text-[22px]">
+                      IDR {result.products_price}
                     </p>
                   </div>
                 </div>

@@ -13,8 +13,8 @@ function ItemProduct({ id, img, name, desc, price }) {
           {name}
         </span>
         <p className="text-sm font-normal text-dark">{desc}</p>
-        <p className="text-lg font-medium text-dark lg:text-[22px]">
-          Rp.{price}
+        <p className="text-lg font-medium text-primary lg:text-[22px]">
+          IDR {price}
         </p>
         <div className="flex flex-col gap-y-2 md:flex-row md:justify-between md:gap-x-2">
           <Link
