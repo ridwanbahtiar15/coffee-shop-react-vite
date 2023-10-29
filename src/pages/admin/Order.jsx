@@ -21,7 +21,6 @@ function Order(props) {
   const [isDropdownShown, setIsDropdownShow] = useState(false);
   const [detailOrder, setDetailOrder] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  // console.log(searchParams.get("id"));
 
   const user = useSelector((state) => state.user);
   const token = user.token;
@@ -562,7 +561,7 @@ function Order(props) {
           <div className="bg-light w-full flex flex-col gap-y-6 p-7 md:w-[60%] lg:w-[50%] xl:w-[35%] absolute right-0 top-0 h-screen overflow-y-scroll">
             <header className="flex justify-between items-center">
               <p className="text-2xl font-medium text-[#0B0909]">
-                Order #12345-09343
+                {`Order #${searchParams.get("id")}`}
               </p>
               <button
                 type="button"

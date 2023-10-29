@@ -25,7 +25,6 @@ function Order(props) {
   const [formAddProduct, setFormAddProduct] = useState(false);
   const [formUpdateProduct, setFormUpdateProduct] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-
   const [isCategory, setIsCategory] = useState(false);
 
   const user = useSelector((state) => state.user);
@@ -130,7 +129,6 @@ function Order(props) {
           isError: false,
         });
         setOpenModal({ isOpen: true, status: "addProduct" });
-        setOpenModal({ isOpen: true, status: "error" });
         authAxios
           .get("/products")
           .then((res) => setProduct(res.data.result))
@@ -185,7 +183,7 @@ function Order(props) {
       setMessage({
         msg: res.data.msg,
         isError: false,
-        status: "deleteProduct",
+        status: null,
       });
       setOpenModal({
         isOpen: true,
@@ -392,14 +390,17 @@ function Order(props) {
               </div>
               <p className="max-xl:hidden">User</p>
             </Link>
-            <Link
-              to="/logout"
+            <button
               className={`flex items-center gap-x-2 py-2 px-4 hover:bg-primary rounded-md outline-none text-sm font-normal${
                 // eslint-disable-next-line react/prop-types
                 props.path == "/logout"
                   ? " text-[#0B132A] bg-primary"
                   : " text-[#4F5665]"
               }`}
+              onClick={() => {
+                setOpenModal({ isOpen: true, status: "logout" });
+                setMessage({ msg: "Are You Sure?" });
+              }}
             >
               <div>
                 <svg
@@ -439,7 +440,7 @@ function Order(props) {
                 </svg>
               </div>
               <p className="max-xl:hidden">Logout</p>
-            </Link>
+            </button>
           </div>
         </aside>
         <section className="w-full py-5 px-5 md:px-10 xl:w-4/5 lg:py-6 lg:px-10 text-light flex flex-col gap-y-6">
@@ -488,7 +489,7 @@ function Order(props) {
               </div>
             </header>
             <section className="py-4 px-3 border border-[#E8E8E8] rounded-md">
-              <div className="text-xs xl:text-sm font-medium text-secondary overflow-x-scroll">
+              <div className="text-xs min-[1440px]:text-sm font-medium text-secondary overflow-x-scroll">
                 <table className="table-auto w-full">
                   <thead className="">
                     <tr className="border-b border-[#E8E8E84D]">
@@ -597,7 +598,7 @@ function Order(props) {
                   encType="multipart/form-data"
                   onSubmit={OnAddHandler}
                 >
-                  <div className="flex flex-col gap-y-2 cursor-pointer">
+                  <div className="flex flex-col gap-y-2">
                     <label htmlFor="image" className="text-dark font-semibold">
                       Photo Product
                     </label>
@@ -774,7 +775,7 @@ function Order(props) {
                   encType="multipart/form-data"
                   onSubmit={OnUpdateHandler}
                 >
-                  <div className="flex flex-col gap-y-2 cursor-pointer">
+                  <div className="flex flex-col gap-y-2">
                     <label htmlFor="image" className="text-dark font-semibold">
                       Photo Product
                     </label>

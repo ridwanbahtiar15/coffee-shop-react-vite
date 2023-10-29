@@ -13,7 +13,7 @@ function Modal({
 
   return (
     <div
-      className="bg-gray-200 justify-center items-center h-screen opacity-100 absolute"
+      className="bg-gray-200 justify-center items-center h-screen opacity-100 absolute z-10"
       id="logoutModal"
     >
       <div className="fixed left-0 top-0 bg-black bg-opacity-50 w-screen h-screen flex justify-center items-center px-[10px] md:px-0">
@@ -36,10 +36,6 @@ function Modal({
                       navigate("/login");
                       break;
                     case "401":
-                      closeModal({ isOpen: false, status: null });
-                      navigate("/login");
-                      break;
-                    case "deleteProduct":
                       closeModal({ isOpen: false, status: null });
                       navigate("/login");
                       break;

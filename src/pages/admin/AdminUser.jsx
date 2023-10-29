@@ -1,7 +1,9 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 import Navbar from "../../components/Navbar";
 import DropdownMobile from "../../components/DropdownMobile";
@@ -17,17 +19,177 @@ function Order(props) {
   const [Message, setMessage] = useState({ msg: null, isError: null });
   const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
-  const [formUser, setFormUser] = useState(false);
+  const [formAddUser, setFormAddUser] = useState(false);
+  const [formUpdateUser, setFormUpdateUser] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [isPassShown, setIsPassShown] = useState(false);
-  const [isPassShown2, setIsPassShown2] = useState(false);
+  // const [isPassShown2, setIsPassShown2] = useState(false);
 
   const showPassHandler = () => {
     setIsPassShown((state) => !state);
   };
 
-  const showPassHandler2 = () => {
-    setIsPassShown2((state) => !state);
+  // const showPassHandler2 = () => {
+  //   setIsPassShown2((state) => !state);
+  // };
+
+  const user = useSelector((state) => state.user);
+  const token = user.token;
+  const url = import.meta.env.VITE_BACKEND_HOST;
+  const authAxios = axios.create({
+    baseURL: url,
+    headers: {
+      Authorization: `Barer ${token}`,
+    },
+  });
+
+  const [userData, setUserData] = useState([]);
+  useEffect(() => {
+    authAxios
+      .get("/users")
+      .then((res) => {
+        setUserData(res.data.result);
+        // console.log(res.data.result);
+      })
+      .catch((err) => {
+        setMessage({
+          msg: err.response.data.msg,
+          isError: true,
+        });
+        setOpenModal({ isOpen: true, status: "401" });
+      });
+  }, []);
+
+  const [image, setImage] = useState("");
+  const changeImageHandler = (e) => {
+    setImage(e.target.files[0]);
+  };
+
+  const [normalUser, setNormalUser] = useState(false);
+  const [adminUser, setAdminUser] = useState(false);
+  const [typeUser, setTypeUser] = useState({ name: null, id: null });
+
+  const [userById, setUserById] = useState([]);
+  const handleChange = (e) => {
+    const dataClone = { ...userById };
+    dataClone[e.target.name] = e.target.value;
+    setUserById(dataClone);
+  };
+
+  const GetUserHandler = (id) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      id: id,
+    }));
+
+    setFormUpdateUser(true);
+    authAxios
+      .get("/users/" + id)
+      .then((res) => {
+        setUserById(res.data.result[0]);
+        setTypeUser(res.data.result[0].roles_id);
+        if (res.data.result[0].roles_id == 1) {
+          setAdminUser(true);
+          setNormalUser(false);
+        }
+        if (res.data.result[0].roles_id == 2) {
+          setNormalUser(true);
+          setAdminUser(false);
+        }
+      })
+      .catch((err) => {
+        setMessage({
+          msg: err.response.data.msg,
+          isError: true,
+        });
+        setOpenModal({ isOpen: true, status: "error" });
+      });
+  };
+
+  const OnAddHandler = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("users_image", image);
+    formData.append("users_fullname", e.target.users_fullname.value);
+    formData.append("users_email", e.target.users_email.value);
+    formData.append("users_phone", e.target.users_phone.value);
+    formData.append("users_password", e.target.users_password.value);
+    formData.append("users_address", e.target.users_address.value);
+    formData.append("roles_id", typeUser);
+
+    authAxios
+      .post("/users", formData)
+      .then((res) => {
+        setMessage({
+          msg: res.data.msg,
+          isError: false,
+        });
+        setOpenModal({ isOpen: true, status: null });
+        authAxios
+          .get("/users")
+          .then((res) => setUserData(res.data.result))
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => {
+        setMessage({
+          msg: err.response.data.msg,
+          isError: true,
+        });
+        setOpenModal({ isOpen: true, status: "error" });
+      });
+  };
+
+  const OnUpdateHandler = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("users_image", image);
+    formData.append("users_fullname", e.target.users_fullname.value);
+    formData.append("users_email", e.target.users_email.value);
+    formData.append("users_phone", e.target.users_phone.value);
+    formData.append("users_password", e.target.users_password.value);
+    formData.append("users_address", e.target.users_address.value);
+    formData.append("roles_id", typeUser);
+
+    authAxios
+      .patch("/users/" + searchParams.get("id"), formData)
+      .then((res) => {
+        setMessage({
+          msg: res.data.msg,
+          isError: false,
+        });
+        setOpenModal({ isOpen: true, status: null });
+        authAxios
+          .get("/users")
+          .then((res) => setUserData(res.data.result))
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => {
+        setMessage({
+          msg: err.response.data.msg,
+          isError: true,
+        });
+        setOpenModal({ isOpen: true, status: "error" });
+      });
+  };
+
+  const DeleteUserHandler = (id) => {
+    authAxios.delete("/users/" + id).then((res) => {
+      setMessage({
+        msg: res.data.msg,
+        isError: false,
+        status: null,
+      });
+      setOpenModal({
+        isOpen: true,
+      });
+      authAxios
+        .get("/users")
+        .then((res) => setUserData(res.data.result))
+        .catch((err) => console.log(err));
+    });
   };
 
   return (
@@ -115,16 +277,16 @@ function Order(props) {
                   fill="none"
                 >
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M14.5134 20.5H6.16555C3.09919 20.5 0.746786 19.3925 1.41498 14.9348L2.19301 8.89363C2.60491 6.66937 4.02367 5.81812 5.26852 5.81812H15.447C16.7102 5.81812 18.0466 6.73345 18.5225 8.89363L19.3006 14.9348C19.8681 18.8891 17.5797 20.5 14.5134 20.5Z"
                     stroke={
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M14.6502 5.59848C14.6502 3.21241 12.716 1.27812 10.3299 1.27812V1.27812C9.18088 1.27325 8.07727 1.72628 7.26308 2.53703C6.44889 3.34778 5.9912 4.44947 5.99121 5.59848H5.99121"
@@ -132,9 +294,9 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M13.296 10.102H13.2502"
@@ -142,9 +304,9 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M7.46492 10.102H7.41916"
@@ -152,9 +314,9 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </div>
@@ -178,28 +340,28 @@ function Order(props) {
                   fill="none"
                 >
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M7.59102 13.2068C11.28 13.2068 14.433 13.7658 14.433 15.9988C14.433 18.2318 11.301 18.8068 7.59102 18.8068C3.90102 18.8068 0.749023 18.2528 0.749023 16.0188C0.749023 13.7848 3.88002 13.2068 7.59102 13.2068Z"
                     stroke={
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M7.59108 10.0198C5.16908 10.0198 3.20508 8.05676 3.20508 5.63476C3.20508 3.21276 5.16908 1.24976 7.59108 1.24976C10.0121 1.24976 11.9761 3.21276 11.9761 5.63476C11.9851 8.04776 10.0351 10.0108 7.62208 10.0198H7.59108Z"
                     stroke={
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M14.4824 8.88153C16.0834 8.65653 17.3164 7.28253 17.3194 5.61953C17.3194 3.98053 16.1244 2.62053 14.5574 2.36353"
@@ -207,9 +369,9 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M16.5947 12.7322C18.1457 12.9632 19.2287 13.5072 19.2287 14.6272C19.2287 15.3982 18.7187 15.8982 17.8947 16.2112"
@@ -217,9 +379,9 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </div>
@@ -248,8 +410,8 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/logout" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
                   />
                   <path
                     d="M4 14L1.44194 11.4419C1.19786 11.1979 1.19786 10.8021 1.44194 10.5581L4 8"
@@ -257,8 +419,8 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/logout" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
                   />
                   <path
                     d="M9 11L2 11"
@@ -266,8 +428,8 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/logout" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
                   />
                 </svg>
               </div>
@@ -282,7 +444,7 @@ function Order(props) {
                 <p className="text-2xl font-medium text-[#0B0909]">User List</p>
                 <button
                   className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
-                  onClick={() => setFormUser(true)}
+                  onClick={() => setFormAddUser(true)}
                 >
                   + Add User
                 </button>
@@ -321,9 +483,7 @@ function Order(props) {
                 <table className="table-auto lg:table-fixed w-full">
                   <thead className="">
                     <tr className="border-b border-[#E8E8E84D]">
-                      <th className="p-6 text-left">
-                        <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
-                      </th>
+                      <th className="p-6 text-left w-12">No</th>
                       <th className="p-6 text-center">Image</th>
                       <th className="p-6 text-center">Full Name</th>
                       <th className="p-6 text-center">Phone</th>
@@ -333,7 +493,57 @@ function Order(props) {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b border-[#E8E8E84D] bg-[#F9FAFB]">
+                    {userData.map((result, i) => (
+                      <tr
+                        className={`border-b border-[#E8E8E84D]${
+                          i % 2 == 0 ? " bg-[#F9FAFB]" : ""
+                        }`}
+                        key={i}
+                      >
+                        <td className="px-6 text-left">{i + 1}</td>
+                        <td className="p-6">
+                          <div className="flex justify-center">
+                            <img
+                              src={result.users_image}
+                              alt="product"
+                              className="w-12 rounded-md"
+                            />
+                          </div>
+                        </td>
+                        <td className="text-center">{result.users_fullname}</td>
+                        <td className="text-center">{result.users_phone}</td>
+                        <td className="text-center">{result.users_address}</td>
+                        <td className="text-center">{result.users_email}</td>
+                        <td className="text-center">
+                          <div className="flex flex-col gap-y-2 items-center xl:flex-row xl:justify-center xl:gap-x-2">
+                            <div
+                              className="p-1 bg-[#FF89061A] rounded-full cursor-pointer"
+                              onClick={() => {
+                                setFormUpdateUser(true);
+                                GetUserHandler(result.users_id);
+                              }}
+                            >
+                              <img
+                                src={getImageUrl("fi_edit-3", "svg")}
+                                alt="fi_edit-3"
+                                className="w-4"
+                              />
+                            </div>
+                            <div
+                              className="p-1 bg-[#D000001A] rounded-full cursor-pointer"
+                              onClick={() => DeleteUserHandler(result.users_id)}
+                            >
+                              <img
+                                src={getImageUrl("Delete", "svg")}
+                                alt="Delete"
+                                className="w-4"
+                              />
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {/* <tr className="border-b border-[#E8E8E84D]">
                       <td className="p-6 text-left">
                         <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
                       </td>
@@ -371,46 +581,7 @@ function Order(props) {
                           </div>
                         </div>
                       </td>
-                    </tr>
-                    <tr className="border-b border-[#E8E8E84D]">
-                      <td className="p-6 text-left">
-                        <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
-                      </td>
-                      <td className="p-6">
-                        <div className="flex justify-center">
-                          <img
-                            src={getImageUrl("image31", "webp")}
-                            alt="product"
-                            className="w-12 rounded-md"
-                          />
-                        </div>
-                      </td>
-                      <td className="p-6 text-center">Eleanor Pena</td>
-                      <td className="p-6 text-center">0812383374</td>
-                      <td className="p-6 text-center">Bekasi</td>
-                      <td className="p-6 text-center">eleanor@mail.com</td>
-                      <td className="p-6 text-center">
-                        <div className="flex flex-col gap-y-2 items-center xl:flex-row xl:justify-center xl:gap-x-2">
-                          <div
-                            className="p-1 bg-[#FF89061A] rounded-full cursor-pointer"
-                            onClick={() => setFormUser(true)}
-                          >
-                            <img
-                              src={getImageUrl("fi_edit-3", "svg")}
-                              alt="fi_edit-3"
-                              className="w-4"
-                            />
-                          </div>
-                          <div className="p-1 bg-[#D000001A] rounded-full">
-                            <img
-                              src={getImageUrl("Delete", "svg")}
-                              alt="Delete"
-                              className="w-4"
-                            />
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
+                    </tr> */}
                   </tbody>
                 </table>
               </div>
@@ -418,7 +589,7 @@ function Order(props) {
           </div>
         </section>
       </main>
-      {formUser && (
+      {formAddUser && (
         <div className="font-plusJakartaSans fixed top-0 left-0 right-0 bg-black bg-opacity-50 h-full">
           <div className="bg-light w-full flex flex-col gap-y-6 p-7 md:w-[60%] lg:w-[50%] xl:w-[35%] absolute right-0 top-0 h-screen overflow-y-scroll">
             <header className="flex justify-between items-center">
@@ -426,7 +597,7 @@ function Order(props) {
               <button
                 type="button"
                 className="outline-none"
-                onClick={() => setFormUser(false)}
+                onClick={() => setFormAddUser(false)}
               >
                 <img
                   src={getImageUrl("XCircle", "svg")}
@@ -437,39 +608,62 @@ function Order(props) {
             </header>
             <section>
               <section className="text-sm">
-                <form className="flex flex-col gap-y-6">
-                  <div className="flex flex-col gap-y-2 cursor-pointer">
+                <form
+                  className="flex flex-col gap-y-6"
+                  encType="multipart/form-data"
+                  onSubmit={OnAddHandler}
+                >
+                  <div className="flex flex-col gap-y-2">
                     <label htmlFor="image" className="text-dark font-semibold">
                       Image User
                     </label>
-                    <div className="p-4 bg-[#E8E8E8] self-baseline rounded-md">
-                      <img
-                        src={getImageUrl("Image", "svg")}
-                        alt="image"
-                        className="w-6"
-                      />
-                    </div>
-                    <button
+                    {image ? (
+                      <div className="self-baseline rounded-md">
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt="image"
+                          className="w-14 rounded-md"
+                        />
+                      </div>
+                    ) : (
+                      <div className="p-4 bg-[#E8E8E8] self-baseline rounded-md">
+                        <img
+                          src={getImageUrl("Image", "svg")}
+                          alt="image"
+                          className="w-6"
+                        />
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      name="users_image"
+                      id="users-image"
+                      className="hidden"
+                      onChange={changeImageHandler}
+                    />
+                    <label
                       type="button"
-                      className="py-2 px-5 bg-primary self-baseline rounded-md text-xs font-medium hover:bg-amber-600 active:ring active:ring-orange-300"
+                      className="py-2 px-5 bg-primary self-baseline rounded-md text-xs font-medium hover:bg-amber-600 active:ring active:ring-orange-300 cursor-pointer"
+                      htmlFor="users-image"
                     >
                       Upload
-                    </button>
+                    </label>
                   </div>
                   <div className="flex flex-col gap-y-3 relative">
                     <label
-                      htmlFor="fullname"
-                      className="text-sm md:text-base font-semibold text-[#0B132A] lg:text-base"
+                      htmlFor="users_fullname"
+                      className="text-sm font-semibold text-[#0B132A]"
                     >
                       Full Name
                     </label>
                     <input
                       type="text"
-                      id="fullname"
+                      id="users_fullname"
+                      name="users_fullname"
                       placeholder="Enter Your Full Name"
                       className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
                     />
-                    <div className="icon-email absolute top-[46px] left-4 md:top-[50px]">
+                    <div className="icon-email absolute top-[46px] left-4 md:top-[46px]">
                       <img
                         src={getImageUrl("Profile", "svg")}
                         alt="mail.svg"
@@ -479,18 +673,19 @@ function Order(props) {
                   </div>
                   <div className="flex flex-col gap-y-3 relative">
                     <label
-                      htmlFor="email"
-                      className="text-sm md:text-base font-semibold text-[#0B132A] lg:text-base"
+                      htmlFor="users_email"
+                      className="text-sm font-semibold text-[#0B132A]"
                     >
                       Email
                     </label>
                     <input
                       type="email"
-                      id="email"
+                      id="users_email"
+                      name="users_email"
                       placeholder="Enter Your Email"
                       className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
                     />
-                    <div className="icon-email absolute top-[46px] left-4 md:top-[50px]">
+                    <div className="icon-email absolute top-[46px] left-4 md:top-[46px]">
                       <img
                         src={getImageUrl("mail", "svg")}
                         alt="mail.svg"
@@ -500,18 +695,18 @@ function Order(props) {
                   </div>
                   <div className="flex flex-col gap-y-3 relative">
                     <label
-                      htmlFor="phone"
-                      className="text-sm md:text-base font-semibold text-[#0B132A] lg:text-base"
+                      htmlFor="users_phone"
+                      className="text-sm font-semibold text-[#0B132A]"
                     >
                       Phone
                     </label>
                     <input
                       type="number"
-                      id="phone"
+                      id="users_phone"
                       placeholder="Enter Your Phone"
                       className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
                     />
-                    <div className="icon-email absolute top-[46px] left-4 md:top-[50px]">
+                    <div className="icon-email absolute top-[46px] left-4 md:top-[46px]">
                       <img
                         src={getImageUrl("PhoneCall", "svg")}
                         alt="mail.svg"
@@ -521,18 +716,19 @@ function Order(props) {
                   </div>
                   <div className="flex flex-col gap-y-3 relative">
                     <label
-                      htmlFor="password"
-                      className="text-sm md:text-base font-semibold text-[#0B132A] lg:text-base"
+                      htmlFor="users_password"
+                      className="text-sm font-semibold text-[#0B132A]"
                     >
                       Password
                     </label>
                     <input
                       type={isPassShown ? "text" : "password"}
-                      id="password"
+                      id="users_password"
+                      name="users_password"
                       placeholder="Enter Your Password"
                       className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
                     />
-                    <div className="icon-password absolute top-[46px] left-4 md:top-[50px]">
+                    <div className="icon-password absolute top-[46px] left-4 md:top-[46px]">
                       <img
                         src={getImageUrl("Password", "svg")}
                         alt="Password"
@@ -540,7 +736,7 @@ function Order(props) {
                       />
                     </div>
                     <div
-                      className={`absolute top-[46px] right-4 md:top-[50px] ${
+                      className={`absolute top-[46px] right-4 md:top-[46px] ${
                         isPassShown ? " hidden" : "block"
                       }`}
                       id="btnHiddenPassword"
@@ -568,65 +764,19 @@ function Order(props) {
                   </div>
                   <div className="flex flex-col gap-y-3 relative">
                     <label
-                      htmlFor="confirmPassword"
-                      className="text-sm md:text-base font-semibold text-[#0B132A] lg:text-base"
-                    >
-                      Password
-                    </label>
-                    <input
-                      type={isPassShown2 ? "text" : "password"}
-                      id="confirmPassword"
-                      placeholder="Enter Your Password"
-                      className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
-                    />
-                    <div className="icon-password absolute top-[46px] left-4 md:top-[50px]">
-                      <img
-                        src={getImageUrl("Password", "svg")}
-                        alt="Password"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <div
-                      className={`absolute top-[46px] right-4 md:top-[50px] ${
-                        isPassShown2 ? " hidden" : "block"
-                      }`}
-                      id="btnHiddenPassword"
-                      onClick={showPassHandler2}
-                    >
-                      <img
-                        src={getImageUrl("EyeSlash", "svg")}
-                        alt="EyeSlash"
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <div
-                      className={`absolute top-[45px] right-[15px] md:top-[49px] ${
-                        isPassShown2 ? " block" : " hidden"
-                      }`}
-                      id="btn-show-password"
-                      onClick={showPassHandler2}
-                    >
-                      <img
-                        src={getImageUrl("eye", "svg")}
-                        alt="eye"
-                        className="w-[18px] h-[18px]"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-y-3 relative">
-                    <label
-                      htmlFor="address"
-                      className="text-sm md:text-base font-semibold text-[#0B132A] lg:text-base"
+                      htmlFor="users_address"
+                      className="text-sm font-semibold text-[#0B132A]"
                     >
                       Address
                     </label>
                     <input
                       type="text"
-                      id="address"
+                      id="users_address"
+                      name="users_address"
                       placeholder="Enter Your Address"
                       className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
                     />
-                    <div className="icon-email absolute top-[46px] left-4 md:top-[50px]">
+                    <div className="icon-email absolute top-[46px] left-4 md:top-[46px]">
                       <img
                         src={getImageUrl("Location", "svg")}
                         alt="mail.svg"
@@ -637,24 +787,297 @@ function Order(props) {
                   <div className="flex flex-col gap-y-3 relative">
                     <label
                       htmlFor="address"
-                      className="text-sm md:text-base font-semibold text-[#0B132A] lg:text-base"
+                      className="text-sm font-semibold text-[#0B132A]"
                     >
                       Type Of User
                     </label>
                     <div className="flex items-center gap-x-4">
-                      <div className="p-2 text-base font-normal text-secondary border border-[#E8E8E8] w-full text-center rounded-md">
+                      <div
+                        className={`p-2 text-sm font-normal text-secondary border border-[#E8E8E8] w-full text-center rounded-md cursor-pointer${
+                          normalUser ? " border-primary" : ""
+                        }`}
+                        onClick={() => {
+                          setNormalUser(true);
+                          setAdminUser(false);
+                          setTypeUser(2);
+                        }}
+                      >
                         Normal User
                       </div>
-                      <div className="p-2 text-base font-normal text-secondary border border-[#E8E8E8] w-full text-center rounded-md">
+                      <div
+                        className={`p-2 text-sm font-normal text-secondary border border-[#E8E8E8] w-full text-center rounded-md cursor-pointer${
+                          adminUser ? " border-primary" : ""
+                        }`}
+                        onClick={() => {
+                          setNormalUser(false);
+                          setAdminUser(true);
+                          setTypeUser(1);
+                        }}
+                      >
                         Admin
                       </div>
                     </div>
                   </div>
                   <button
-                    type="button"
+                    type="submit"
                     className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
                   >
                     Add User
+                  </button>
+                </form>
+              </section>
+            </section>
+          </div>
+        </div>
+      )}
+      {formUpdateUser && (
+        <div className="font-plusJakartaSans fixed top-0 left-0 right-0 bg-black bg-opacity-50 h-full">
+          <div className="bg-light w-full flex flex-col gap-y-6 p-7 md:w-[60%] lg:w-[50%] xl:w-[35%] absolute right-0 top-0 h-screen overflow-y-scroll">
+            <header className="flex justify-between items-center">
+              <p className="text-2xl font-medium text-[#0B0909]">Edit User</p>
+              <button
+                type="button"
+                className="outline-none"
+                onClick={() => {
+                  setFormUpdateUser(false);
+                  setSearchParams((prev) => ({
+                    ...prev,
+                  }));
+                }}
+              >
+                <img
+                  src={getImageUrl("XCircle", "svg")}
+                  alt="XCircle"
+                  className="w-6 h-6"
+                />
+              </button>
+            </header>
+            <section>
+              <section className="text-sm">
+                <form
+                  className="flex flex-col gap-y-6"
+                  encType="multipart/form-data"
+                  onSubmit={OnUpdateHandler}
+                >
+                  <div className="flex flex-col gap-y-2">
+                    <label htmlFor="image" className="text-dark font-semibold">
+                      Image User
+                    </label>
+                    {image ? (
+                      <div className="self-baseline rounded-md">
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt="image"
+                          className="w-14 rounded-md"
+                        />
+                      </div>
+                    ) : (
+                      <div className="self-baseline rounded-md">
+                        <img
+                          src={userById.users_image}
+                          alt="image"
+                          className="w-14 rounded-md"
+                        />
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      name="users_image"
+                      id="users-image"
+                      className="hidden"
+                      onChange={changeImageHandler}
+                    />
+                    <label
+                      type="button"
+                      className="py-2 px-5 bg-primary self-baseline rounded-md text-xs font-medium hover:bg-amber-600 active:ring active:ring-orange-300 cursor-pointer"
+                      htmlFor="users-image"
+                    >
+                      Upload
+                    </label>
+                  </div>
+                  <div className="flex flex-col gap-y-3 relative">
+                    <label
+                      htmlFor="users_fullname"
+                      className="text-sm font-semibold text-[#0B132A]"
+                    >
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      id="users_fullname"
+                      name="users_fullname"
+                      placeholder="Enter Your Full Name"
+                      className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
+                      value={userById.users_fullname}
+                      onChange={handleChange}
+                    />
+                    <div className="icon-email absolute top-[46px] left-4 md:top-[46px]">
+                      <img
+                        src={getImageUrl("Profile", "svg")}
+                        alt="mail.svg"
+                        className="w-full h-full"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-y-3 relative">
+                    <label
+                      htmlFor="users_email"
+                      className="text-sm font-semibold text-[#0B132A]"
+                    >
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="users_email"
+                      name="users_email"
+                      placeholder="Enter Your Email"
+                      className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
+                      value={userById.users_email}
+                      onChange={handleChange}
+                    />
+                    <div className="icon-email absolute top-[46px] left-4 md:top-[46px]">
+                      <img
+                        src={getImageUrl("mail", "svg")}
+                        alt="mail.svg"
+                        className="w-full h-full"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-y-3 relative">
+                    <label
+                      htmlFor="users_phone"
+                      className="text-sm font-semibold text-[#0B132A]"
+                    >
+                      Phone
+                    </label>
+                    <input
+                      type="number"
+                      id="users_phone"
+                      placeholder="Enter Your Phone"
+                      className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
+                      value={userById.users_phone}
+                      onChange={handleChange}
+                    />
+                    <div className="icon-email absolute top-[46px] left-4 md:top-[46px]">
+                      <img
+                        src={getImageUrl("PhoneCall", "svg")}
+                        alt="mail.svg"
+                        className="w-full h-full"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-y-3 relative">
+                    <label
+                      htmlFor="users_password"
+                      className="text-sm font-semibold text-[#0B132A]"
+                    >
+                      Password
+                    </label>
+                    <input
+                      type={isPassShown ? "text" : "password"}
+                      id="users_password"
+                      name="users_password"
+                      placeholder="Enter Your Password"
+                      className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
+                      onChange={handleChange}
+                    />
+                    <div className="icon-password absolute top-[46px] left-4 md:top-[46px]">
+                      <img
+                        src={getImageUrl("Password", "svg")}
+                        alt="Password"
+                        className="w-full h-full"
+                      />
+                    </div>
+                    <div
+                      className={`absolute top-[46px] right-4 md:top-[46px] ${
+                        isPassShown ? " hidden" : "block"
+                      }`}
+                      id="btnHiddenPassword"
+                      onClick={showPassHandler}
+                    >
+                      <img
+                        src={getImageUrl("EyeSlash", "svg")}
+                        alt="EyeSlash"
+                        className="w-full h-full"
+                      />
+                    </div>
+                    <div
+                      className={`absolute top-[45px] right-[15px] md:top-[49px] ${
+                        isPassShown ? " block" : " hidden"
+                      }`}
+                      id="btn-show-password"
+                      onClick={showPassHandler}
+                    >
+                      <img
+                        src={getImageUrl("eye", "svg")}
+                        alt="eye"
+                        className="w-[18px] h-[18px]"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-y-3 relative">
+                    <label
+                      htmlFor="users_address"
+                      className="text-sm font-semibold text-[#0B132A]"
+                    >
+                      Address
+                    </label>
+                    <input
+                      type="text"
+                      id="users_address"
+                      name="users_address"
+                      placeholder="Enter Your Address"
+                      className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
+                      value={userById.users_address}
+                      onChange={handleChange}
+                    />
+                    <div className="icon-email absolute top-[46px] left-4 md:top-[46px]">
+                      <img
+                        src={getImageUrl("Location", "svg")}
+                        alt="mail.svg"
+                        className="w-full h-full"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-y-3 relative">
+                    <label
+                      htmlFor="address"
+                      className="text-sm font-semibold text-[#0B132A]"
+                    >
+                      Type Of User
+                    </label>
+                    <div className="flex items-center gap-x-4">
+                      <div
+                        className={`p-2 text-sm font-normal text-secondary border border-[#E8E8E8] w-full text-center rounded-md cursor-pointer${
+                          normalUser ? " border-primary" : ""
+                        }`}
+                        onClick={() => {
+                          setNormalUser(true);
+                          setAdminUser(false);
+                          setTypeUser(2);
+                        }}
+                      >
+                        Normal User
+                      </div>
+                      <div
+                        className={`p-2 text-sm font-normal text-secondary border border-[#E8E8E8] w-full text-center rounded-md cursor-pointer${
+                          adminUser ? " border-primary" : ""
+                        }`}
+                        onClick={() => {
+                          setNormalUser(false);
+                          setAdminUser(true);
+                          setTypeUser(1);
+                        }}
+                      >
+                        Admin
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300"
+                  >
+                    Update User
                   </button>
                 </form>
               </section>
