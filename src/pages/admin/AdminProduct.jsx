@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { useSearchParams } from "react-router-dom";
 
 import Navbar from "../../components/Navbar";
 import DropdownMobile from "../../components/DropdownMobile";
@@ -25,9 +24,7 @@ function Order(props) {
   const [isDropdownShown, setIsDropdownShow] = useState(false);
   const [formAddProduct, setFormAddProduct] = useState(false);
   const [formUpdateProduct, setFormUpdateProduct] = useState(false);
-  // const [isAddProduct, setIsAddProduct] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  // console.log(searchParams.get("id"));
 
   const [isCategory, setIsCategory] = useState(false);
 
@@ -61,7 +58,6 @@ function Order(props) {
   }, []);
 
   const [productById, setProductById] = useState([]);
-
   const handleChange = (e) => {
     const dataClone = { ...productById };
     dataClone[e.target.name] = e.target.value;

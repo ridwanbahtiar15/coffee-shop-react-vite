@@ -1,7 +1,9 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 import Navbar from "../../components/Navbar";
 import DropdownMobile from "../../components/DropdownMobile";
@@ -18,6 +20,179 @@ function Order(props) {
   const [openModal, setOpenModal] = useState(false);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
   const [detailOrder, setDetailOrder] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  // console.log(searchParams.get("id"));
+
+  const user = useSelector((state) => state.user);
+  const token = user.token;
+  const url = import.meta.env.VITE_BACKEND_HOST;
+  const authAxios = axios.create({
+    baseURL: url,
+    headers: {
+      Authorization: `Barer ${token}`,
+    },
+  });
+
+  const [order, setOrder] = useState([]);
+  useEffect(() => {
+    authAxios
+      .get("/orders")
+      .then((res) => {
+        setOrder(res.data.result);
+      })
+      .catch((err) => {
+        setMessage({
+          msg: err.response.data.msg,
+          isError: true,
+        });
+        setOpenModal({ isOpen: true, status: "401" });
+      });
+  }, []);
+
+  const statusSwitch = (value) => {
+    switch (value) {
+      case "Pending":
+        return (
+          <div className="text-xs text-[#D00000] font-bold py-2 px-3 rounded-full bg-[#D0000033]">
+            {value}
+          </div>
+        );
+        // eslint-disable-next-line no-unreachable
+        break;
+      case "Waiting":
+        return (
+          <div className="text-xs text-[#4F5665] font-bold py-2 px-3 rounded-full bg-[#4F566533]">
+            {value}
+          </div>
+        );
+        // eslint-disable-next-line no-unreachable
+        break;
+      case "On Progress/Paid":
+        return (
+          <div className="text-xs text-primary font-bold py-2 px-3 rounded-full bg-[#FF890633]">
+            {value}
+          </div>
+        );
+        // eslint-disable-next-line no-unreachable
+        break;
+      case "Done":
+        return (
+          <div className="text-xs text-[#00A700] font-bold py-2 px-3 rounded-full bg-[#00A70033]">
+            {value}
+          </div>
+        );
+        // eslint-disable-next-line no-unreachable
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const dateHandler = (value) => {
+    const newDate = new Date(value);
+    const date = newDate.getDate();
+    const month = monthNames[newDate.getMonth()];
+    const year = newDate.getFullYear();
+    return `${date} ${month} ${year}`;
+  };
+
+  const [userDetail, setUserDetail] = useState([]);
+  const [productById, setProductById] = useState([]);
+  const [status, setStatus] = useState();
+  const [isStatus, setIsStatus] = useState(false);
+
+  const GetDetailOrderHandler = (id) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      id: id,
+    }));
+
+    setDetailOrder(true);
+
+    authAxios
+      .get("/orders/users/" + id)
+      .then((res) => {
+        setUserDetail(res.data.result[0]);
+        setStatus(res.data.result[0].orders_status);
+      })
+      .catch((err) => {
+        if (err.response.status == 401) {
+          setMessage({
+            msg: err.response.data.msg,
+            isError: true,
+          });
+          setOpenModal({ isOpen: true, status: "401" });
+        }
+      });
+
+    authAxios
+      .get("/orders/detail/" + id)
+      .then((res) => {
+        setProductById(res.data.result);
+      })
+      .catch((err) => {
+        if (err.response.status == 401) {
+          setMessage({
+            msg: err.response.data.msg,
+            isError: true,
+          });
+          setOpenModal({ isOpen: true, status: "401" });
+        }
+      });
+  };
+
+  const onUpdateHandler = () => {
+    const body = {
+      orders_status: status,
+    };
+
+    authAxios
+      .patch("/orders/" + searchParams.get("id"), body)
+      .then((res) => {
+        setMessage({
+          msg: res.data.msg,
+          isError: false,
+        });
+        setOpenModal({
+          isOpen: true,
+        });
+        authAxios
+          .get("/orders")
+          .then((res) => {
+            setOrder(res.data.result);
+          })
+          .catch((err) => {
+            setMessage({
+              msg: err.response.data.msg,
+              isError: true,
+            });
+            setOpenModal({ isOpen: true, status: "401" });
+          });
+      })
+      .catch((err) => {
+        setMessage({
+          msg: err.response.data.msg,
+          isError: true,
+        });
+        setOpenModal({ isOpen: true, status: "error" });
+      });
+  };
 
   return (
     <>
@@ -104,16 +279,16 @@ function Order(props) {
                   fill="none"
                 >
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M14.5134 20.5H6.16555C3.09919 20.5 0.746786 19.3925 1.41498 14.9348L2.19301 8.89363C2.60491 6.66937 4.02367 5.81812 5.26852 5.81812H15.447C16.7102 5.81812 18.0466 6.73345 18.5225 8.89363L19.3006 14.9348C19.8681 18.8891 17.5797 20.5 14.5134 20.5Z"
                     stroke={
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M14.6502 5.59848C14.6502 3.21241 12.716 1.27812 10.3299 1.27812V1.27812C9.18088 1.27325 8.07727 1.72628 7.26308 2.53703C6.44889 3.34778 5.9912 4.44947 5.99121 5.59848H5.99121"
@@ -121,9 +296,9 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M13.296 10.102H13.2502"
@@ -131,9 +306,9 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M7.46492 10.102H7.41916"
@@ -141,9 +316,9 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/order" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </div>
@@ -167,28 +342,28 @@ function Order(props) {
                   fill="none"
                 >
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M7.59102 13.2068C11.28 13.2068 14.433 13.7658 14.433 15.9988C14.433 18.2318 11.301 18.8068 7.59102 18.8068C3.90102 18.8068 0.749023 18.2528 0.749023 16.0188C0.749023 13.7848 3.88002 13.2068 7.59102 13.2068Z"
                     stroke={
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                     d="M7.59108 10.0198C5.16908 10.0198 3.20508 8.05676 3.20508 5.63476C3.20508 3.21276 5.16908 1.24976 7.59108 1.24976C10.0121 1.24976 11.9761 3.21276 11.9761 5.63476C11.9851 8.04776 10.0351 10.0108 7.62208 10.0198H7.59108Z"
                     stroke={
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M14.4824 8.88153C16.0834 8.65653 17.3164 7.28253 17.3194 5.61953C17.3194 3.98053 16.1244 2.62053 14.5574 2.36353"
@@ -196,9 +371,9 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                   <path
                     d="M16.5947 12.7322C18.1457 12.9632 19.2287 13.5072 19.2287 14.6272C19.2287 15.3982 18.7187 15.8982 17.8947 16.2112"
@@ -206,9 +381,9 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/admin/user" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               </div>
@@ -237,8 +412,8 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/logout" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
                   />
                   <path
                     d="M4 14L1.44194 11.4419C1.19786 11.1979 1.19786 10.8021 1.44194 10.5581L4 8"
@@ -246,8 +421,8 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/logout" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
                   />
                   <path
                     d="M9 11L2 11"
@@ -255,8 +430,8 @@ function Order(props) {
                       // eslint-disable-next-line react/prop-types
                       props.path == "/logout" ? "#0B132A" : "#4F5665"
                     }
-                    stroke-width="1.5"
-                    stroke-linecap="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
                   />
                 </svg>
               </div>
@@ -266,14 +441,11 @@ function Order(props) {
         </aside>
         <section className="w-full py-5 px-5 md:px-10 xl:w-4/5 lg:py-6 lg:px-10 text-light flex flex-col gap-y-6">
           <div className="flex flex-col gap-y-4 md:gap-x-5">
-            <header className="flex flex-col gap-y-4 lg:flex-row justify-between w-full">
-              <div className="flex justify-between lg:flex-col lg:gap-y-5">
+            <header className="flex flex-col gap-y-4 lg:items-center lg:flex-row justify-between w-full">
+              <div className="">
                 <p className="text-2xl font-medium text-[#0B0909]">
                   Order List
                 </p>
-                <button className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300">
-                  + Add Order
-                </button>
               </div>
               <div className="flex flex-col gap-y-4 lg:flex-row lg:gap-x-3 lg:items-end">
                 <div className="font-medium text-secondary">
@@ -289,17 +461,19 @@ function Order(props) {
                     </div>
                   </div>
                 </div>
-                <div className="font-medium text-secondary">
-                  <p className="text-xs mb-4">Search Order</p>
-                  <div className="flex p-3 lg:w-[240px] justify-between rounded-md border border-[#E8E8E8]">
-                    <p className="text-sm">Enter Order Number</p>
-                    <div>
-                      <img
-                        src={getImageUrl("Search", "svg")}
-                        alt="Search"
-                        className="w-5 h-5"
-                      />
-                    </div>
+                <div className="font-medium text-secondary relative lg:w-[240px]">
+                  <p className="text-xs mb-3">Search Order</p>
+                  <input
+                    type="text"
+                    className="text-sm p-3 border border-[#E8E8E8] rounded-md w-full  font-medium text-secondary placeholder:font-medium placeholder:text-secondary outline-none focus:border focus:border-primary"
+                    placeholder="Enter Search Order"
+                  />
+                  <div className="absolute top-10 right-3">
+                    <img
+                      src={getImageUrl("Search", "svg")}
+                      alt="Search"
+                      className="w-5 h-5"
+                    />
                   </div>
                 </div>
                 <div className="">
@@ -316,13 +490,11 @@ function Order(props) {
               </div>
             </header>
             <section className="py-4 px-3 border border-[#E8E8E8] rounded-md">
-              <div className="text-xs font-medium text-secondary overflow-x-scroll">
+              <div className="text-xs min-[1440px]:text-sm font-medium text-secondary overflow-x-scroll">
                 <table className="table-auto w-full">
                   <thead className="">
                     <tr className="border-b border-[#E8E8E84D]">
-                      <th className="p-6 text-left">
-                        <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
-                      </th>
+                      <th className="p-6 text-left">No</th>
                       <th className="p-6 text-center">No. Order</th>
                       <th className="p-6 text-center">Date</th>
                       <th className="p-6 text-center">Order</th>
@@ -332,193 +504,52 @@ function Order(props) {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="border-b border-[#E8E8E84D] bg-[#F9FAFB]">
-                      <td className="p-6 text-left">
-                        <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
-                      </td>
-                      <td className="p-6 text-center">#12354-09893</td>
-                      <td className="p-6 text-center">26 January 2023</td>
-                      <td className="p-6 flex flex-col items-center">
-                        <ul className="list-disc">
-                          <li>Hazelnut Latte R1x</li>
-                          <li>Caramel Machiato L1x</li>
-                        </ul>
-                      </td>
-                      <td className="p-6 text-center">
-                        <div className="flex justify-center">
-                          <div className="text-xs text-[#00A700] font-bold py-2 px-3 rounded-full bg-[#00A70033]">
-                            Done
+                    {order.map((result, i) => (
+                      <tr
+                        className={`border-b border-[#E8E8E84D]${
+                          i % 2 == 0 ? " bg-[#F9FAFB]" : ""
+                        }`}
+                        key={i}
+                      >
+                        <td className="p-6 text-left">{i + 1}</td>
+                        <td className="p-6 text-center">{`#${result.orders_id}`}</td>
+                        <td className="p-6 text-center">
+                          {dateHandler(result.created_at)}
+                        </td>
+                        <td className="p-6 text-center">{result.product}</td>
+                        <td className="p-6 text-center">
+                          <div className="flex justify-center">
+                            {statusSwitch(result.orders_status)}
                           </div>
-                        </div>
-                      </td>
-                      <td className="p-6 text-center">IDR. 40.000</td>
-                      <td className="p-6 text-center">
-                        <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2">
-                          <div className="p-1 bg-[#8E64471A] rounded-full">
-                            <img
-                              src={getImageUrl("view-list", "svg")}
-                              alt="view-list"
-                              className="w-4 h-4"
-                            />
+                        </td>
+                        <td className="p-6 text-center">
+                          {`IDR ${result.orders_total}`}
+                        </td>
+                        <td className="p-6 text-center">
+                          <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2 justify-center">
+                            <div
+                              className="p-1 bg-[#FF89061A] rounded-full cursor-pointer"
+                              onClick={() =>
+                                GetDetailOrderHandler(result.orders_id)
+                              }
+                            >
+                              <img
+                                src={getImageUrl("fi_edit-3", "svg")}
+                                alt="fi_edit-3"
+                                className="w-4"
+                              />
+                            </div>
+                            {/* <div className="p-1 bg-[#D000001A] rounded-full cursor-pointer">
+                              <img
+                                src={getImageUrl("Delete", "svg")}
+                                alt="Delete"
+                                className="w-4"
+                              />
+                            </div> */}
                           </div>
-                          <div className="p-1 bg-[#FF89061A] rounded-full">
-                            <img
-                              src={getImageUrl("fi_edit-3", "svg")}
-                              alt="fi_edit-3"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                          <div className="p-1 bg-[#D000001A] rounded-full">
-                            <img
-                              src={getImageUrl("Delete", "svg")}
-                              alt="Delete"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b border-[#E8E8E84D]">
-                      <td className="p-6 text-left">
-                        <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
-                      </td>
-                      <td className="p-6 text-center">#12354-09893</td>
-                      <td className="p-6 text-center">26 January 2023</td>
-                      <td className="p-6 flex flex-col items-center">
-                        <ul className="list-disc">
-                          <li>Hazelnut Latte R1x</li>
-                          <li>Caramel Machiato L1x</li>
-                        </ul>
-                      </td>
-                      <td className="p-6 text-center">
-                        <div className="flex justify-center">
-                          <div className="text-xs text-[#D00000] font-bold py-2 px-3 rounded-full bg-[#D0000033]">
-                            Pending
-                          </div>
-                        </div>
-                      </td>
-                      <td className="p-6 text-center">IDR. 40.000</td>
-                      <td className="p-6 text-center">
-                        <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2">
-                          <div
-                            className="p-1 bg-[#8E64471A] rounded-full cursor-pointer"
-                            onClick={() => setDetailOrder(true)}
-                          >
-                            <img
-                              src={getImageUrl("view-list", "svg")}
-                              alt="view-list"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                          <div className="p-1 bg-[#FF89061A] rounded-full">
-                            <img
-                              src={getImageUrl("fi_edit-3", "svg")}
-                              alt="fi_edit-3"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                          <div className="p-1 bg-[#D000001A] rounded-full">
-                            <img
-                              src={getImageUrl("Delete", "svg")}
-                              alt="Delete"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b border-[#E8E8E84D] bg-[#F9FAFB]">
-                      <td className="p-6 text-left">
-                        <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
-                      </td>
-                      <td className="p-6 text-center">#12354-09893</td>
-                      <td className="p-6 text-center">26 January 2023</td>
-                      <td className="p-6 flex flex-col items-center">
-                        <ul className="list-disc">
-                          <li>Hazelnut Latte R1x</li>
-                          <li>Caramel Machiato L1x</li>
-                        </ul>
-                      </td>
-                      <td className="p-6 text-center">
-                        <div className="flex justify-center">
-                          <div className="text-xs text-primary font-bold py-2 px-3 rounded-full bg-[#FF890633]">
-                            On Progress
-                          </div>
-                        </div>
-                      </td>
-                      <td className="p-6 text-center">IDR. 40.000</td>
-                      <td className="p-6 text-center">
-                        <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2">
-                          <div className="p-1 bg-[#8E64471A] rounded-full">
-                            <img
-                              src={getImageUrl("view-list", "svg")}
-                              alt="view-list"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                          <div className="p-1 bg-[#FF89061A] rounded-full">
-                            <img
-                              src={getImageUrl("fi_edit-3", "svg")}
-                              alt="fi_edit-3"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                          <div className="p-1 bg-[#D000001A] rounded-full">
-                            <img
-                              src={getImageUrl("Delete", "svg")}
-                              alt="Delete"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b border-[#E8E8E84D]">
-                      <td className="p-6 text-left">
-                        <div className="p-2 border border-[#E8E8E8] w-2 rounded-sm"></div>
-                      </td>
-                      <td className="p-6 text-center">#12354-09893</td>
-                      <td className="p-6 text-center">26 January 2023</td>
-                      <td className="p-6 flex flex-col items-center">
-                        <ul className="list-disc">
-                          <li>Hazelnut Latte R1x</li>
-                          <li>Caramel Machiato L1x</li>
-                        </ul>
-                      </td>
-                      <td className="p-6 text-center">
-                        <div className="flex justify-center">
-                          <div className="text-xs text-[#4F5665] font-bold py-2 px-3 rounded-full bg-[#4F566533]">
-                            Waiting
-                          </div>
-                        </div>
-                      </td>
-                      <td className="p-6 text-center">IDR. 40.000</td>
-                      <td className="p-6 text-center">
-                        <div className="flex flex-col gap-y-2 items-center xl:flex-row md:gap-x-2">
-                          <div className="p-1 bg-[#8E64471A] rounded-full">
-                            <img
-                              src={getImageUrl("view-list", "svg")}
-                              alt="view-list"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                          <div className="p-1 bg-[#FF89061A] rounded-full">
-                            <img
-                              src={getImageUrl("fi_edit-3", "svg")}
-                              alt="fi_edit-3"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                          <div className="p-1 bg-[#D000001A] rounded-full">
-                            <img
-                              src={getImageUrl("Delete", "svg")}
-                              alt="Delete"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -536,7 +567,12 @@ function Order(props) {
               <button
                 type="button"
                 className="outline-none"
-                onClick={() => setDetailOrder(false)}
+                onClick={() => {
+                  setDetailOrder(false);
+                  setSearchParams((prev) => ({
+                    ...prev,
+                  }));
+                }}
               >
                 <img
                   src={getImageUrl("XCircle", "svg")}
@@ -562,7 +598,7 @@ function Order(props) {
                   </div>
                   <p className="flex-1 text-secondary font-medium">Fullname</p>
                   <p className="flex-1 text-dark font-bold text-right">
-                    Ridwan Bahtiar
+                    {userDetail.users_fullname}
                   </p>
                 </div>
                 <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
@@ -575,7 +611,7 @@ function Order(props) {
                   </div>
                   <p className="flex-1 text-secondary font-medium">Address</p>
                   <p className="flex-1 text-dark font-bold text-right">
-                    Bekasi
+                    {userDetail.users_address}
                   </p>
                 </div>
                 <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
@@ -588,7 +624,7 @@ function Order(props) {
                   </div>
                   <p className="flex-1 text-secondary font-medium">Phone</p>
                   <p className="flex-1 text-dark font-bold text-right">
-                    08127343343
+                    {userDetail.users_phone}
                   </p>
                 </div>
                 <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
@@ -600,7 +636,9 @@ function Order(props) {
                     />
                   </div>
                   <p className="flex-1 text-secondary font-medium">Dine In</p>
-                  <p className="flex-1 text-dark font-bold text-right">Cash</p>
+                  <p className="flex-1 text-dark font-bold text-right">
+                    {userDetail.payment_methods_name}
+                  </p>
                 </div>
                 <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
                   <div className="flex-none">
@@ -612,7 +650,7 @@ function Order(props) {
                   </div>
                   <p className="flex-1 text-secondary font-medium">Shipping</p>
                   <p className="flex-1 text-dark font-bold text-right">
-                    Ridwan
+                    {userDetail.deliveries_name}
                   </p>
                 </div>
                 <div className="flex gap-x-3 items-center border-b border-[#e8e8e8e8] py-5 px-3.5">
@@ -624,94 +662,111 @@ function Order(props) {
                     />
                   </div>
                   <p className="flex-1 text-dark font-medium">Status</p>
-                  <div className="flex items-center justify-center gap-x-2 p-2 bg-[#F1F1F1] rounded-md">
-                    <p>On Progress</p>
-                    <div>
-                      <img
-                        src={getImageUrl("down-dark", "svg")}
-                        alt="down"
-                        className="w-4 h-4"
-                      />
+                  <div className="flex flex-col gap-y-3">
+                    <div
+                      className="flex items-center justify-center gap-x-2 py-2 px-3 bg-[#F1F1F1] rounded-md cursor-pointer"
+                      onClick={() => setIsStatus((state) => !state)}
+                    >
+                      <p>{status}</p>
+                      <div>
+                        <img
+                          src={getImageUrl("down-dark", "svg")}
+                          alt="down"
+                          className="w-4 h-4"
+                        />
+                      </div>
                     </div>
+                    {isStatus && (
+                      <div className="flex items-center justify-center gap-x-2 py-2 px-3 bg-[#F1F1F1] rounded-md cursor-pointer">
+                        <div className="flex flex-col gap-y-3">
+                          <div
+                            onClick={() => {
+                              setStatus("Pending");
+                              setIsStatus(false);
+                            }}
+                          >
+                            Pending
+                          </div>
+                          <div
+                            onClick={() => {
+                              setStatus("On Progress/Paid");
+                              setIsStatus(false);
+                            }}
+                          >
+                            On Progress/Paid
+                          </div>
+                          <div
+                            onClick={() => {
+                              setStatus("Done");
+                              setIsStatus(false);
+                            }}
+                          >
+                            Done
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex gap-x-3 items-center justify-between py-5 px-3.5">
                   <p className="text-secondary font-medium">
                     Total Transaction
                   </p>
-                  <p className="text-primary font-bold">IDR. 40.000</p>
+                  <p className="text-primary font-bold">
+                    {`IDR ${userDetail.orders_total}`}
+                  </p>
                 </div>
               </section>
             </section>
-            <section>
-              <header className="mb-4">
+            <section className="flex flex-col gap-y-4">
+              <header>
                 <h2 className="text-xl text-dark font-medium lg:text-[22px]">
                   Your Order
                 </h2>
               </header>
               <section className="flex flex-col gap-y-4">
-                <div className="bg-[#E8E8E84D] flex flex-col gap-y-4 p-4 sm:flex-row sm:gap-x-4 sm:items-center">
-                  <div className="w-full md:w-1/3">
-                    <img
-                      src={getImageUrl("image31", "webp")}
-                      alt="coffee"
-                      className="w-full h-full"
-                    />
-                  </div>
-                  <div className="product-info flex flex-col items-start gap-y-4 md:w-2/3">
-                    <p className="text-sm text-[#0B0909] font-bold">
-                      Hazelnut Latte
-                    </p>
-                    <div className="text-xs text-secondary font-normal flex">
-                      <div className="flex gap-x-2">
-                        <p>2 Pcs</p>
-                        <p>|</p>
-                        <p>Regular</p>
-                        <p>|</p>
-                        <p>Ice</p>
+                {productById.map((result, i) => (
+                  <div
+                    className="bg-[#E8E8E84D] flex flex-col gap-y-4 p-4 sm:flex-row sm:gap-x-4 sm:items-center"
+                    key={i}
+                  >
+                    <div className="w-full md:w-1/3">
+                      <img
+                        src={result.products_image}
+                        alt="coffee"
+                        className="w-full h-full"
+                      />
+                    </div>
+                    <div className="product-info flex flex-col items-start gap-y-4 md:w-2/3">
+                      <p className="text-sm text-[#0B0909] font-bold">
+                        {result.products_name}
+                      </p>
+                      <div className="text-xs text-secondary font-normal flex">
+                        <div className="flex gap-x-2">
+                          <p>{result.orders_products_qty} Pcs</p>
+                          <p>|</p>
+                          <p>{result.sizes_name}</p>
+                          <p>|</p>
+                          <p>{result.hot_or_ice}</p>
+                        </div>
+                      </div>
+                      <div className="flex gap-x-4 items-center">
+                        <p className="text-sm text-primary font-medium">
+                          {`IDR ${result.orders_products_subtotal}`}
+                        </p>
                       </div>
                     </div>
-                    <div className="flex gap-x-4 items-center">
-                      <p className="text-xs text-[#D00000] font-medium line-through">
-                        IDR10.000
-                      </p>
-                      <p className="text-sm text-primary font-medium">
-                        IDR. 40.000
-                      </p>
-                    </div>
                   </div>
-                </div>
-                <div className="bg-[#E8E8E84D] flex flex-col gap-y-4 p-4 sm:flex-row sm:gap-x-4 sm:items-center">
-                  <div className="w-full md:w-1/3">
-                    <img
-                      src={getImageUrl("image31", "webp")}
-                      alt="coffee"
-                      className="w-full h-full"
-                    />
-                  </div>
-                  <div className="product-info flex flex-col items-start gap-y-4 md:w-2/3">
-                    <p className="text-sm text-[#0B0909] font-bold">
-                      Hazelnut Latte
-                    </p>
-                    <div className="text-xs text-secondary font-normal flex">
-                      <div className="flex gap-x-2">
-                        <p>2 Pcs</p>
-                        <p>|</p>
-                        <p>Regular</p>
-                        <p>|</p>
-                        <p>Ice</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-x-4 items-center">
-                      <p className="text-xs text-[#D00000] font-medium line-through">
-                        IDR10.000
-                      </p>
-                      <p className="text-sm text-primary font-medium">
-                        IDR. 40.000
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                ))}
+              </section>
+              <section>
+                <button
+                  type="button"
+                  className="p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300 w-full"
+                  onClick={onUpdateHandler}
+                >
+                  Update
+                </button>
               </section>
             </section>
           </div>
