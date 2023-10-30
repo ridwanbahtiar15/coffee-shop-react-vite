@@ -26,6 +26,10 @@ function Home() {
           setOpenModal({ isOpen: true, status: "logout" });
           setMessage({ msg: "Are You Sure?" });
         }}
+        // isAnauthorized={(msg) => {
+        //   setOpenModal({ isOpen: true, status: "401" });
+        //   setMessage({ msg });
+        // }}
       />
       <header className="flex flex-wrap font-plusJakartaSans">
         <div className="w-full max-sm:h-screen select-none flex items-center py-4 px-5 md:px-24 lg:px-[130px] max-[1400px]:h-[700px] min-[1400px]:h-[1024px] xl:w-1/2 header-section">

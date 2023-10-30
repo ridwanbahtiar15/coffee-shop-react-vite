@@ -5,6 +5,7 @@ const ProductContext = createContext();
 export const UseProductContext = () => useContext(ProductContext);
 
 // siapkan komponen provider
+// eslint-disable-next-line react/prop-types
 export const ProductProvider = ({ children }) => {
   const [body] = useState([]);
   const [wrapBody, setWrapBody] = useState([]);

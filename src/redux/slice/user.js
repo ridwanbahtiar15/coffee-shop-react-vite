@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { login } from "../../utils/https/auth";
+import { login, Logout } from "../../utils/https/auth";
 
 const initialState = {
   isUserAvailable: false,
@@ -23,6 +23,25 @@ const loginThunk = createAsyncThunk(
       const { data } = await login(body);
       return { token: data.data.token, userInfo: data.data.userInfo };
     } catch (err) {
+      const errObj = {
+        status: err.response.status,
+        message: err.response.data.msg,
+      };
+      return rejectWithValue(errObj);
+      // return err;
+    }
+  }
+);
+
+const logoutThunk = createAsyncThunk(
+  "user/logout",
+  async (body, { rejectWithValue }) => {
+    try {
+      const { data } = await Logout(body);
+      return { message: data };
+      // return { token: data.data.token, userInfo: data.data.userInfo };
+    } catch (err) {
+      console.log(err);
       const errObj = {
         status: err.response.status,
         message: err.response.data.msg,
@@ -65,10 +84,35 @@ const userSlice = createSlice({
       .addCase(loginThunk.fulfilled, (prevState, { payload }) => {
         return {
           ...prevState,
+          isUserAvailable: true,
           isPending: false,
           isFulfilled: true,
           token: payload.token,
           userInfo: payload.userInfo,
+        };
+      })
+      .addCase(logoutThunk.rejected, (prevState, { payload }) => {
+        return {
+          ...prevState,
+          isUserAvailable: true,
+          isPending: false,
+          isRejected: true,
+          isFulfilled: false,
+          err: {
+            ...prevState.err,
+            logout: payload,
+          },
+        };
+      })
+      .addCase(logoutThunk.fulfilled, (prevState) => {
+        return {
+          ...prevState,
+          isUserAvailable: false,
+          isPending: false,
+          isRejected: false,
+          isFulfilled: true,
+          token: null,
+          userInfo: null,
         };
       });
   },
@@ -77,6 +121,7 @@ const userSlice = createSlice({
 export const userAction = {
   ...userSlice.actions,
   loginThunk,
+  logoutThunk,
 };
 
 export default userSlice.reducer;

@@ -71,6 +71,12 @@ function Profile() {
   const submitHandler = (e) => {
     e.preventDefault();
 
+    setMessage({
+      msg: "Loading...",
+      isError: false,
+    });
+    setOpenModal({ isOpen: true, status: false });
+
     const formData = new FormData();
     formData.append("users_image", image);
     formData.append("users_fullname", e.target.fullname.value);
@@ -78,8 +84,6 @@ function Profile() {
     formData.append("users_phone", e.target.phone.value);
     formData.append("users_password", e.target.password.value);
     formData.append("users_address", e.target.address.value);
-
-    console.log(formData);
 
     authAxios
       .patch("/users/profile/edit", formData)

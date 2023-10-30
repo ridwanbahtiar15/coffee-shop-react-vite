@@ -110,6 +110,12 @@ function Order(props) {
   const OnAddHandler = (e) => {
     e.preventDefault();
 
+    setMessage({
+      msg: "Loading...",
+      isError: false,
+    });
+    setOpenModal({ isOpen: true, status: false });
+
     const formData = new FormData();
     formData.append("users_image", image);
     formData.append("users_fullname", e.target.users_fullname.value);
@@ -118,6 +124,8 @@ function Order(props) {
     formData.append("users_password", e.target.users_password.value);
     formData.append("users_address", e.target.users_address.value);
     formData.append("roles_id", typeUser);
+
+    console.log(image);
 
     authAxios
       .post("/users", formData)
@@ -143,6 +151,12 @@ function Order(props) {
 
   const OnUpdateHandler = (e) => {
     e.preventDefault();
+
+    setMessage({
+      msg: "Loading...",
+      isError: false,
+    });
+    setOpenModal({ isOpen: true, status: false });
 
     const formData = new FormData();
     formData.append("users_image", image);
@@ -505,7 +519,7 @@ function Order(props) {
                           <div className="flex justify-center">
                             <img
                               src={result.users_image}
-                              alt="product"
+                              alt="image-profilr"
                               className="w-12 rounded-md"
                             />
                           </div>

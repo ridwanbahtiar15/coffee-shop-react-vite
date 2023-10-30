@@ -1,5 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { useNavigate, Link } from "react-router-dom";
+import { userAction } from "../../redux/slice/user";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 function Modal({
   /*  eslint-disable-next-line react/prop-types */
@@ -10,6 +13,27 @@ function Modal({
   message: { msg },
 }) {
   const navigate = useNavigate();
+  const disPatch = useDispatch();
+
+  // const user = useSelector((state) => state.user);
+  // const token = user.token;
+  // const url = import.meta.env.VITE_BACKEND_HOST;
+  // const authAxios = axios.create({
+  //   baseURL: url,
+  //   headers: {
+  //     Authorization: `Barer ${token}`,
+  //   },
+  // });
+  const user = useSelector((state) => state.user);
+  const token = user.token;
+  console.log(token);
+
+  const LogoutHandler = () => {
+    const { logoutThunk } = userAction;
+    disPatch(logoutThunk(token)).then(() => navigate("/login"));
+
+    // authAxios.delete("/auth/logout");
+  };
 
   return (
     <div
@@ -50,12 +74,13 @@ function Modal({
             </div>
           ) : (
             <div className="flex gap-x-6">
-              <Link
-                to="/login"
+              <button
+                type="button"
                 className="p-[10px] bg-primary hover:bg-amber-600 rounded-md text-dark text-base font-medium active:ring active:ring-orange-300"
+                onClick={LogoutHandler}
               >
                 Confirm
-              </Link>
+              </button>
               <button
                 className="p-[10px] bg-light border-2 hover:bg-slate-200 rounded-md text-dark text-base font-medium active:ring active:ring-slate-300"
                 onClick={() => closeModal({ isOpen: false, status: null })}

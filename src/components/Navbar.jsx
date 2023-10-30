@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -11,10 +12,17 @@ function Navbar(props) {
   const token = user.token;
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
-    if (token) {
+    if (user.isUserAvailable) {
       setIsLogin(true);
     }
   }, []);
+
+  // eslint-disable-next-line no-unused-vars
+  const [Message, setMessage] = useState({ msg: null, isError: null });
+  const [openModal, setOpenModal] = useState({
+    isOpen: false,
+    status: null,
+  });
 
   const [btnArrow, setBtnArrow] = useState(false);
   const btnArrowHandle = () => {
@@ -37,7 +45,11 @@ function Navbar(props) {
       .then((res) => {
         setImage(res.data.result[0].users_image);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        if (err.response.status == 401) {
+          props.isAnauthorized(err.response.data.msg);
+        }
+      });
   }, []);
 
   return (

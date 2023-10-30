@@ -14,11 +14,18 @@ import Dashboard from "./pages/admin/Dashboard";
 import Order from "./pages/admin/Order";
 import AdminProduct from "./pages/admin/AdminProduct";
 import AdminUser from "./pages/admin/AdminUser";
+import PrivateUser from "./components/PrivateUser";
+import PrivateAdmin from "./components/PrivateAdmin";
+import PrivateAuth from "./components/PrivateAuth";
 
 const router = createBrowserRouter([
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <PrivateAuth>
+        <Login />
+      </PrivateAuth>
+    ),
     // errorElement: "",
   },
   {
@@ -38,7 +45,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/profile",
-    element: <Profile />,
+    element: (
+      <PrivateUser>
+        <Profile />
+      </PrivateUser>
+    ),
     // errorElement: "",
   },
   {
@@ -58,32 +69,56 @@ const router = createBrowserRouter([
   },
   {
     path: "/history-order",
-    element: <HistoryOrder />,
+    element: (
+      <PrivateUser>
+        <HistoryOrder />
+      </PrivateUser>
+    ),
     // errorElement: "",
   },
   {
     path: "/detail-order/:id",
-    element: <DetailOrder />,
+    element: (
+      <PrivateUser>
+        <DetailOrder />
+      </PrivateUser>
+    ),
     // errorElement: "",
   },
   {
     path: "/dashboard",
-    element: <Dashboard path="/dashboard" />,
+    element: (
+      <PrivateAdmin>
+        <Dashboard path="/dashboard" />
+      </PrivateAdmin>
+    ),
     // errorElement: "",
   },
   {
     path: "/admin/order",
-    element: <Order path="/admin/order" />,
+    element: (
+      <PrivateAdmin>
+        <Order path="/admin/order" />
+      </PrivateAdmin>
+    ),
     // errorElement: "",
   },
   {
     path: "/admin/product",
-    element: <AdminProduct path="/admin/product" />,
+    element: (
+      <PrivateAdmin>
+        <AdminProduct path="/admin/product" />
+      </PrivateAdmin>
+    ),
     // errorElement: "",
   },
   {
     path: "/admin/user",
-    element: <AdminUser path="/admin/user" />,
+    element: (
+      <PrivateAdmin>
+        <AdminUser path="/admin/user" />
+      </PrivateAdmin>
+    ),
     // errorElement: "",
   },
 ]);
