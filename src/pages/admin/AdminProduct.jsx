@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -26,6 +26,14 @@ function Order(props) {
   const [formUpdateProduct, setFormUpdateProduct] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [isCategory, setIsCategory] = useState(false);
+  const linkRef = useRef(null);
+
+  const goto = (ref) => {
+    window.scrollTo({
+      top: ref.offsetTop,
+      left: 0,
+    });
+  };
 
   const user = useSelector((state) => state.user);
   const token = user.token;
@@ -113,6 +121,13 @@ function Order(props) {
   const OnAddHandler = (e) => {
     e.preventDefault();
 
+    setMessage({
+      msg: "Loading...",
+      isError: false,
+    });
+
+    setOpenModal({ isOpen: true, status: false });
+
     const formData = new FormData();
     formData.append("products_image", image);
     formData.append("products_name", e.target.products_name.value);
@@ -124,6 +139,9 @@ function Order(props) {
     authAxios
       .post("/products", formData)
       .then((res) => {
+        setFormAddProduct(false);
+        setImage("");
+        goto(linkRef.current);
         setMessage({
           msg: res.data.msg,
           isError: false,
@@ -146,6 +164,13 @@ function Order(props) {
   const OnUpdateHandler = (e) => {
     e.preventDefault();
 
+    setMessage({
+      msg: "Loading...",
+      isError: false,
+    });
+
+    setOpenModal({ isOpen: true, status: false });
+
     const formData = new FormData();
     formData.append("products_image", image);
     formData.append("products_name", e.target.products_name.value);
@@ -157,6 +182,11 @@ function Order(props) {
     authAxios
       .patch("/products/" + searchParams.get("id"), formData)
       .then((res) => {
+        setSearchParams((prev) => ({
+          ...prev,
+        }));
+        setFormUpdateProduct(false);
+        setImage("");
         setMessage({
           msg: res.data.msg,
           isError: false,
@@ -179,6 +209,12 @@ function Order(props) {
   };
 
   const DeleteProductHandler = (id, imageUrl) => {
+    setMessage({
+      msg: "Loading...",
+      isError: false,
+    });
+    setOpenModal({ isOpen: true, status: false });
+
     authAxios.delete(`/products?id=${id}&imageUrl=${imageUrl}`).then((res) => {
       setMessage({
         msg: res.data.msg,
@@ -569,6 +605,7 @@ function Order(props) {
                 </table>
               </div>
             </section>
+            <div ref={linkRef}></div>
           </div>
         </section>
       </main>
@@ -680,15 +717,15 @@ function Order(props) {
                       placeholder="Enter Product Description"
                     ></textarea>
                   </div>
-                  <div className="flex flex-col gap-y-4 text-xs text-secondary">
-                    <p className="font-semibold text-dark">Category</p>
+                  <div className="flex flex-col gap-y-4 text-secondary">
+                    <p className="text-sm font-semibold text-dark">Category</p>
                     <div
                       className={`flex justify-between w-full p-3 border border-bg[#4F5665] rounded-md cursor-pointer tracking-wider ${
                         isCategory ? "border-primary" : ""
                       }`}
                       onClick={() => setIsCategory((state) => !state)}
                     >
-                      <p>{category.name}</p>
+                      <p className="text-xs">{category.name}</p>
                       <div>
                         <img
                           src={getImageUrl("down", "svg")}
@@ -755,6 +792,7 @@ function Order(props) {
                 type="button"
                 className="outline-none"
                 onClick={() => {
+                  setImage("");
                   setFormUpdateProduct(false);
                   setSearchParams((prev) => ({
                     ...prev,

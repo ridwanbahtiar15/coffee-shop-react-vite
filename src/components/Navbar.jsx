@@ -204,7 +204,7 @@ function Navbar(props) {
               props.path == "/admin/product" ||
               props.path == "/admin/user"
                 ? "bg-light border border-[#E8E8E8] top-20 right-10 drop-shadow-md"
-                : "bg-[#0B0909] top-20 right-24  lg:right-32 "
+                : "bg-[#0B0909] top-20 right-24 lg:right-32 drop-shadow-md"
             } z-10`}
             id="dropdown-menu"
           >

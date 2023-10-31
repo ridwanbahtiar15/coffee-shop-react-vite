@@ -164,6 +164,10 @@ function Order(props) {
     authAxios
       .patch("/orders/" + searchParams.get("id"), body)
       .then((res) => {
+        setSearchParams((prev) => ({
+          ...prev,
+        }));
+        setDetailOrder(false);
         setMessage({
           msg: res.data.msg,
           isError: false,

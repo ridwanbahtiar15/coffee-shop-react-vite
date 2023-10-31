@@ -26,9 +26,9 @@ function Modal({
   // });
   const user = useSelector((state) => state.user);
   const token = user.token;
-  console.log(token);
 
   const LogoutHandler = () => {
+    console.log("ok");
     const { logoutThunk } = userAction;
     disPatch(logoutThunk(token)).then(() => navigate("/login"));
 

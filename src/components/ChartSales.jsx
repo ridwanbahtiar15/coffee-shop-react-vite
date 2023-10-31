@@ -34,7 +34,6 @@ function ChartSales(props) {
     );
     cupArr.push(e.cup);
   });
-  console.log(dateArr);
 
   return (
     <Line

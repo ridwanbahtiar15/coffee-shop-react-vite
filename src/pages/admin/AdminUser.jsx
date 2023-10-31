@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -22,6 +22,14 @@ function Order(props) {
   const [formAddUser, setFormAddUser] = useState(false);
   const [formUpdateUser, setFormUpdateUser] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const linkRef = useRef(null);
+
+  const goto = (ref) => {
+    window.scrollTo({
+      top: ref.offsetTop,
+      left: 0,
+    });
+  };
 
   const [isPassShown, setIsPassShown] = useState(false);
   // const [isPassShown2, setIsPassShown2] = useState(false);
@@ -125,11 +133,12 @@ function Order(props) {
     formData.append("users_address", e.target.users_address.value);
     formData.append("roles_id", typeUser);
 
-    console.log(image);
-
     authAxios
       .post("/users", formData)
       .then((res) => {
+        setFormAddUser(false);
+        setImage("");
+        goto(linkRef.current);
         setMessage({
           msg: res.data.msg,
           isError: false,
@@ -156,6 +165,7 @@ function Order(props) {
       msg: "Loading...",
       isError: false,
     });
+
     setOpenModal({ isOpen: true, status: false });
 
     const formData = new FormData();
@@ -170,6 +180,11 @@ function Order(props) {
     authAxios
       .patch("/users/" + searchParams.get("id"), formData)
       .then((res) => {
+        setSearchParams((prev) => ({
+          ...prev,
+        }));
+        setFormUpdateUser(false);
+        setImage("");
         setMessage({
           msg: res.data.msg,
           isError: false,
@@ -190,6 +205,12 @@ function Order(props) {
   };
 
   const DeleteUserHandler = (id) => {
+    setMessage({
+      msg: "Loading...",
+      isError: false,
+    });
+    setOpenModal({ isOpen: true, status: false });
+
     authAxios.delete("/users/" + id).then((res) => {
       setMessage({
         msg: res.data.msg,
@@ -600,6 +621,7 @@ function Order(props) {
                 </table>
               </div>
             </section>
+            <div ref={linkRef}></div>
           </div>
         </section>
       </main>
@@ -853,6 +875,7 @@ function Order(props) {
                 type="button"
                 className="outline-none"
                 onClick={() => {
+                  setImage("");
                   setFormUpdateUser(false);
                   setSearchParams((prev) => ({
                     ...prev,
@@ -948,6 +971,7 @@ function Order(props) {
                       className="py-3.5 px-10 border rounded-lg border-[#DEDEDE] text-xs tracking-wide outline-none focus:border-primary placeholder:tracking-wider"
                       value={userById.users_email}
                       onChange={handleChange}
+                      disabled
                     />
                     <div className="icon-email absolute top-[46px] left-4 md:top-[46px]">
                       <img
