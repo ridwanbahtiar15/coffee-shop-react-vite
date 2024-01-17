@@ -11,6 +11,7 @@ function Login() {
   useEffect(() => {
     document.title = "Login";
   });
+  console.log(import.meta.env.VITE_BACKEND_HOST);
 
   const user = useSelector((state) => state.user);
   const disPatch = useDispatch();
