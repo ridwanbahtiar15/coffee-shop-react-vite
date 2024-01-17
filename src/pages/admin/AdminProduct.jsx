@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
 import { useState, useEffect, useRef } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
@@ -27,6 +27,7 @@ function Order(props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isCategory, setIsCategory] = useState(false);
   const linkRef = useRef(null);
+  const navigate = useNavigate();
 
   const goto = (ref) => {
     window.scrollTo({
@@ -46,12 +47,13 @@ function Order(props) {
   });
 
   const [product, setProduct] = useState([]);
+  const [meta, setMeta] = useState([]);
   useEffect(() => {
     authAxios
-      .get("/products")
+      .get("/products?" + searchParams.toString())
       .then((res) => {
         setProduct(res.data.result);
-        // console.log(res.data.result);
+        setMeta(res.data.meta);
       })
       .catch((err) => {
         if (err.response.status == 401) {
@@ -62,7 +64,65 @@ function Order(props) {
           setOpenModal({ isOpen: true, status: "401" });
         }
       });
-  }, []);
+  }, [searchParams]);
+
+  const pagination = (page) => {
+    if (page !== meta.page) {
+      navigate("?page=" + page);
+    }
+  };
+
+  const renderButtons = () => {
+    return Array.from({ length: meta.totalPage }, (_, index) => (
+      <button
+        onClick={() => {
+          pagination(index + 1);
+        }}
+        key={index}
+        className={`${
+          index + 1 == meta.page ? "text-primary" : "text-secondary"
+        }`}
+      >
+        {index + 1}
+      </button>
+    ));
+  };
+
+  const onSearchHandler = (e) => {
+    e.preventDefault();
+
+    let urlProduct = `/products`;
+
+    if (e.target.search.value == "") {
+      setSearchParams((prev) => ({
+        ...prev,
+      }));
+      urlProduct = `/products`;
+      authAxios
+        .get(urlProduct)
+        .then((res) => setProduct(res.data.result))
+        .catch(() => {
+          setProduct([]);
+          setMeta([]);
+        });
+      return;
+    }
+
+    if (e.target.search.value) {
+      setSearchParams((prev) => ({
+        ...prev,
+        name: e.target.search.value,
+      }));
+      urlProduct = `/products?name=${e.target.search.value.toLowerCase()}`;
+      authAxios
+        .get(urlProduct)
+        .then((res) => setProduct(res.data.result))
+        .catch(() => {
+          setProduct([]);
+          setMeta([]);
+        });
+    }
+  };
 
   const [productById, setProductById] = useState([]);
   const handleChange = (e) => {
@@ -495,11 +555,15 @@ function Order(props) {
                   + Add Product
                 </button>
               </div>
-              <div className="flex flex-col gap-y-4 lg:flex-row lg:gap-x-3 lg:items-end">
+              <form
+                className="flex flex-col gap-y-4 lg:flex-row lg:gap-x-3 lg:items-end"
+                onSubmit={onSearchHandler}
+              >
                 <div className="font-medium text-secondary relative">
                   <p className="text-xs mb-3">Search Product</p>
                   <input
                     type="text"
+                    id="search"
                     className="text-sm p-3 border border-[#E8E8E8] rounded-md w-full lg:w-[340px] font-medium text-secondary placeholder:font-medium placeholder:text-secondary outline-none focus:border focus:border-primary"
                     placeholder="Enter Product Name"
                   />
@@ -513,7 +577,7 @@ function Order(props) {
                 </div>
                 <div>
                   <button
-                    type="button"
+                    type="submit"
                     className="flex gap-x-2 p-3 bg-primary hover:bg-amber-600 rounded-md text-dark text-sm font-medium active:ring active:ring-orange-300 max-md:w-full justify-center items-center"
                   >
                     <div>
@@ -522,7 +586,7 @@ function Order(props) {
                     <p>Filter</p>
                   </button>
                 </div>
-              </div>
+              </form>
             </header>
             <section className="py-4 px-3 border border-[#E8E8E8] rounded-md">
               <div className="text-xs min-[1440px]:text-sm font-medium text-secondary overflow-x-scroll">
@@ -603,6 +667,13 @@ function Order(props) {
                     ))}
                   </tbody>
                 </table>
+              </div>
+              <div className="flex justify-between text-xs font-medium text-secondary mt-6 mb-2">
+                <p>
+                  Show {meta.totalData <= 5 ? meta.totalData : meta.limit}{" "}
+                  product of {meta.totalData} product
+                </p>
+                <div className="flex gap-x-4">{renderButtons()}</div>
               </div>
             </section>
             <div ref={linkRef}></div>
@@ -919,7 +990,7 @@ function Order(props) {
                       </div>
                     </div>
                     {isCategory && (
-                      <div className="flex flex-col w-fullbg-[#FCFDFE] border border-bg[#4F5665] rounded-md">
+                      <div className="flex flex-col w-full bg-[#FCFDFE] border border-bg[#4F5665] rounded-md">
                         {categories.map((result, i) => (
                           <div
                             className="hover:bg-primary hover:text-dark hover:rounded-md p-3 cursor-pointer"

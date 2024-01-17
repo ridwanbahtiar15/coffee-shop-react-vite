@@ -196,7 +196,7 @@ function Navbar(props) {
         )}
         {isLogin && (
           <div
-            className={`absolute  text-light text-sm font-normal py-2 px-6 max-lg:hidden ${
+            className={`absolute text-light text-sm font-normal py-2 px-6 max-lg:hidden ${
               btnArrow ? "" : "hidden"
             } ${
               props.path == "/dashboard" ||

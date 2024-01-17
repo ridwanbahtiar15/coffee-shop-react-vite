@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import getImageUrl from "../utils/imageGetter";
 
 function Footer() {

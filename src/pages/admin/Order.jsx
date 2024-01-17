@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unknown-property */
 import { useState, useEffect } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
@@ -21,6 +21,7 @@ function Order(props) {
   const [isDropdownShown, setIsDropdownShow] = useState(false);
   const [detailOrder, setDetailOrder] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const user = useSelector((state) => state.user);
   const token = user.token;
@@ -33,11 +34,13 @@ function Order(props) {
   });
 
   const [order, setOrder] = useState([]);
+  const [meta, setMeta] = useState([]);
   useEffect(() => {
     authAxios
-      .get("/orders")
+      .get("/orders?" + searchParams.toString())
       .then((res) => {
         setOrder(res.data.result);
+        setMeta(res.data.meta);
       })
       .catch((err) => {
         setMessage({
@@ -46,7 +49,29 @@ function Order(props) {
         });
         setOpenModal({ isOpen: true, status: "401" });
       });
-  }, []);
+  }, [searchParams]);
+
+  const pagination = (page) => {
+    if (page !== meta.page) {
+      navigate("?page=" + page);
+    }
+  };
+
+  const renderButtons = () => {
+    return Array.from({ length: meta.totalPage }, (_, index) => (
+      <button
+        onClick={() => {
+          pagination(index + 1);
+        }}
+        key={index}
+        className={`${
+          index + 1 == meta.page ? "text-primary" : "text-secondary"
+        }`}
+      >
+        {index + 1}
+      </button>
+    ));
+  };
 
   const statusSwitch = (value) => {
     switch (value) {
@@ -542,19 +567,19 @@ function Order(props) {
                                 className="w-4"
                               />
                             </div>
-                            {/* <div className="p-1 bg-[#D000001A] rounded-full cursor-pointer">
-                              <img
-                                src={getImageUrl("Delete", "svg")}
-                                alt="Delete"
-                                className="w-4"
-                              />
-                            </div> */}
                           </div>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
+              </div>
+              <div className="flex justify-between text-xs font-medium text-secondary mt-6 mb-2">
+                <p>
+                  Show {meta.totalData <= 5 ? meta.totalData : meta.limit}{" "}
+                  product of {meta.totalData} product
+                </p>
+                <div className="flex gap-x-4">{renderButtons()}</div>
               </div>
             </section>
           </div>

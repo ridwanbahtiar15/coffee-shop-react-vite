@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import "../../style/style.css";
@@ -24,6 +24,8 @@ function Product() {
   });
   const [openModal, setOpenModal] = useState({ isOpen: false, status: null });
   const [isDropdownShown, setIsDropdownShow] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams({});
+  const navigate = useNavigate();
 
   const user = useSelector((state) => state.user);
   const token = user.token;
@@ -36,17 +38,42 @@ function Product() {
   });
 
   const [product, setProduct] = useState([]);
+  const [meta, setMeta] = useState([]);
   useEffect(() => {
     authAxios
-      .get("/products")
+      .get("/products?" + searchParams.toString())
       .then((res) => {
         setProduct(res.data.result);
+        setMeta(res.data.meta);
       })
       .catch((err) => console.log(err));
   }, []);
 
+  const pagination = (page) => {
+    if (page !== meta.page) {
+      navigate("?page=" + page);
+    }
+  };
+
+  const renderButtons = () => {
+    return Array.from({ length: meta.totalPage }, (_, index) => (
+      <button
+        onClick={() => {
+          pagination(index + 1);
+        }}
+        key={index}
+        className={`h-10 w-10 ${
+          index + 1 == meta.page
+            ? "bg-primary text-white"
+            : "bg-slate-300 text-black"
+        } rounded-full flex justify-center items-center`}
+      >
+        {index + 1}
+      </button>
+    ));
+  };
+
   // eslint-disable-next-line no-unused-vars
-  const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState();
   const [category, setCategory] = useState();
 
@@ -352,7 +379,7 @@ function Product() {
               ))}
             </div>
             <div className="flex justify-center gap-x-4">
-              <img
+              {/* <img
                 src={getImageUrl("paginate-1", "svg")}
                 alt="paginate-1"
                 className="w-10 h-10"
@@ -376,7 +403,8 @@ function Product() {
                 src={getImageUrl("arrow-right", "svg")}
                 alt="arrow-right"
                 className="w-10 h-10"
-              />
+              /> */}
+              {renderButtons()}
             </div>
           </section>
         ) : (

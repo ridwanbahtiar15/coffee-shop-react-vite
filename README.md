@@ -1,8 +1,25 @@
-# React + Vite
+# Coffe Shop Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A project Coffe Shop, build with using React JS & TailwindCSS
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Requirements
+
+For development, you will only need React JS, TailwindCSS, Redux, Axios.
+
+## Install
+
+    git clone https://github.com/ridwanbahtiar15/coffee-shop-react-vite.git
+    cd PROJECT_TITLE
+    npm install
+
+## Configure app
+
+Create file `.env.local` then edit it with your settings. You will need:
+
+VITE_BACKEND_HOST = "Your Host Address"
+
+## Running the project
+
+     npm run dev
