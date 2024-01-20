@@ -1,4 +1,4 @@
-# Coffee Shop With React
+# Coffee Shop With React JS
 
 <!-- ABOUT THE PROJECT -->
 
