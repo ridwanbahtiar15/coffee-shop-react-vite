@@ -1,10 +1,10 @@
-# Tickitz Movie With React
+# Coffee Shop With React
 
 <!-- ABOUT THE PROJECT -->
 
 ## About The Project
 
-A Front End project for ordering movie ticket and transactions online. The main feature in this project is using a Single Page Application (SPA), Dynamic Web and Responsive website for mobile, tablet and laptop.
+A Front End project for ordering coffee and transactions online. The main feature in this project is using a Single Page Application (SPA), Dynamic Web and Responsive website for mobile, tablet and laptop.
 
 ## Screenshot
 
