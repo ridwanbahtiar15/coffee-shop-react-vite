@@ -12,7 +12,6 @@ https://coffee-shop-react-vite.vercel.app/
 
 ## Built With
 
-- [![ReactJs][ReactJs-logo]][ReactJs-url]
 - [React JS](https://go.dev/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Redux](https://redux.js.org/)
