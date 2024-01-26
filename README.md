@@ -51,40 +51,12 @@ according to your needs. You will need:
 
 ## Screenshot
 
-<tr>
-  <td>Login</td>
-  <td>Home</td>
-</tr>
-<tr>
-  <td><img src="./src/assets/ss_coffeeshop/login.png" alt="image" style="width:360px;"/></td>
-  <td><img src="./src/assets/ss_coffeeshop/home2.png" alt="image" style="width:360px;"/></td>
-</tr>
-
-<tr>
-  <td>Product</td>
-  <td>Product Detail</td>
-</tr>
-<tr>
-  <td><img src="./src/assets/ss_coffeeshop/product.png" alt="image" style="width:360px;"/></td>
-  <td><img src="./src/assets/ss_coffeeshop/product-detail2.png" alt="image" style="width:360px;"/></td>
-</tr>
-
-<tr>
-  <td>Profile</td>
-  <td>List Product</td>
-</tr>
-<tr>
-  <td><img src="./src/assets/ss_coffeeshop/profile2.png" alt="image" style="width:360px;"/></td>
-  <td><img src="./src/assets/ss_coffeeshop/list-product.png" alt="image" style="width:360px;"/></td>
-</tr>
-
 | Login                                                                              | Home                                                                              |
 | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
 | <img src="./src/assets/ss_coffeeshop/login.png" alt="image" style="width:360px;"/> | <img src="./src/assets/ss_coffeeshop/home.png" alt="image" style="width:360px;"/> |
 
-|
-| Product | Product Detail |
-| ---------------------------------------------------------------------------------- | ----- |
+| Product                                                                              | Product Detail                                                                               |
+| ------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
 | <img src="./src/assets/ss_coffeeshop/product.png" alt="image" style="width:360px;"/> | <img src="./src/assets/ss_coffeeshop/product-detail2.png" alt="image" style="width:360px;"/> |
 
 | Profile                                                                               | List Product                                                                              |
