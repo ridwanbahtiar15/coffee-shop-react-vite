@@ -78,6 +78,19 @@ according to your needs. You will need:
   <td><img src="./src/assets/ss_coffeeshop/list-product.png" alt="image" style="width:360px;"/></td>
 </tr>
 
+| Login                                                                              | Home                                                                              |
+| ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| <img src="./src/assets/ss_coffeeshop/login.png" alt="image" style="width:360px;"/> | <img src="./src/assets/ss_coffeeshop/home.png" alt="image" style="width:360px;"/> |
+
+|
+| Product | Product Detail |
+| ---------------------------------------------------------------------------------- | ----- |
+| <img src="./src/assets/ss_coffeeshop/product.png" alt="image" style="width:360px;"/> | <img src="./src/assets/ss_coffeeshop/product-detail2.png" alt="image" style="width:360px;"/> |
+
+| Profile                                                                               | List Product                                                                              |
+| ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| <img src="./src/assets/ss_coffeeshop/profile2.png" alt="image" style="width:360px;"/> | <img src="./src/assets/ss_coffeeshop/list-product.png" alt="image" style="width:360px;"/> |
+
 ## Related Project
 
 [Back End With Express JS](https://github.com/ridwanbahtiar15/coffe-shop)
