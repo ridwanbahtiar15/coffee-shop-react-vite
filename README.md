@@ -22,9 +22,11 @@ https://coffee-shop-react-vite.vercel.app/
 Create file `.env` then edit it with your settings
 according to your needs. You will need:
 
-| Key               | Value                                 |
-| ----------------- | ------------------------------------- |
-| VITE_BACKEND_HOST | Your Backend Express JS / Golang Host |
+<pre>
+<code>
+VITE_BACKEND_HOST = Your Backend Express JS / Golang Host
+</code>
+</pre>
 
 ## Install And Run Locally
 
