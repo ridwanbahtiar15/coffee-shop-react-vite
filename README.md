@@ -2,7 +2,9 @@
 
 <!-- ABOUT THE PROJECT -->
 
-<img src="./src/assets/img/coffee-shop-logo1.webp" width="200px" alt="logo"></img>
+<div align="center">
+        <img src="./coffee-shop-logo.webp" width="200px" alt="logo"></img>
+</div>
 
 A Front End project for ordering coffee and transactions online. The main feature in this project is using a Single Page Application (SPA), Dynamic Web and Responsive website for mobile, tablet and laptop.
 
@@ -66,6 +68,5 @@ VITE_BACKEND_HOST = Your Backend Express JS / Golang Host
 
 ## Related Project
 
-[Back End With Express JS](https://github.com/ridwanbahtiar15/coffe-shop)
-
-[Back End With Golang](https://github.com/ridwanbahtiar15/coffee-shop-Golang)
+- [Back End With Express JS](https://github.com/ridwanbahtiar15/coffe-shop)
+- [Back End With Golang](https://github.com/ridwanbahtiar15/coffee-shop-Golang)
