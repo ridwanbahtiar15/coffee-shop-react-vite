@@ -2,9 +2,9 @@
 
 <!-- ABOUT THE PROJECT -->
 
-<div align="center">
+<p align="center">
         <img src="./src/assets/img/coffee-shop-logo1.webp" width="200px" alt="logo"></img>
-</div>
+</p>
 
 A Front End project for ordering coffee and transactions online. The main feature in this project is using a Single Page Application (SPA), Dynamic Web and Responsive website for mobile, tablet and laptop.
 
