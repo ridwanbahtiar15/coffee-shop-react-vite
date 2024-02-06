@@ -8,10 +8,6 @@
 
 A Front End project for ordering coffee and transactions online. The main feature in this project is using a Single Page Application (SPA), Dynamic Web and Responsive website for mobile, tablet and laptop.
 
-## Link Deployment
-
-https://coffee-shop-react-vite.vercel.app/
-
 ## Built With
 
 - [React JS](https://go.dev/)
@@ -65,6 +61,10 @@ VITE_BACKEND_HOST = Your Backend Express JS / Golang Host
 | Profile                                                                               | List Product                                                                              |
 | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | <img src="./src/assets/ss_coffeeshop/profile2.png" alt="image" style="width:360px;"/> | <img src="./src/assets/ss_coffeeshop/list-product.png" alt="image" style="width:360px;"/> |
+
+## Link Deployment
+
+[Coffee Shop](https://coffee-shop-react-vite.vercel.app)
 
 ## Related Project
 
