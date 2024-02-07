@@ -42,7 +42,7 @@ VITE_BACKEND_HOST = Your Backend Express JS / Golang Host
 
 4.  Prepare Backend
 
-    prepare the backend in the following link [Back End With Express JS](#express) or [Back End With Golang](https://github.com/ridwanbahtiar15/coffee-shop-Golang)
+    prepare the backend in the following link [Back End With Express JS](#link) or [Back End With Golang](#link)
 
 5.  Start the server
 
@@ -67,6 +67,6 @@ VITE_BACKEND_HOST = Your Backend Express JS / Golang Host
 [Coffee Shop](https://coffee-shop-react-vite.vercel.app)
 
 ## Related Project
-
-- <div id="express">[Back End With Express JS](https://github.com/ridwanbahtiar15/coffe-shop)</div>
+<div id="link"></div>
+- [Back End With Express JS](https://github.com/ridwanbahtiar15/coffe-shop)
 - [Back End With Golang](https://github.com/ridwanbahtiar15/coffee-shop-Golang)
