@@ -42,7 +42,7 @@ VITE_BACKEND_HOST = Your Backend Express JS / Golang Host
 
 4.  Prepare Backend
 
-    prepare the backend in the following link [Back End With Express JS](https://github.com/ridwanbahtiar15/coffe-shop) or [Back End With Golang](https://github.com/ridwanbahtiar15/coffee-shop-Golang)
+    prepare the backend in the following link [Back End With Express JS](#express) or [Back End With Golang](https://github.com/ridwanbahtiar15/coffee-shop-Golang)
 
 5.  Start the server
 
@@ -68,5 +68,5 @@ VITE_BACKEND_HOST = Your Backend Express JS / Golang Host
 
 ## Related Project
 
-- [Back End With Express JS](https://github.com/ridwanbahtiar15/coffe-shop)
+- <div id="express">[Back End With Express JS](https://github.com/ridwanbahtiar15/coffe-shop)</div>
 - [Back End With Golang](https://github.com/ridwanbahtiar15/coffee-shop-Golang)
